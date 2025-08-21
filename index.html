@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台中市CBL企業交流聯盟</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Adds space between image and title */
+            margin-bottom: 35px; /* Replaces the h1 margin */
+        }
+        .title-container img {
+            width: 80px; /* Control image size */
+            height: auto;
+            border-radius: 8px;
+        }
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .weekly-report-image {
+            max-width: 30%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0d47a1;
+            margin: 0;
+            font-size: 2.0em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex; /* Make list items horizontal */
+            justify-content: center; /* Center the items */
+            gap: 20px; /* Add space between items */
+            margin-bottom: 20px; /* Add some space below the list */
+        }
+        li {
+            margin: 0; /* Remove vertical margin */
+        }
+        a {
+            text-decoration: none;
+            color: #1565c0;
+            font-size: 0.84em;
+            padding: 6px 12px;
+            border: 2px solid #1565c0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            min-width: 126px;
+        }
+        a:hover {
+            background-color: #1565c0;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        @media (max-width: 600px) {
+            ul {
+                flex-direction: column; /* Stack links vertically on small screens */
+            }
+            a {
+                min-width: unset; /* Remove minimum width constraint */
+                width: 80%; /* Make links take up more width */
+                margin: 5px auto; /* Add some vertical margin and center them */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <img src="CBL.jpg" alt="CBL" width="200" height="133">
+            <h1>台中市CBL企業交流聯盟</h1>
+        </div>
+        <ul>
+                        <li><a href="戰績表20250821.jpg">賽程戰績表</a></li>
+            <li><a href="https://reurl.cc/konkx3">打者紀錄表</a></li>
+            <li><a href="https://reurl.cc/89DzKg">投手紀錄表</a></li>
+        </ul>
+        <div class="image-container">
+            <img src="每週戰況.jpg" alt="每週戰況" class="weekly-report-image">
+        </div>
+    </div>
+</body>
+</html>
