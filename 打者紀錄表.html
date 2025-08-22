@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>打者成績查詢</title>
+  <style>
+    body { font-family: system-ui, "Noto Sans TC", Arial; margin: 24px; }
+    h1 { margin: 0 0 12px; }
+    .note-readonly {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    input, select { padding: 8px 10px; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 6px 8px; border-bottom: 1px solid #ddd; text-align: center; white-space: nowrap; }
+    th { background: #f9f9f9; position: sticky; top: 0; }
+  </style>
+</head>
+<body>
+  <h1>台中市 CBL 企業交流聯盟 打者成績查詢</h1>
+
+  <div class="note-readonly">
+    ⚠️ 提示：此頁面僅供查詢球員成績，使用者無法修改資料。
+  </div>
+
+  <div class="controls">
+    <input id="search" type="text" placeholder="搜尋：球員姓名" />
+    <select id="team"><option value="">全部球隊</option></select>
+    <select id="season"><option value="">全部賽季</option></select>
+  </div>
+
+  <table id="table">
+    <thead><tr id="header-row"></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    // 👇 在這裡貼上 Google 試算表「發佈到網路」的 CSV 連結
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT_X5jYPR24dk5oqUSr1py8glTu-jHZJwuzhyJN7RrjMkgkXjwv0hVgmn7KlieQy_-CZEn6UQofqTbz/pub?gid=546432089&single=true&output=csv";
+
+    const searchInput = document.getElementById('search');
+    const teamSelect = document.getElementById('team');
+    const seasonSelect = document.getElementById('season');
+    const headerRow = document.getElementById('header-row');
+    const tbody = document.getElementById('tbody');
+    let rows = [], headers = [];
+
+    async function fetchCSV() {
+      try {
+        const res = await fetch(CSV_URL);
+        if (!res.ok) throw new Error('讀取失敗：HTTP ' + res.status);
+        const text = await res.text();
+        parseCSV(text);
+        buildFilters();
+        render();
+      } catch (err) {
+        tbody.innerHTML = '<tr><td>' + err.message + '</td></tr>';
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.replace(/\r/g,'').split('\n').filter(l => l.trim() !== '');
+      headers = splitCSVLine(lines[0]).map(h => h.trim());
+      rows = lines.slice(1).map(line => {
+        const cells = splitCSVLine(line);
+        const obj = {};
+        headers.forEach((h,i)=> obj[h] = (cells[i]||'').trim());
+        return obj;
+      });
+      headerRow.innerHTML = headers.map(h=>`<th>${h}</th>`).join('');
+    }
+
+    function splitCSVLine(line) {
+      const out=[]; let cur='', inQuotes=false;
+      for (let i=0; i<line.length; i++) {
+        const c=line[i], n=line[i+1];
+        if (c === '"' && inQuotes && n === '"') { cur += '"'; i++; }
+        else if (c === '"') { inQuotes = !inQuotes; }
+        else if (c === ',' && !inQuotes) { out.push(cur); cur=''; }
+        else { cur += c; }
+      }
+      out.push(cur);
+      return out;
+    }
+
+    function buildFilters() {
+      const teamKey = headers.find(h => h.includes('隊')) || "隊伍";
+      const seasonKey = headers.find(h => h.includes('賽季')) || "賽季";
+      const nameKey = headers.find(h => h.includes('姓名')) || "背號/姓名";
+      const teams = [...new Set(rows.map(r => r[teamKey]).filter(Boolean))].sort();
+      const seasons = [...new Set(rows.map(r => r[seasonKey]).filter(Boolean))].sort().reverse();
+      teamSelect.innerHTML = '<option value="">全部球隊</option>' + teams.map(t=>`<option>${t}</option>`).join('');
+      seasonSelect.innerHTML = '<option value="">全部賽季</option>' + seasons.map(s=>`<option>${s}</option>`).join('');
+      [searchInput,teamSelect,seasonSelect].forEach(el=>el.addEventListener('input',render));
+      searchInput.dataset.nameKey=nameKey; teamSelect.dataset.teamKey=teamKey; seasonSelect.dataset.seasonKey=seasonKey;
+    }
+
+    function render() {
+      const nameKey=searchInput.dataset.nameKey, teamKey=teamSelect.dataset.teamKey, seasonKey=seasonSelect.dataset.seasonKey;
+      const kw=searchInput.value.trim().toLowerCase(), team=teamSelect.value, season=seasonSelect.value;
+      const filtered=rows.filter(r=>{
+        const passName=kw?String(r[nameKey]||'').toLowerCase().includes(kw):true;
+        const passTeam=team?r[teamKey]===team:true;
+        const passSeason=season?r[seasonKey]===season:true;
+        return passName && passTeam && passSeason;
+      });
+      tbody.innerHTML=filtered.map(r=>`<tr>`+headers.map(h=>`<td>${r[h]??''}</td>`).join('')+`</tr>`).join('')
+        || `<tr><td colspan="${headers.length}">找不到符合的資料</td></tr>`;
+    }
+
+    fetchCSV();
+  </script>
+</body>
+</html>
