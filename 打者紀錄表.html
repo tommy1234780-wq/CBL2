@@ -5,25 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>打者成績查詢</title>
   <style>
-    body { font-family: system-ui, "Noto Sans TC", Arial; margin: 24px; }
-    h1 { margin: 0 0 12px; }
+    body { font-family: system-ui, "Noto Sans TC", Arial; margin: 24px; background-color: #f0f2f5; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { margin: 0 0 16px; font-size: 28px; color: #333; }
     .note-readonly {
       background-color: #fff3cd;
       color: #856404;
       border: 1px solid #ffeeba;
-      padding: 8px 12px;
-      margin-bottom: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
       border-radius: 4px;
       font-size: 14px;
     }
-    .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-    input, select { padding: 8px 10px; font-size: 14px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 6px 8px; border-bottom: 1px solid #ddd; text-align: center; white-space: nowrap; }
-    th { background: #f9f9f9; position: sticky; top: 0; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    input, select { padding: 10px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #ddd; text-align: center; white-space: nowrap; }
+    th { background: #f9f9f9; position: sticky; top: 0; z-index: 1; }
+
+    @media (max-width: 768px) {
+      body { margin: 0; background-color: #fff; }
+      .container { padding: 15px; border-radius: 0; box-shadow: none; }
+      h1 { font-size: 22px; }
+      .controls { flex-direction: column; }
+      input, select { width: 100%; box-sizing: border-box; }
+    }
   </style>
 </head>
 <body>
+<div class="container">
   <h1>台中市 CBL 企業交流聯盟 打者成績查詢</h1>
 
   <div class="note-readonly">
@@ -36,10 +47,13 @@
     <select id="season"><option value="">全部賽季</option></select>
   </div>
 
-  <table id="table">
-    <thead><tr id="header-row"></tr></thead>
-    <tbody id="tbody"></tbody>
-  </table>
+  <div class="table-wrapper">
+    <table id="table">
+      <thead><tr id="header-row"></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
 
   <script>
     // 👇 在這裡貼上 Google 試算表「發佈到網路」的 CSV 連結
