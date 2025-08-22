@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台中市CBL企業交流聯盟</title>
+    <title>賽程戰績表 - 台中市CBL企業交流聯盟</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -34,15 +34,6 @@
             height: auto;
             border-radius: 8px;
         }
-        .image-container {
-            margin-bottom: 20px;
-        }
-        .weekly-report-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
         h1 {
             color: #0d47a1;
             margin: 0;
@@ -69,6 +60,7 @@
             border-radius: 8px;
             transition: all 0.3s ease;
             display: inline-block;
+            cursor: pointer;
         }
         a:hover {
             background-color: #1565c0;
@@ -76,44 +68,17 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .title-container {
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 20px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            a {
-                width: 80%;
-                margin: 0 auto;
-            }
+        .image-container {
+            margin-bottom: 20px;
         }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            .title-container img {
-                width: 50px;
-            }
-            h1 {
-                font-size: 1.3em;
-            }
-            a {
-                font-size: 0.8em;
-                padding: 10px 5px;
-            }
+        .report-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -121,15 +86,28 @@
     <div class="container">
         <div class="title-container">
             <img src="CBL.jpg" alt="CBL" width="200" height="133">
-            <h1>台中市CBL企業交流聯盟</h1>
+            <h1>賽程戰績表</h1>
         </div>
+
         <ul>
-            <li><a href="賽程戰績表.html">賽程戰績表</a></li>
-            <li><a href="數據統計.html">選手數據查詢</a></li>
+            <li><a onclick="showImage('賽程表.jpg', '賽程')">賽程</a></li>
+            <li><a onclick="showImage('隊伍排名.jpg', '戰績排名')">戰績排名</a></li>
         </ul>
+
         <div class="image-container">
-            <img src="每週戰況.jpg" alt="每週戰況" class="weekly-report-image">
+            <img id="report-image" src="賽程表.jpg" alt="戰績排名" class="report-image">
+        </div>
+        <div class="back-link">
+            <a href="index.html">返回首頁</a>
         </div>
     </div>
+
+    <script>
+        function showImage(src, alt) {
+            var img = document.getElementById('report-image');
+            img.src = src;
+            img.alt = alt;
+        }
+    </script>
 </body>
 </html>
