@@ -68,7 +68,7 @@
 
     async function fetchCSV() {
       try {
-        const res = await fetch(CSV_URL);
+        const res = await fetch(CSV_URL + (CSV_URL.includes('?') ? '&' : '?') + 't=' + new Date().getTime());
         if (!res.ok) throw new Error('讀取失敗：HTTP ' + res.status);
         const text = await res.text();
         parseCSV(text);
