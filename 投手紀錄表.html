@@ -32,6 +32,65 @@
       input, select { width: 100%; box-sizing: border-box; }
     }
   </style>
+    <style id="dark-mode-style">
+      /* Define color variables for light and dark modes */
+      :root {
+        --bg-color: #f0f2f5;
+        --text-color: #333;
+        --container-bg: #ffffff;
+        --table-header-bg: #f9f9f9;
+        --table-border-color: #ddd;
+        --note-bg: #fff3cd;
+        --note-text: #856404;
+        --note-border: #ffeeba;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #121212;
+          --text-color: #e0e0e0;
+          --container-bg: #1e1e1e;
+          --table-header-bg: #333;
+          --table-border-color: #555;
+          --note-bg: #4a4a2a;
+          --note-text: #fffacd;
+          --note-border: #808000;
+        }
+        body { background-color: var(--bg-color); } /* Apply to body for mobile view */
+      }
+
+      /* Apply variables */
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      .container {
+        background-color: var(--container-bg);
+        border-color: var(--table-border-color);
+      }
+      h1 {
+        color: var(--text-color);
+      }
+      th {
+        background: var(--table-header-bg);
+        color: var(--text-color);
+        border-bottom-color: var(--table-border-color);
+      }
+      td {
+         color: var(--text-color);
+         border-bottom-color: var(--table-border-color);
+      }
+      .note-readonly {
+          background-color: var(--note-bg);
+          color: var(--note-text);
+          border-color: var(--note-border);
+      }
+      input, select {
+          background-color: var(--container-bg);
+          color: var(--text-color);
+          border: 1px solid var(--table-border-color);
+      }
+    </style>
 </head>
 <body>
 <div class="container">
