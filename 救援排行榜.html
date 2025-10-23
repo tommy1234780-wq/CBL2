@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>救援排行榜</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+        @media screen and (max-width: 600px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            body {
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>救援排行榜</h1>
+
+    <div class="table-container">
+        <table>
+        <thead>
+            <tr>
+                <th>排名</th>
+                <th>球員</th>
+                <th>隊伍</th>
+                <th>救援</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-tbody">
+            <!-- Data will be loaded dynamically -->
+        </tbody>
+    </table>
+    </div>
+
+    <script>
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmnSzqJij7qN0DkHrUHSTUbQv609l1OkQU-1BlZqO2t2Jry0zvcMyQa1DpbGKYSXtF94pg2CU-I3X8/pub?gid=1969750057&single=true&output=csv";
+        const tbody = document.getElementById('leaderboard-tbody');
+
+        async function fetchAndRenderLeaderboard() {
+            try {
+                const res = await fetch(CSV_URL);
+                if (!res.ok) throw new Error('Failed to fetch CSV: HTTP ' + res.status);
+                const text = await res.text();
+                
+                const lines = text.trim().split(/\n/);
+                const headers = lines[0].split(',').map(h => h.trim());
+                const data = lines.slice(1).map(line => {
+                    const values = [];
+                    let current_value = "";
+                    let in_quotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        const next_char = line[i+1];
+                        if (char === '"' && in_quotes && next_char === '"' ) {
+                            current_value += '"' ;
+                            i++;
+                        } else if (char === '"' ) {
+                            in_quotes = !in_quotes;
+                        } else if (char === ',' && !in_quotes) {
+                            values.push(current_value.trim());
+                            current_value = "";
+                        } else {
+                            current_value += char;
+                        }
+                    }
+                    values.push(current_value.trim());
+
+                    const row_data = {};
+                    headers.forEach((h, i) => row_data[h] = values[i] || "");
+                    return row_data;
+                });
+
+                const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
+                const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
+                const saves_key = headers.find(h => h.includes('救援')) || '救援';
+
+                const filtered_data = [];
+                for (const entry of data) {
+                    let saves;
+                    try {
+                        saves = parseInt(entry[saves_key], 10);
+                    } catch (e) {
+                        saves = 0; // Handle non-numeric values
+                    }
+                    entry[saves_key] = saves;
+                    filtered_data.push(entry);
+                }
+
+                const sorted_data = filtered_data.sort((a, b) => b[saves_key] - a[saves_key]);
+
+                let html_rows = "";
+                let rank = 0;
+                let last_score = -1;
+                sorted_data.slice(0, 10).forEach((player, index) => {
+                    if (player[saves_key] !== last_score) {
+                        rank = index + 1;
+                    }
+                    let rank_display = rank;
+                    if (rank === 1) {
+                        rank_display = '🏆';
+                    }
+
+                    const is_first = rank === 1;
+                    const style = is_first ? ' style="color: red;"' : '';
+
+                    html_rows += `
+                        <tr>
+                            <td>${rank_display}</td>
+                            <td><span${style}>${player[player_key]}</span></td>
+                            <td><span${style}>${player[team_key]}</span></td>
+                            <td><span${style}>${player[saves_key]}</span></td>
+                        </tr>
+                    `;
+                    last_score = player[saves_key];
+                });
+                tbody.innerHTML = html_rows;
+
+            } catch (error) {
+                console.error("Error fetching or parsing CSV:", error);
+                tbody.innerHTML = `<tr><td colspan="4">載入資料失敗: ${error.message}</td></tr>`;
+            }
+        }
+
+        fetchAndRenderLeaderboard();
+        setInterval(fetchAndRenderLeaderboard, 300000); // Refresh every 5 minutes
+    </script>
+
+</body>
+</html>

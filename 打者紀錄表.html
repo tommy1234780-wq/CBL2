@@ -18,83 +18,53 @@
       font-size: 14px;
     }
     .controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-    input, select { padding: 10px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
-    .table-wrapper { overflow-x: auto; }
+    input, select, button { padding: 10px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background-color: #f0f0f0; cursor: pointer; }
+    button:hover { background-color: #e0e0e0; }
+    .table-wrapper { overflow: auto; max-height: 65vh; border-top: 1px solid #eee; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 10px 12px; border-bottom: 1px solid #ddd; text-align: center; white-space: nowrap; }
-    th { background: #f9f9f9; position: sticky; top: 0; z-index: 1; }
+    /* Combined thead rules for clarity. */
+    thead { position: sticky; top: 0; z-index: 2; background: #f9f9f9; }
+    th { background: #f9f9f9; }
+    thead.is-sticky {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: box-shadow 0.2s ease-in-out;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      border-right: 1px solid #ddd;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+      position: sticky;
+      z-index: 1;
+      border-right: 1px solid #ddd;
+      /* 'left' is set by JS */
+    }
+
+    /* Set backgrounds for sticky columns */
+    td:nth-child(1), td:nth-child(2) { background-color: #fff; }
+    thead th:nth-child(1), thead th:nth-child(2) { background-color: #f9f9f9; z-index: 3; }
+
 
     @media (max-width: 768px) {
       body { margin: 0; background-color: #fff; }
       .container { padding: 15px; border-radius: 0; box-shadow: none; }
       h1 { font-size: 22px; }
       .controls { flex-direction: column; }
-      input, select { width: 100%; box-sizing: border-box; }
+      input, select, button { width: 100%; box-sizing: border-box; }
     }
   </style>
-    <style id="dark-mode-style">
-      /* Define color variables for light and dark modes */
-      :root {
-        --bg-color: #f0f2f5;
-        --text-color: #333;
-        --container-bg: #ffffff;
-        --table-header-bg: #f9f9f9;
-        --table-border-color: #ddd;
-        --note-bg: #fff3cd;
-        --note-text: #856404;
-        --note-border: #ffeeba;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg-color: #121212;
-          --text-color: #e0e0e0;
-          --container-bg: #1e1e1e;
-          --table-header-bg: #333;
-          --table-border-color: #555;
-          --note-bg: #4a4a2a;
-          --note-text: #fffacd;
-          --note-border: #808000;
-        }
-        body { background-color: var(--bg-color); } /* Apply to body for mobile view */
-      }
-
-      /* Apply variables */
-      body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-      }
-      .container {
-        background-color: var(--container-bg);
-        border-color: var(--table-border-color);
-      }
-      h1 {
-        color: var(--text-color);
-      }
-      th {
-        background: var(--table-header-bg);
-        color: var(--text-color);
-        border-bottom-color: var(--table-border-color);
-      }
-      td {
-         color: var(--text-color);
-         border-bottom-color: var(--table-border-color);
-      }
-      .note-readonly {
-          background-color: var(--note-bg);
-          color: var(--note-text);
-          border-color: var(--note-border);
-      }
-      input, select {
-          background-color: var(--container-bg);
-          color: var(--text-color);
-          border: 1px solid var(--table-border-color);
-      }
-    </style>
 </head>
 <body>
 <div class="container">
   <h1>台中市 CBL 企業交流聯盟 打者成績查詢</h1>
+
+  <p style="font-size: 14px; color: #666; margin-bottom: 16px;">成績更新時間：<span id="last-updated">讀取中...</span></p>
 
   <div class="note-readonly">
     ⚠️ 提示：此頁面僅供查詢球員成績，使用者無法修改資料。
@@ -127,12 +97,72 @@
 
     async function fetchCSV() {
       try {
-        const res = await fetch(CSV_URL + (CSV_URL.includes('?') ? '&' : '?') + 't=' + new Date().getTime());
+        const res = await fetch(CSV_URL);
         if (!res.ok) throw new Error('讀取失敗：HTTP ' + res.status);
         const text = await res.text();
-        parseCSV(text);
-        buildFilters();
-        render();
+        parseCSV(text); // Populates global 'headers' and 'rows'
+
+        const AC1_COLUMN_INDEX = 28; // 0-indexed for 29th column
+
+        // Extract and display update time
+        const updateTimeElement = document.getElementById('last-updated');
+        if (updateTimeElement && headers.length > AC1_COLUMN_INDEX) {
+          const updateTimeFromAC1 = headers[AC1_COLUMN_INDEX];
+          if (updateTimeFromAC1) {
+            updateTimeElement.textContent = updateTimeFromAC1;
+          } else {
+            updateTimeElement.textContent = '無法取得更新時間 (AC1 為空)';
+          }
+        } else if (updateTimeElement) {
+          updateTimeElement.textContent = 'CSV資料不足 (無 AC1 欄位)';
+        }
+
+        // Create displayHeaders for rendering (excluding AC1)
+        window.displayHeaders = headers.filter((_, index) => index !== AC1_COLUMN_INDEX);
+
+        // Set headerRow.innerHTML here, after window.displayHeaders is defined
+        headerRow.innerHTML = window.displayHeaders.map(h => {
+          if (h.includes('打擊率')) {
+            return `<th>${h} <span id="sort-avg-toggle" style="cursor: pointer;"></span></th>`;
+          }
+          return `<th>${h}</th>`;
+        }).join('');
+
+        buildFilters(); // Uses global 'headers' and 'rows'
+        render(); // Uses global 'rows' and 'window.displayHeaders'
+
+        let sortOrder = 'none'; // none, 'asc', 'desc'
+        const sortAvgToggle = document.getElementById('sort-avg-toggle');
+
+        if (sortAvgToggle) {
+          sortAvgToggle.innerHTML = '&#9670;'; // Initial: lozenge
+          sortAvgToggle.addEventListener('click', () => {
+            if (sortOrder === 'desc') {
+              sortOrder = 'asc';
+              sortAvgToggle.innerHTML = '&#9650;'; // Up arrow
+            } else {
+              sortOrder = 'desc';
+              sortAvgToggle.innerHTML = '&#9660;'; // Down arrow
+            }
+
+            const avgKey = headers.find(h => h.includes('打擊率'));
+            if (avgKey) {
+              rows.sort((a, b) => {
+                const avgA = parseFloat(a[avgKey]);
+                const avgB = parseFloat(b[avgKey]);
+                if (isNaN(avgA)) return 1;
+                if (isNaN(avgB)) return -1;
+
+                if (sortOrder === 'asc') {
+                  return avgA - b[avgKey];
+                } else {
+                  return avgB - a[avgKey];
+                }
+              });
+              render();
+            }
+          });
+        }
       } catch (err) {
         tbody.innerHTML = '<tr><td>' + err.message + '</td></tr>';
       }
@@ -147,7 +177,12 @@
         headers.forEach((h,i)=> obj[h] = (cells[i]||'').trim());
         return obj;
       });
-      headerRow.innerHTML = headers.map(h=>`<th>${h}</th>`).join('');
+      headerRow.innerHTML = headers.map(h => {
+        if (h.includes('打擊率')) {
+          return `<th>${h} <span id="sort-avg-toggle" style="cursor: pointer;"></span></th>`;
+        }
+        return `<th>${h}</th>`;
+      }).join('');
     }
 
     function splitCSVLine(line) {
@@ -175,6 +210,17 @@
       searchInput.dataset.nameKey=nameKey; teamSelect.dataset.teamKey=teamKey; seasonSelect.dataset.seasonKey=seasonKey;
     }
 
+    function updateStickyColumns() {
+      const firstCol = document.querySelector('#table th:nth-child(1)');
+      if (!firstCol) return;
+      const firstColWidth = firstCol.offsetWidth;
+      
+      const secondColElems = document.querySelectorAll('#table th:nth-child(2), #table td:nth-child(2)');
+      secondColElems.forEach(elem => {
+        elem.style.left = firstColWidth + 'px';
+      });
+    }
+
     function render() {
       const nameKey=searchInput.dataset.nameKey, teamKey=teamSelect.dataset.teamKey, seasonKey=seasonSelect.dataset.seasonKey;
       const kw=searchInput.value.trim().toLowerCase(), team=teamSelect.value, season=seasonSelect.value;
@@ -184,12 +230,30 @@
         const passSeason=season?r[seasonKey]===season:true;
         return passName && passTeam && passSeason;
       });
-      tbody.innerHTML=filtered.map(r=>`<tr>`+headers.map(h=>`<td>${r[h]??''}</td>`).join('')+`</tr>`).join('')
-        || `<tr><td colspan="${headers.length}">找不到符合的資料</td></tr>`;
+      tbody.innerHTML=filtered.map(r=>`<tr>`+window.displayHeaders.map(h=>`<td>${r[h]??''}</td>`).join('')+`</tr>`).join('')
+        || `<tr><td colspan="${window.displayHeaders.length}">找不到符合的資料</td></tr>`;
+      
+      // Update sticky columns after rendering table
+      updateStickyColumns();
     }
 
+    window.addEventListener('resize', updateStickyColumns);
+
     fetchCSV();
-    setInterval(fetchCSV, 60000); // 每分鐘自動更新一次
+
+    // Observer for sticky header shadow
+    try {
+      const thead = document.querySelector('#table thead');
+      if (thead) {
+        const observer = new IntersectionObserver(
+          ([e]) => thead.classList.toggle('is-sticky', e.intersectionRatio < 1),
+          { threshold: [1] }
+        );
+        observer.observe(thead);
+      }
+    } catch (e) {
+      console.error('Sticky header observer failed:', e);
+    }
   </script>
 </body>
 </html>

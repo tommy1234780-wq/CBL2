@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數據統計 - 台中市CBL企業交流聯盟</title>
+    <title>打者排行榜</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 20px;
             background-color: #f0f2f5;
             color: #333;
-            margin: 0;
-            padding: 20px;
         }
         .container {
             text-align: center;
@@ -19,7 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
-            max-width: 900px;
+            max-width: 600px;
             margin: auto;
         }
         .title-container {
@@ -30,23 +32,35 @@
             margin-bottom: 35px;
         }
         .title-container img {
-            width: 60px;
-            height: auto;
+            width: 60px; /* From index.html */
+            height: auto; /* From index.html */
             border-radius: 8px;
         }
         h1 {
             color: #0d47a1;
-            margin: 0;
-            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-size: 1.8em; /* From index.html */
+        }
+        /* Responsive Design for h1 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.3em;
+            }
         }
         ul {
             list-style-type: none;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: row; /* Changed to row */
+            flex-wrap: wrap; /* Added for responsiveness */
+            justify-content: center; /* Center items horizontally */
             gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            margin-bottom: 20px; /* Add some space below the links */
         }
         li {
             margin: 0;
@@ -54,12 +68,12 @@
         a {
             text-decoration: none;
             color: #1565c0;
-            font-size: 0.9em;
-            padding: 8px 15px;
+            font-size: 1.1em;
+            padding: 12px 20px;
             border: 2px solid #1565c0;
             border-radius: 8px;
             transition: all 0.3s ease;
-            display: inline-block;
+            display: block;
             cursor: pointer;
         }
         a:hover {
@@ -68,8 +82,14 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .back-link {
-            margin-top: 20px;
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            a {
+                font-size: 1em;
+                padding: 10px 15px;
+            }
         }
         #content-frame {
             width: 100%;
@@ -78,19 +98,25 @@
             border-radius: 8px;
             margin-top: 20px;
         }
+        .back-link {
+            margin-top: 20px;
+        }
     </style>
 </head>
-<body onload="loadContent('打者紀錄表.html')">
+<body onload="loadContent('打擊率排行榜.html')">
     <div class="container">
         <div class="title-container">
-            <img src="CBL.jpg" alt="CBL" width="200" height="133">
-            <h1>數據統計</h1>
+            <img src="CBL.jpg" alt="CBL">
+            <h1>打者排行榜</h1>
         </div>
         <ul>
-            <li><a onclick="loadContent('打者紀錄表.html')">打者紀錄表</a></li>
-            <li><a onclick="loadContent('投手紀錄表.html')">投手紀錄表</a></li>
+            <li><a onclick="loadContent('打擊率排行榜.html')">打擊率排行榜</a></li>
+            <li><a onclick="loadContent('全壘打排行榜.html')">全壘打排行榜</a></li>
+            <li><a onclick="loadContent('打點排行榜.html')">打點排行榜</a></li>
+            <li><a onclick="loadContent('盜壘排行榜.html')">盜壘排行榜</a></li>
+            <li><a onclick="loadContent('安打排行榜.html')">安打排行榜</a></li>
         </ul>
-        
+
         <iframe id="content-frame"></iframe>
 
         <div class="back-link">
