@@ -571,6 +571,7 @@
         let currentAdminUser = null;
         let activeAtBatCell = null; // Holds the currently editing table cell
         const atBatOptions = ["", "1安", "2安", "3安", "全壘打", "三振", "保送", "觸身", "野選", "失誤", "雙殺", "不死三振", "滾地", "飛球", "高飛犧牲打", "違規", "三殺"];
+        let playerRoster = { "所有球員": [] };
 
         // --- Function Definitions ---
 
@@ -591,13 +592,26 @@
             const resetRecordBtn = document.getElementById('resetRecordBtn');
             const actionButtons = document.querySelectorAll('.table-actions button');
 
+            // First, reset all contenteditable to false to ensure clean state
+            document.querySelectorAll('[contenteditable]').forEach(el => el.setAttribute('contenteditable', 'false'));
+            
             if (isAdmin) {
                 adminLoginBtn.textContent = `登出 (${user.displayName})`;
                 saveChangesBtn.style.display = 'inline-block';
                 resetRecordBtn.style.display = 'inline-block';
-                document.querySelectorAll('[contenteditable="false"]').forEach(el => {
+                
+                // Only make specific elements editable
+                document.querySelectorAll('td.fixed-col-data, #gameDate, #gameVenue, .inning-score-table td:not(.team-name)').forEach(el => {
                     el.setAttribute('contenteditable', 'true');
                 });
+                 document.querySelectorAll('.team-section .stats-section td:not(.player-name-cell):not(.at-bat-cell):not(.fixed-col-data)').forEach(el => {
+                    el.setAttribute('contenteditable', 'true');
+                });
+                document.querySelectorAll('.team-section .fixed-col-data').forEach(el => {
+                    el.setAttribute('contenteditable', 'true');
+                });
+
+
                 document.querySelectorAll('.table-actions').forEach(div => {
                     div.style.display = 'block';
                 });
@@ -606,9 +620,7 @@
                 adminLoginBtn.textContent = "管理者登入 (Google)";
                 saveChangesBtn.style.display = 'none';
                 resetRecordBtn.style.display = 'none';
-                document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-                    el.setAttribute('contenteditable', 'false');
-                });
+                // All contenteditable elements are already set to false above
                 document.querySelectorAll('.table-actions').forEach(div => {
                     div.style.display = 'none';
                 });
@@ -630,8 +642,6 @@
 
                         const data = docSnap.data();
 
-        
-
                         document.getElementById('gameDate').textContent = data.gameInfo.date;
 
                         document.getElementById('homeTeam').textContent = data.gameInfo.homeTeamName;
@@ -641,8 +651,6 @@
                         document.getElementById('gameVenue').textContent = data.gameInfo.venue;
 
                         document.getElementById('gameScore').textContent = data.gameInfo.gameScore;
-
-        
 
                         syncAllTeamNames('主隊', data.gameInfo.homeTeamName);
 
@@ -704,31 +712,13 @@
 
                                     const atBat = (batter.atBats || [])[i] || {};
 
-                                    // Handle old string-only data for backward compatibility
-
-                                    const atBatData = (typeof atBat === 'string')
-
-                                        ? { result: atBat, rbi: 0, sb: 0 }
-
-                                        : { result: atBat.result || '', rbi: atBat.rbi || 0, sb: atBat.sb || 0 };
+                                    const atBatData = (typeof atBat === 'string') ? { result: atBat, rbi: 0, sb: 0 } : { result: atBat.result || '', rbi: atBat.rbi || 0, sb: atBat.sb || 0 };
 
                                     return `<td class="at-bat-cell" data-result="${atBatData.result}" data-rbi="${atBatData.rbi}" data-sb="${atBatData.sb}">${formatAtBatText(atBatData)}</td>`;
 
                                 }).join('');
 
-        
-
-                                newRow.innerHTML = `
-
-                                    <td class="fixed-col-data" contenteditable="${isAdmin}">${batter.battingOrder || ''}</td>
-
-                                    <td class="fixed-col-data" contenteditable="${isAdmin}">${batter.jerseyNumber || ''}</td>
-
-                                    <td class="fixed-col-data" contenteditable="${isAdmin}">${batter.name || ''}</td>
-
-                                    ${atBatCells}
-
-                                `;
+                                newRow.innerHTML = `<td class="fixed-col-data" contenteditable="${isAdmin}">${batter.battingOrder || ''}</td><td class="fixed-col-data" contenteditable="${isAdmin}">${batter.jerseyNumber || ''}</td><td class="player-name-cell">${batter.name || ''}</td>${atBatCells}`;
 
                                 tableBody.appendChild(newRow);
 
@@ -758,6 +748,8 @@
 
                             setupAtBatCellListeners(tableBody);
 
+                            setupNameCellListeners(tableBody);
+
                         });
 
         
@@ -776,31 +768,13 @@
 
                                 const newRow = document.createElement('tr');
 
-                                newRow.innerHTML = `
-
-                                    <td contenteditable="${isAdmin}">${pitcher.jerseyNumber || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.name || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.pitchCount || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.inningsPitched || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.hitsAllowed || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.runsAllowed || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.earnedRuns || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.walks || ''}</td>
-
-                                    <td contenteditable="${isAdmin}">${pitcher.strikeouts || ''}</td>
-
-                                `;
+                                newRow.innerHTML = `<td contenteditable="${isAdmin}">${pitcher.jerseyNumber || ''}</td><td class="player-name-cell">${pitcher.name || ''}</td><td contenteditable="${isAdmin}">${pitcher.pitchCount || ''}</td><td contenteditable="${isAdmin}">${pitcher.inningsPitched || ''}</td><td contenteditable="${isAdmin}">${pitcher.hitsAllowed || ''}</td><td contenteditable="${isAdmin}">${pitcher.runsAllowed || ''}</td><td contenteditable="${isAdmin}">${pitcher.earnedRuns || ''}</td><td contenteditable="${isAdmin}">${pitcher.walks || ''}</td><td contenteditable="${isAdmin}">${pitcher.strikeouts || ''}</td>`;
 
                                 tableBody.appendChild(newRow);
 
                             });
+
+                            setupNameCellListeners(tableBody.parentElement); // Call on table to get all name cells
 
                         });
 
@@ -814,179 +788,97 @@
 
                         console.log(`No document for gameId: ${gameId}! Using default values.`);
 
-                        setupAtBatCellListeners(document.body); // Initial setup for empty table
+                        setupAtBatCellListeners(document.body);
+
+                        setupNameCellListeners(document.body);
 
                     }
 
                 }
 
-        
+        async function saveRecordData() {
+            if (!currentAdminUser || currentAdminUser.uid !== adminUID) {
+                alert("您沒有權限儲存變更。請以管理員身份登入。");
+                return;
+            }
+            const homeTeamName = document.getElementById('homeTeam').textContent;
+            const recordData = {
+                gameInfo: {
+                    date: document.getElementById('gameDate').textContent,
+                    homeTeamName: homeTeamName,
+                    awayTeamName: document.getElementById('awayTeam').textContent,
+                    venue: document.getElementById('gameVenue').textContent,
+                    gameScore: document.getElementById('gameScore').textContent
+                },
+                inningScores: [], homeBatters: [], awayBatters: [], homePitchers: [], awayPitchers: []
+            };
+            
+            document.querySelectorAll('.inning-score-table tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const teamScore = { teamName: cells[0].textContent, innings: [], R: cells[10].textContent, H: cells[11].textContent, E: cells[12].textContent };
+                for (let i = 1; i <= 9; i++) { teamScore.innings.push(cells[i].textContent); }
+                recordData.inningScores.push(teamScore);
+            });
 
-                async function saveRecordData() {
+            document.querySelectorAll('.team-section').forEach((teamSection) => {
+                const teamName = teamSection.querySelector('h2 .team-record-name').textContent;
+                const isHome = teamName === homeTeamName;
 
-                    if (!currentAdminUser || currentAdminUser.uid !== adminUID) {
-
-                        alert("您沒有權限儲存變更。請以管理員身份登入。");
-
-                        return;
-
-                    }
-
-                    const homeTeamName = document.getElementById('homeTeam').textContent;
-
-                    const recordData = {
-
-                        gameInfo: {
-
-                            date: document.getElementById('gameDate').textContent,
-
-                            homeTeamName: homeTeamName,
-
-                            awayTeamName: document.getElementById('awayTeam').textContent,
-
-                            venue: document.getElementById('gameVenue').textContent,
-
-                            gameScore: document.getElementById('gameScore').textContent
-
-                        },
-
-                        inningScores: [], homeBatters: [], awayBatters: [], homePitchers: [], awayPitchers: []
-
-                    };
-
-                    
-
-                    document.querySelectorAll('.inning-score-table tbody tr').forEach(row => {
-
-                        const cells = row.querySelectorAll('td');
-
-                        const teamScore = { teamName: cells[0].textContent, innings: [], R: cells[10].textContent, H: cells[11].textContent, E: cells[12].textContent };
-
-                        for (let i = 1; i <= 9; i++) { teamScore.innings.push(cells[i].textContent); }
-
-                        recordData.inningScores.push(teamScore);
-
+                const batterTableBody = teamSection.querySelectorAll('.stats-section table tbody')[0];
+                const batters = [];
+                batterTableBody.querySelectorAll('tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const atBats = Array.from(row.querySelectorAll('.at-bat-cell')).map(cell => ({
+                        result: cell.dataset.result || '',
+                        rbi: parseInt(cell.dataset.rbi) || 0,
+                        sb: parseInt(cell.dataset.sb) || 0,
+                    }));
+                    batters.push({
+                        battingOrder: cells[0].textContent, jerseyNumber: cells[1].textContent,
+                        name: cells[2].textContent, atBats: atBats
                     });
+                });
 
-        
-
-                    document.querySelectorAll('.team-section').forEach((teamSection) => {
-
-                        const teamName = teamSection.querySelector('h2 .team-record-name').textContent;
-
-                        const isHome = teamName === homeTeamName;
-
-        
-
-                        const batterTableBody = teamSection.querySelectorAll('.stats-section table tbody')[0];
-
-                        const batters = [];
-
-                        batterTableBody.querySelectorAll('tr').forEach(row => {
-
-                            const cells = row.querySelectorAll('td');
-
-                            const atBats = Array.from(row.querySelectorAll('.at-bat-cell')).map(cell => ({
-
-                                result: cell.dataset.result || '',
-
-                                rbi: parseInt(cell.dataset.rbi) || 0,
-
-                                sb: parseInt(cell.dataset.sb) || 0,
-
-                            }));
-
-                            batters.push({
-
-                                battingOrder: cells[0].textContent, jerseyNumber: cells[1].textContent,
-
-                                name: cells[2].textContent, atBats: atBats
-
-                            });
-
-                        });
-
-        
-
-                        const pitcherTableBody = teamSection.querySelectorAll('.stats-section table tbody')[1];
-
-                        const pitchers = [];
-
-                        pitcherTableBody.querySelectorAll('tr').forEach(row => {
-
-                            const cells = row.querySelectorAll('td');
-
-                            pitchers.push({
-
-                                jerseyNumber: cells[0].textContent, 
-
-                                name: cells[1].textContent, 
-
-                                pitchCount: cells[2].textContent,
-
-                                inningsPitched: cells[3].textContent, 
-
-                                hitsAllowed: cells[4].textContent, 
-
-                                runsAllowed: cells[5].textContent, 
-
-                                earnedRuns: cells[6].textContent, 
-
-                                walks: cells[7].textContent, 
-
-                                strikeouts: cells[8].textContent
-
-                            });
-
-                        });
-
-        
-
-                        if (isHome) {
-
-                            recordData.homeBatters = batters;
-
-                            recordData.homePitchers = pitchers;
-
-                        } else {
-
-                            recordData.awayBatters = batters;
-
-                            recordData.awayPitchers = pitchers;
-
-                        }
-
+                const pitcherTableBody = teamSection.querySelectorAll('.stats-section table tbody')[1];
+                const pitchers = [];
+                pitcherTableBody.querySelectorAll('tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    pitchers.push({
+                        jerseyNumber: cells[0].textContent, 
+                        name: cells[1].textContent, 
+                        pitchCount: cells[2].textContent,
+                        inningsPitched: cells[3].textContent, 
+                        hitsAllowed: cells[4].textContent, 
+                        runsAllowed: cells[5].textContent, 
+                        earnedRuns: cells[6].textContent, 
+                        walks: cells[7].textContent, 
+                        strikeouts: cells[8].textContent
                     });
+                });
 
-        
-
-                    try {
-
-                        await setDoc(doc(db, "baseballRecords", gameId), recordData);
-
-                        alert("紀錄已成功儲存到 Firebase！");
-
-                    } catch (error) {
-
-                        console.error("儲存紀錄時發生錯誤:", error);
-
-                        alert("儲存紀錄時發生錯誤：" + error.message);
-
-                    }
-
+                if (isHome) {
+                    recordData.homeBatters = batters;
+                    recordData.homePitchers = pitchers;
+                } else {
+                    recordData.awayBatters = batters;
+                    recordData.awayPitchers = pitchers;
                 }
+            });
+
+            try {
+                await setDoc(doc(db, "baseballRecords", gameId), recordData);
+                alert("紀錄已成功儲存到 Firebase！");
+            } catch (error) {
+                console.error("儲存紀錄時發生錯誤:", error);
+                alert("儲存紀錄時發生錯誤：" + error.message);
+            }
+        }
 
         async function resetRecordData() {
-            if (!confirm("您確定要將所有紀錄恢復為預設值嗎？此動作將會刪除目前儲存的紀錄，且無法復原。")) {
-                return;
-            }
-            if (!currentAdminUser || currentAdminUser.uid !== adminUID) {
-                alert("您沒有權限執行此操作。");
-                return;
-            }
-            const docRef = doc(db, "baseballRecords", gameId);
+            if (!confirm("您確定要將所有紀錄恢復為預設值嗎？此動作將會刪除目前儲存的紀錄，且無法復原。")) { return; }
+            if (!currentAdminUser || currentAdminUser.uid !== adminUID) { alert("您沒有權限執行此操作。"); return; }
             try {
-                await deleteDoc(docRef);
+                await deleteDoc(doc(db, "baseballRecords", gameId));
                 alert("紀錄已成功恢復為預設值。頁面將會重新載入。");
                 location.reload();
             } catch (error) {
@@ -1053,50 +945,201 @@
         }
 
         function setupAtBatCellListeners(targetElement) {
-            // If targetElement is a cell itself, put it in an array to be processed.
-            // Otherwise, query for all cells within the container.
             const cellsToSetup = targetElement.classList.contains('at-bat-cell') 
                 ? [targetElement] 
                 : Array.from(targetElement.querySelectorAll('.at-bat-cell'));
 
             cellsToSetup.forEach(cell => {
-                // Prevent adding multiple listeners
-                if (cell.dataset.listenerAttached) {
-                    // Remove old listener to be safe, in case the cell is being reused
-                    const oldListener = cell._clickListener;
-                    if(oldListener) cell.removeEventListener('click', oldListener);
-                }
-
-                const newClickListener = function() {
+                if (cell.dataset.listenerAttached) return;
+                cell.addEventListener('click', function() {
                     if (currentAdminUser && currentAdminUser.uid === adminUID) {
                         openAtBatModal(this);
                     }
-                };
-                
-                cell.addEventListener('click', newClickListener);
-                cell._clickListener = newClickListener; // Store reference for potential removal
+                });
                 cell.dataset.listenerAttached = 'true';
+            });
+        }
+
+        async function fetchPlayerRoster() {
+            const BATTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT_X5jYPR24dk5oqUSr1py8glTu-jHZJwuzhyJN7RrjMkgkXjwv0hVgmn7KlieQy_-CZEn6UQofqTbz/pub?gid=546432089&single=true&output=csv";
+            const PITCHER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmnSzqJij7qN0DkHrUHSTUbQv609l1OkQU-1BlZqO2t2Jry0zvcMyQa1DpbGKYSXtF94pg2CU-I3X8/pub?gid=1969750057&single=true&output=csv";
+
+            const parseCsvForPlayers = (csvText) => {
+                const lines = csvText.replace(/\r/g,'').split('\n').filter(l => l.trim() !== '');
+                if (lines.length < 2) return [];
+                const headers = lines[0].split(',').map(h => h.trim());
+                const nameIndex = headers.findIndex(h => h.includes('姓名'));
+                const teamIndex = headers.findIndex(h => h.includes('隊')); // Assuming '隊' is the team header
+                
+                if (nameIndex === -1 || teamIndex === -1) {
+                    console.warn("CSV headers missing '姓名' or '隊' for player roster parsing.");
+                    return [];
+                }
+
+                return lines.slice(1).map(line => {
+                    const cells = line.split(',').map(c => c.trim());
+                    const name = cells[nameIndex];
+                    const team = cells[teamIndex];
+                    return (name && team) ? { name, team } : null;
+                }).filter(Boolean); // Filter out null/empty player objects
+            };
+
+            try {
+                const [batterRes, pitcherRes] = await Promise.all([fetch(BATTER_CSV_URL), fetch(PITCHER_CSV_URL)]);
+                if (!batterRes.ok || !pitcherRes.ok) throw new Error('Failed to fetch player CSV data');
+                
+                const [batterText, pitcherText] = await Promise.all([batterRes.text(), pitcherRes.text()]);
+                
+                const allPlayersWithTeams = [
+                    ...parseCsvForPlayers(batterText),
+                    ...parseCsvForPlayers(pitcherText)
+                ];
+
+                const uniqueTeams = [...new Set(allPlayersWithTeams.map(p => p.team))].sort();
+                
+                const groupedRoster = { "所有球員": [...new Set(allPlayersWithTeams.map(p => p.name))].sort() }; // Flat list of all names
+                uniqueTeams.forEach(team => {
+                    groupedRoster[team] = [...new Set(allPlayersWithTeams.filter(p => p.team === team).map(p => p.name))].sort();
+                });
+                playerRoster = groupedRoster;
+
+                console.log('Player roster loaded:', Object.keys(playerRoster).length -1, 'teams,', allPlayersWithTeams.length, 'total players');
+            } catch (error) {
+                console.error("Failed to build player roster:", error);
+                playerRoster = { "所有球員": [] }; // Ensure it's not undefined
+            }
+        }
+
+        function setupNameCellListeners(targetElement) {
+            targetElement.querySelectorAll('.player-name-cell').forEach(cell => {
+                cell.setAttribute('contenteditable', 'false');
+                if (cell.dataset.nameListener) return;
+                cell.addEventListener('click', function() {
+                    if (this.querySelector('select')) return;
+                    if (currentAdminUser && currentAdminUser.uid === adminUID) {
+                        const currentValue = this.textContent.trim();
+                        const select = document.createElement('select');
+                        select.style.cssText = "width:100%;height:100%;border:none;background:transparent;font:inherit;text-align:center;";
+                        
+                        const teamSection = this.closest('.stats-section');
+                        const teamNameElement = teamSection ? teamSection.querySelector('h2 .team-record-name') : null;
+                        const currentTableTeamName = teamNameElement ? teamNameElement.textContent.trim() : '';
+
+                        let allOptionsHtml = '<option value="">- 選擇球員 -</option>';
+                        allOptionsHtml += '<option value="--manual--">-- 手動輸入新球員 --</option>';
+
+                        const teamsToShow = Object.keys(playerRoster).sort((a,b) => {
+                            if (a === currentTableTeamName) return -1;
+                            if (b === currentTableTeamName) return 1;
+                            if (a === "所有球員") return 1;
+                            if (b === "所有球員") return -1;
+                            return a.localeCompare(b);
+                        });
+
+                        teamsToShow.forEach(team => {
+                            const names = playerRoster[team];
+                            if (names && names.length > 0) {
+                                const label = team === currentTableTeamName ? `${team} (本隊)` : team;
+                                allOptionsHtml += `<optgroup label="${label}">`;
+                                names.forEach(name => {
+                                    const selectedAttr = (name === currentValue) ? 'selected' : '';
+                                    allOptionsHtml += `<option value="${name}" ${selectedAttr}>${name}</option>`;
+                                });
+                                allOptionsHtml += `</optgroup>`;
+                            }
+                        });
+                        
+                        select.innerHTML = allOptionsHtml;
+                        this.innerHTML = '';
+                        this.appendChild(select);
+                        select.focus();
+
+                        const saveAndExit = () => {
+                            const selectedValue = select.value;
+                            if (selectedValue === '--manual--') {
+                                this.innerHTML = '';
+                                this.setAttribute('contenteditable', 'true');
+                                this.focus();
+                            } else {
+                                this.textContent = selectedValue;
+                                this.setAttribute('contenteditable', 'false');
+                            }
+                            // In both cases, the select should be removed
+                            if(this.contains(select)) {
+                                select.remove();
+                            }
+                        };
+                        
+                        select.addEventListener('change', saveAndExit);
+                        select.addEventListener('blur', () => {
+                           // Use a small timeout to allow the change event to fire first
+                           setTimeout(() => {
+                                if (document.body.contains(select)) {
+                                    saveAndExit();
+                                }
+                           }, 150);
+                        });
+                    }
+                });
+                cell.dataset.nameListener = 'true';
             });
         }
 
         function syncAllTeamNames(oldName, newName) {
             if (!oldName || oldName === newName) return;
-            const elementsToUpdate = document.querySelectorAll('#homeTeam, #awayTeam, .team-record-name, .inning-score-table .team-name');
-            elementsToUpdate.forEach(el => {
-                if (el.textContent.trim() === oldName) { el.textContent = newName; }
+            document.querySelectorAll('#homeTeam, #awayTeam, .team-record-name, .inning-score-table .team-name').forEach(el => {
+                if (el.textContent.trim() === oldName) el.textContent = newName;
             });
         }
 
         function setupNameSync() {
-            const editableNameFields = document.querySelectorAll('#homeTeam, #awayTeam, .team-record-name');
-            editableNameFields.forEach(field => {
-                let valueOnFocus = '';
-                field.addEventListener('focus', (e) => { valueOnFocus = e.target.textContent.trim(); });
-                field.addEventListener('blur', (e) => {
-                    if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
-                    const newValue = e.target.textContent.trim();
-                    if (valueOnFocus !== newValue) { syncAllTeamNames(valueOnFocus, newValue); }
+            document.querySelectorAll('#homeTeam, #awayTeam').forEach(field => {
+                field.addEventListener('click', function() {
+                    if (currentAdminUser && currentAdminUser.uid === adminUID && !this.querySelector('select')) {
+                        const valueOnFocus = this.textContent.trim();
+                        const select = document.createElement('select');
+                        select.style.cssText = "width:100%;height:100%;border:none;background:transparent;font:inherit;text-align:center;";
+                        
+                        const teamNames = Object.keys(playerRoster).filter(t => t !== "所有球員");
+                        let optionsHtml = '<option value="">- 選擇隊伍 -</option>';
+                        teamNames.forEach(name => {
+                            const selectedAttr = (name === valueOnFocus) ? 'selected' : '';
+                            optionsHtml += `<option value="${name}" ${selectedAttr}>${name}</option>`;
+                        });
+                        select.innerHTML = optionsHtml;
+                        this.innerHTML = '';
+                        this.appendChild(select);
+                        select.focus();
+
+                        const saveAndSync = () => {
+                            const newValue = select.value;
+                            this.textContent = newValue || valueOnFocus; // Revert if no selection
+                            select.remove();
+                            if (valueOnFocus !== newValue && newValue) {
+                                syncAllTeamNames(valueOnFocus, newValue);
+                            }
+                        };
+                        select.addEventListener('change', saveAndSync);
+                        select.addEventListener('blur', saveAndSync);
+                    }
                 });
+            });
+
+            document.querySelectorAll('.team-record-name').forEach(field => {
+                 let valueOnFocus = '';
+                 field.addEventListener('focus', (e) => { 
+                    if(currentAdminUser && currentAdminUser.uid === adminUID) {
+                        e.target.setAttribute('contenteditable', 'true');
+                        valueOnFocus = e.target.textContent.trim();
+                    }
+                 });
+                 field.addEventListener('blur', (e) => {
+                     e.target.setAttribute('contenteditable', 'false');
+                     const newValue = e.target.textContent.trim();
+                     if (valueOnFocus !== newValue) {
+                         syncAllTeamNames(valueOnFocus, newValue);
+                     }
+                 });
             });
         }
 
@@ -1123,30 +1166,26 @@
             await loadRecordData();
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchPlayerRoster();
             updatePageTitle();
+            setupNameSync();
 
             const gameSelect = document.getElementById('game-select');
             if (gameSelect) {
                 gameSelect.value = gameId;
-                gameSelect.addEventListener('change', function() {
-                    window.location.href = `single_game_record.html?game=${this.value}`;
-                });
+                gameSelect.addEventListener('change', function() { window.location.href = `single_game_record.html?game=${this.value}`; });
             }
 
             document.getElementById('adminLoginBtn').addEventListener('click', async () => {
-                if (currentAdminUser) {
-                    await signOut(auth);
-                    alert("已登出管理者帳號。");
-                } else {
+                if (currentAdminUser) { await signOut(auth); alert("已登出管理者帳號。"); } 
+                else {
                     try {
                         const result = await signInWithPopup(auth, provider);
                         if (result.user.uid !== adminUID) {
                             alert("登入成功，但您的帳號並非管理員。將自動為您登出。");
                             await signOut(auth);
-                        } else {
-                            alert("管理員登入成功！");
-                        }
+                        } else { alert("管理員登入成功！"); }
                     } catch (error) {
                         console.error("Google 登入失敗:", error);
                         alert("Google 登入失敗：" + error.message);
@@ -1156,15 +1195,9 @@
 
             document.getElementById('saveChangesBtn').addEventListener('click', saveRecordData);
             document.getElementById('resetRecordBtn').addEventListener('click', resetRecordData);
-
-            // Modal event listeners
             document.getElementById('saveAtBatBtn').addEventListener('click', saveAtBatModal);
             document.getElementById('cancelAtBatBtn').addEventListener('click', closeAtBatModal);
-            document.getElementById('atBatModal').addEventListener('click', (e) => {
-                if (e.target.id === 'atBatModal') { // Click on overlay to close
-                    closeAtBatModal();
-                }
-            });
+            document.getElementById('atBatModal').addEventListener('click', (e) => { if (e.target.id === 'atBatModal') closeAtBatModal(); });
 
             document.querySelectorAll('.add-batter-row').forEach(button => {
                 button.addEventListener('click', function() {
@@ -1173,15 +1206,10 @@
                     const newRow = document.createElement('tr');
                     const numAtBats = this.closest('.stats-section').querySelectorAll('th.at-bat-column').length || 5;
                     const atBatCells = Array(numAtBats).fill('<td class="at-bat-cell" data-result="" data-rbi="0" data-sb="0"></td>').join('');
-                    const newBattingOrder = tableBody.children.length + 1;
-                    newRow.innerHTML = `
-                        <td class="fixed-col-data" contenteditable="true">${newBattingOrder}</td>
-                        <td contenteditable="true" class="fixed-col-data"></td>
-                        <td contenteditable="true" class="fixed-col-data"></td>
-                        ${atBatCells}
-                    `;
+                    newRow.innerHTML = `<td class="fixed-col-data" contenteditable="true">代打</td><td contenteditable="true" class="fixed-col-data"></td><td class="player-name-cell"></td>${atBatCells}`;
                     tableBody.appendChild(newRow);
                     setupAtBatCellListeners(newRow);
+                    setupNameCellListeners(newRow);
                 });
             });
 
@@ -1189,7 +1217,7 @@
                 button.addEventListener('click', function() {
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
                     const tableBody = this.closest('.stats-section').querySelector('table tbody');
-                    if (tableBody.children.length > 9) { tableBody.lastElementChild.remove(); }
+                    if (tableBody.children.length > 0) tableBody.lastElementChild.remove();
                 });
             });
 
@@ -1197,22 +1225,17 @@
                 button.addEventListener('click', function() {
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
                     const table = this.closest('.stats-section').querySelector('table');
-                    const theadRow = table.querySelector('thead tr');
-                    const tbodyRows = table.querySelectorAll('tbody tr');
-                    const newColNumber = theadRow.querySelectorAll('th.at-bat-column').length + 1;
-                    const newTh = document.createElement('th');
-                    newTh.textContent = `第${convertToChineseNumeral(newColNumber)}打席`;
-                    newTh.classList.add('at-bat-column');
-                    theadRow.appendChild(newTh);
-                    tbodyRows.forEach(row => {
+                    table.querySelectorAll('tbody tr').forEach(row => {
                         const newTd = document.createElement('td');
                         newTd.classList.add('at-bat-cell');
-                        newTd.dataset.result = '';
-                        newTd.dataset.rbi = '0';
-                        newTd.dataset.sb = '0';
+                        newTd.dataset.result = ''; newTd.dataset.rbi = '0'; newTd.dataset.sb = '0';
                         row.appendChild(newTd);
-                        setupAtBatCellListeners(newTd); // Setup listener on the new cell
+                        setupAtBatCellListeners(newTd);
                     });
+                    const newTh = document.createElement('th');
+                    newTh.textContent = `第${table.querySelectorAll('th.at-bat-column').length + 1}打席`;
+                    newTh.classList.add('at-bat-column');
+                    table.querySelector('thead tr').appendChild(newTh);
                 });
             });
 
@@ -1222,15 +1245,8 @@
                     const table = this.closest('.stats-section').querySelector('table');
                     if (table.querySelectorAll('th.at-bat-column').length > 1) {
                         table.querySelector('th.at-bat-column:last-of-type').remove();
-                        table.querySelectorAll('tbody tr').forEach(row => {
-                            const lastCell = row.querySelector('.at-bat-cell:last-of-type');
-                            if (lastCell) {
-                                lastCell.remove();
-                            }
-                        });
-                    } else {
-                        alert('至少需要保留一個打席欄位。');
-                    }
+                        table.querySelectorAll('tbody tr').forEach(row => { if (row.querySelector('.at-bat-cell:last-of-type')) row.lastElementChild.remove(); });
+                    } else { alert('至少需要保留一個打席欄位。'); }
                 });
             });
 
@@ -1239,8 +1255,9 @@
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
                     const tableBody = this.closest('.stats-section').querySelector('table tbody');
                     const newRow = document.createElement('tr');
-                    newRow.innerHTML = `<td contenteditable="true"></td>`.repeat(9);
+                    newRow.innerHTML = `<td contenteditable="true"></td><td class="player-name-cell"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>`;
                     tableBody.appendChild(newRow);
+                    setupNameCellListeners(newRow);
                 });
             });
 
@@ -1248,23 +1265,15 @@
                 button.addEventListener('click', function() {
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
                     const tableBody = this.closest('.stats-section').querySelector('table tbody');
-                    if (tableBody.children.length > 1) {
-                        tableBody.lastElementChild.remove();
-                    } else {
-                        alert('至少需要保留一位投手。');
-                    }
+                    if (tableBody.children.length > 0) tableBody.lastElementChild.remove();
+                    else alert('至少需要保留一位投手。');
                 });
             });
 
-            setupNameSync();
-
             document.querySelectorAll('.inning-score-table tbody tr').forEach(row => {
-                for (let i = 1; i <= 9; i++) {
-                    row.querySelectorAll('td')[i].addEventListener('input', () => calculateInningRuns(row));
-                }
+                for (let i = 1; i <= 9; i++) { row.querySelectorAll('td')[i].addEventListener('input', () => calculateInningRuns(row)); }
                 calculateInningRuns(row);
             });
-
             updateGameScore();
         });
     </script>
