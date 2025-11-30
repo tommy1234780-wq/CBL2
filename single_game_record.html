@@ -199,6 +199,8 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             width: 90%;
             max-width: 400px;
+            max-height: 85vh; /* 確保在小螢幕上不會過高 */
+            overflow-y: auto;  /* 當內容溢出時啟用垂直捲動 */
         }
         .modal-content h3 {
             margin-top: 0;
