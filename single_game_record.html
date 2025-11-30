@@ -285,7 +285,7 @@
 
         @media (max-width: 768px) {
             .table-wrapper {
-                overflow-x: hidden; /* Prevent horizontal scroll */
+                overflow-x: auto; /* Allow horizontal scroll */
             }
 
             .stats-section table {
@@ -327,12 +327,34 @@
                 font-size: 12px;
                 margin-left: 5px;
             }
-            /* Give inning score table cells a fixed width to prevent squishing */
-            .inning-score-table th, .inning-score-table td {
-                min-width: 26px;
+            
+            /* Styles to fit inning score table without scrolling */
+            .game-info .table-wrapper {
+                overflow-x: hidden; /* Prevent scrolling on score table */
             }
+            .inning-score-table {
+                table-layout: fixed; /* Ensure widths are respected */
+                width: 100%;
+            }
+            .inning-score-table th, .inning-score-table td {
+                font-size: 11px; /* Reduce font size */
+                padding: 4px 1px; /* Reduce padding */
+                min-width: 0; /* Unset min-width to allow shrinking */
+                white-space: nowrap; /* Prevent headers like '隊伍' from wrapping */
+                text-align: center; /* Ensure text is centered */
+            }
+            /* Override contenteditable styles for score table on small screens */
+            .inning-score-table td[contenteditable="true"] {
+                padding: 4px 1px !important; /* Force override padding */
+                min-width: 0 !important;     /* Force override min-width */
+            }
+            /* Explicitly set widths for score table columns */
             .inning-score-table th:first-child, .inning-score-table td:first-child {
-                min-width: 50px; /* Team name */
+                width: 16%; /* Team name column */
+                white-space: normal; /* Allow team names to wrap if needed */
+            }
+            .inning-score-table th:not(:first-child), .inning-score-table td:not(:first-child) {
+                width: 7%; /* Other 12 columns */
             }
         }
     </style>
