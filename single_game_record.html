@@ -11,20 +11,197 @@
     <title>本週CBL紀錄表</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
+
+        /* --- Desktop Styles --- */
+        .header {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .title-group {
+            display: inline-block; /* Centered by header's text-align */
+        }
+        .title-group img {
+            width: 80px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .title-group h1 {
+            color: #0d47a1;
+            margin: 0;
+            font-size: 2em;
+        }
+        .navbar {
+            background-color: #ffffff;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Reverted to center */
+            flex-wrap: wrap; /* Re-added wrap */
+        }
+
+        .nav-links li {
+            margin: 5px 10px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #1565c0;
+            font-size: 0.9em;
+            padding: 8px 15px;
+            border: 2px solid #1565c0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background-color: #1565c0;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .menu-toggle {
+            display: none; /* Hidden on desktop */
+        }
+
+        /* --- Mobile Styles --- */
+        @media (max-width: 992px) {
+            body {
+                padding-top: 70px; /* Space for fixed header */
+            }
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .title-group {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .title-group img {
+                width: 50px; /* Smaller logo for mobile header */
+                margin-bottom: 0;
+            }
+            .title-group h1 {
+                font-size: 1.2em; /* Smaller title for mobile header */
+            }
+            .navbar {
+                padding: 0;
+                border: none;
+            }
+            .menu-toggle {
+                display: block; /* Show hamburger */
+                background-color: transparent;
+                color: #0d47a1;
+                border: 2px solid #0d47a1;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.5em; /* Reverted to larger size */
+                padding: 0px 12px; /* Reverted to previous padding */
+                line-height: 1.2;
+            }
+            .menu-toggle:hover {
+                 background-color: #0d47a1;
+                 color: white;
+            }
+            .nav-links {
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 70px; /* Position below fixed header */
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                z-index: 999; /* Ensure menu is on top of other content */
+            }
+            .nav-links.active {
+                display: flex; /* Show when toggled */
+            }
+            .nav-links li {
+                width: 100%;
+                margin: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 15px;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid #f0f2f5;
+                color: #1565c0; /* Default link color in dropdown */
+                background-color: #ffffff; /* Default background in dropdown */
+            }
+            .nav-links a:hover {
+                background-color: #f0f2f5; /* Light grey on hover */
+                color: #0d47a1; /* Ensure text is visible on hover */
+            }
+            .nav-links a.active {
+                background-color: #e3f2fd; /* Light blue for active item */
+                color: #0d47a1; /* Dark blue text for active item */
+                font-weight: bold; /* Make it stand out */
+                transform: none;
+                box-shadow: none;
+            }
+            .nav-links li:last-child a {
+                border-bottom: none;
+            }
+
+            /* Table adjustments for mobile */
+            .table-wrapper {
+                overflow-x: hidden; /* Prevent horizontal scrolling for tables */
+            }
+            .stats-section table th,
+            .stats-section table td,
+            .inning-score-table th,
+            .inning-score-table td {
+                font-size: 0.65em; /* Very small font size */
+                padding: 3px 2px; /* Minimal padding */
+                white-space: normal; /* Allow text to wrap */
+                word-break: break-word; /* Break long words */
+            }
+            .stats-section table th,
+            .inning-score-table th {
+                height: auto; /* Allow header rows to adjust height */
+            }
+            /* Specific adjustments for name column might be needed if it's too wide */
+            .stats-section table .fixed-col:nth-child(3), /* Name column */
+            .stats-section table .player-name-cell {
+                min-width: 40px; /* Give name a minimal width */
+            }
+        }
+        /* Styles from original page */
         .container {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             max-width: 1200px;
-            margin: auto;
+            margin: 20px auto;
         }
-        h1, h2 {
+        h2 { /* Removed h1 from this rule */
             color: #0056b3;
             text-align: center;
         }
@@ -59,13 +236,10 @@
             font-weight: bold;
             color: #0056b3;
         }
-        .inning-score-table th, .inning-score-table td {
-            width: calc(100% / 13); /* 1 team name + 9 innings + R + H + E */
-        }
         [contenteditable="true"] {
             border: 1px dashed #ccc;
             padding: 7px;
-            min-width: 30px; /* Ensure editable cells are visible */
+            min-width: 30px;
         }
         [contenteditable="true"]:focus {
             outline: none;
@@ -98,25 +272,6 @@
         .table-actions button:hover {
             background-color: #218838;
         }
-        .table-actions button.remove-batter-row {
-            background-color: #dc3545;
-        }
-        .table-actions button.remove-batter-row:hover {
-            background-color: #c82333;
-        }
-        .table-actions button.add-atbat-col {
-            background-color: #007bff;
-        }
-        .table-actions button.add-atbat-col:hover {
-            background-color: #0056b3;
-        }
-        .table-actions button.remove-atbat-col {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        .table-actions button.remove-atbat-col:hover {
-            background-color: #e0a800;
-        }
         .team-section {
             display: flex;
             flex-wrap: wrap;
@@ -124,247 +279,58 @@
             margin-bottom: 30px;
         }
         .team-section .stats-section {
-            flex: 1 1 calc(50% - 10px); /* Two columns, with gap */
-            min-width: 450px; /* Minimum width to prevent squishing */
-        }
-        .team-record-name {
-            border-bottom: 1px dashed #0056b3; /* Indicate editable */
-            padding-bottom: 2px;
-        }
-        .team-record-name:focus {
-            outline: none;
-            background-color: #e7f3ff;
+            flex: 1 1 calc(50% - 10px);
+            min-width: 450px;
         }
         .table-wrapper {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
-        }
-        .header-with-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Center the whole block */
-            gap: 10px; /* Space between logo and title */
-            margin-bottom: 20px; /* Add some space below the header */
-        }
-        .header-with-logo img {
-            height: 50px; /* Adjust as needed */
-            width: auto;
-        }
-        .return-home-btn {
-            padding: 8px 15px;
-            margin-right: 10px; /* Space from other buttons */
-            background-color: #6c757d; /* A neutral color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none; /* Remove underline for link */
-            display: inline-block; /* Make it behave like a button */
-        }
-        .return-home-btn:hover {
-            background-color: #5a6268;
         }
         .game-selector {
             text-align: center;
             margin-bottom: 20px;
         }
-        .game-selector label {
-            font-weight: bold;
-            color: #0056b3;
-        }
-        #game-select {
-            padding: 5px 8px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        /* Modal Styles */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); display: flex;
+            justify-content: center; align-items: center; z-index: 1001;
         }
         .modal-content {
-            background-color: #fff;
-            padding: 12px; /* Original 25px reduced by 50% */
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 45%; /* Original 90% reduced by 50% */
-            max-width: 200px; /* Original 400px reduced by 50% */
-            max-height: 85vh; /* 確保在小螢幕上不會過高 */
-            overflow-y: auto;  /* 當內容溢出時啟用垂直捲動 */
+            background-color: #fff; padding: 12px; border-radius: 8px;
+            width: 45%; max-width: 200px; max-height: 85vh; overflow-y: auto;
         }
-        .modal-content h3 {
-            margin-top: 0;
-            color: #0056b3;
-            text-align: center;
-        }
-        .modal-form-group {
-            margin-bottom: 15px;
-        }
-        .modal-form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .modal-form-group select, .modal-form-group input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        .inline-input-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .inline-input-group label {
-            display: inline; /* Override display: block */
-            margin-bottom: 0;
-            white-space: nowrap; /* Prevent label from wrapping */
-        }
-        .inline-input-group input {
-            width: 70px; /* Set a specific, smaller width */
-        }
-        .modal-actions {
-            text-align: right;
-            margin-top: 20px;
-        }
-        .modal-actions button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .modal-actions button#saveAtBatBtn {
-            background-color: #007bff;
-            color: white;
-        }
-        .modal-actions button#cancelAtBatBtn {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            body {
-                margin: 10px;
-                -webkit-text-size-adjust: 100%; /* Prevent font scaling on iOS */
-            }
-            .container {
-                padding: 10px;
-            }
-            .team-section {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .team-section .stats-section {
-                flex-basis: 100%;
-                min-width: unset;
-            }
-            h1 {
-                font-size: 1.6rem;
-            }
-            h2 {
-                font-size: 1.3rem;
-            }
-            th, td {
-                padding: 6px 5px;
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .table-wrapper {
-                overflow-x: auto; /* Allow horizontal scroll */
-            }
-
-            .stats-section table {
-                table-layout: fixed; /* Force table to obey its width */
-                width: 100%;
-            }
-
-            .stats-section th, .stats-section td {
-                white-space: normal; /* Allow text to wrap */
-                word-wrap: break-word; /* Break long words if necessary */
-                /* Reduce padding on mobile to create more space */
-                padding: 4px 2px;
-            }
-        }
-
-        .delete-pinch-hitter-btn.hidden {
-            display: none !important;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                margin: 5px;
-            }
-            .container {
-                padding: 5px;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            h2 {
-                font-size: 1.1rem;
-            }
-            th, td {
-                font-size: 12px;
-                padding: 5px 3px;
-            }
-            .table-actions button {
-                padding: 5px 8px;
-                font-size: 12px;
-                margin-left: 5px;
-            }
-            
-            /* Styles to fit inning score table without scrolling */
-            .game-info .table-wrapper {
-                overflow-x: hidden; /* Prevent scrolling on score table */
-            }
-            .inning-score-table {
-                table-layout: fixed; /* Ensure widths are respected */
-                width: 100%;
-            }
-            .inning-score-table th, .inning-score-table td {
-                font-size: 11px; /* Reduce font size */
-                padding: 4px 1px; /* Reduce padding */
-                min-width: 0; /* Unset min-width to allow shrinking */
-                white-space: nowrap; /* Prevent headers like '隊伍' from wrapping */
-                text-align: center; /* Ensure text is centered */
-            }
-            /* Override contenteditable styles for score table on small screens */
-            .inning-score-table td[contenteditable="true"] {
-                padding: 4px 1px !important; /* Force override padding */
-                min-width: 0 !important;     /* Force override min-width */
-            }
-            /* Explicitly set widths for score table columns */
-            .inning-score-table th:first-child, .inning-score-table td:first-child {
-                width: 16%; /* Team name column */
-                white-space: normal; /* Allow team names to wrap if needed */
-            }
-            .inning-score-table th:not(:first-child), .inning-score-table td:not(:first-child) {
-                width: 7%; /* Other 12 columns */
-            }
-        }
+        .modal-content h3 { margin-top: 0; color: #0056b3; text-align: center; }
+        .modal-form-group { margin-bottom: 15px; }
+        .modal-form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .modal-form-group select, .modal-form-group input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+        .modal-actions { text-align: right; margin-top: 20px; }
+        .modal-actions button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+        .modal-actions button#saveAtBatBtn { background-color: #007bff; color: white; }
+        .modal-actions button#cancelAtBatBtn { background-color: #6c757d; color: white; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-with-logo">
-            <img src="CBL.jpg" alt="CBL Logo">
+
+    <header class="header">
+        <div class="title-group">
+            <img src="CBL.jpg" alt="CBL">
             <h1>本週CBL紀錄表</h1>
         </div>
+        <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">首頁</a></li>
+            <li><a href="賽程戰績表.html">賽程戰績表</a></li>
+            <li><a href="single_game_record.html?game=game1">本週賽程紀錄表(beta)</a></li>
+            <li><a href="數據統計.html">選手數據查詢</a></li>
+            <li><a href="打者排行榜.html">打者排行榜</a></li>
+            <li><a href="投手排行榜.html">投手排行榜</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
 
         <div class="game-selector">
             <label for="game-select">選擇場次：</label>
@@ -590,7 +556,7 @@
         </div>
 
         <div class="admin-actions" style="text-align: center; margin-top: 20px;">
-            <a href="index.html" class="return-home-btn">返回首頁</a>
+            
             <button id="adminLoginBtn">管理者登入</button>
             <button id="saveChangesBtn" style="display: none;">儲存變更</button>
             <button id="resetRecordBtn" style="display: none; background-color: #dc3545;">恢復預設值</button>
@@ -1687,6 +1653,12 @@
             });
             updateGameScore();
         });
+    </script>
+    <script>
+        function toggleMenu() {
+            var links = document.getElementById('nav-links');
+            links.classList.toggle('active');
+        }
     </script>
 </body>
 </html>

@@ -10,57 +10,48 @@
             background-color: #f0f2f5;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .container {
+
+        /* --- Desktop Styles --- */
+        .header {
             text-align: center;
             background-color: #ffffff;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
-            max-width: 900px;
-            margin: auto;
+            border-bottom: 1px solid #e0e0e0;
         }
-        .title-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 35px;
+        .title-group {
+            display: inline-block; /* Centered by header's text-align */
         }
-        .title-container img {
-            width: 60px;
+        .title-group img {
+            width: 80px;
             height: auto;
             border-radius: 8px;
+            margin-bottom: 10px;
         }
-        .image-container {
-            margin-bottom: 20px;
-        }
-        .weekly-report-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
+        .title-group h1 {
             color: #0d47a1;
             margin: 0;
-            font-size: 1.8em;
+            font-size: 2em;
         }
-        ul {
-            list-style-type: none;
+        .navbar {
+            background-color: #ffffff;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            justify-content: center; /* Reverted to center */
+            flex-wrap: wrap; /* Re-added wrap */
         }
-        li {
-            margin: 0;
+        .nav-links li {
+            margin: 5px 10px;
         }
-        a {
+        .nav-links a {
             text-decoration: none;
             color: #1565c0;
             font-size: 0.9em;
@@ -70,69 +61,162 @@
             transition: all 0.3s ease;
             display: inline-block;
         }
-        a:hover {
+        .nav-links a:hover, .nav-links a.active {
             background-color: #1565c0;
             color: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .title-container {
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 20px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            a {
-                width: 80%;
-                margin: 0 auto;
-            }
+        .menu-toggle {
+            display: none; /* Hidden on desktop */
         }
 
-        @media (max-width: 480px) {
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+        }
+        .image-container {
+            margin-top: 20px;
+        }
+        .weekly-report-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- Mobile Styles --- */
+        @media (max-width: 992px) {
             body {
-                padding: 10px;
+                padding-top: 70px; /* Space for fixed header */
             }
-            .title-container img {
-                width: 50px;
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            h1 {
-                font-size: 1.3em;
+            .title-group {
+                display: flex;
+                align-items: center;
+                gap: 15px;
             }
-            a {
-                font-size: 0.8em;
-                padding: 10px 5px;
+            .title-group img {
+                width: 50px; /* Smaller logo for mobile header */
+                margin-bottom: 0;
+            }
+            .title-group h1 {
+                font-size: 1.2em; /* Smaller title for mobile header */
+            }
+            .navbar {
+                padding: 0;
+                border: none;
+            }
+            .menu-toggle {
+                display: block; /* Show hamburger */
+                background-color: transparent;
+                color: #0d47a1;
+                border: 2px solid #0d47a1;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.5em; /* Reverted to larger size */
+                padding: 0px 12px; /* Reverted to previous padding */
+                line-height: 1.2;
+            }
+            .menu-toggle:hover {
+                 background-color: #0d47a1;
+                 color: white;
+            }
+            .nav-links {
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 70px; /* Position below fixed header */
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                z-index: 999; /* Ensure menu is on top of other content */
+            }
+            .nav-links.active {
+                display: flex; /* Show when toggled */
+            }
+            .nav-links li {
+                width: 100%;
+                margin: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 15px;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid #f0f2f5;
+                color: #1565c0; /* Default link color in dropdown */
+                background-color: #ffffff; /* Default background in dropdown */
+                text-align: center; /* Center text in mobile dropdown */
+                transform: none; /* Reset desktop transform */
+                box-shadow: none; /* Reset desktop shadow */
+            }
+            .nav-links a:hover {
+                background-color: #f0f2f5; /* Light grey on hover */
+                color: #0d47a1; /* Ensure text is visible on hover */
+            }
+            .nav-links a.active {
+                background-color: #e3f2fd; /* Light blue for active item */
+                color: #0d47a1; /* Dark blue text for active item */
+                font-weight: bold; /* Make it stand out */
+            }
+            .nav-links li:last-child a {
+                border-bottom: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title-container">
-            <img src="CBL.jpg" alt="CBL" width="200" height="133">
+
+    <header class="header">
+        <div class="title-group">
+            <img src="CBL.jpg" alt="CBL">
             <h1>台中市CBL企業交流聯盟</h1>
         </div>
-        <ul>
+        <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">首頁</a></li>
             <li><a href="賽程戰績表.html">賽程戰績表</a></li>
             <li><a href="single_game_record.html?game=game1">本週賽程紀錄表(beta)</a></li>
             <li><a href="數據統計.html">選手數據查詢</a></li>
             <li><a href="打者排行榜.html">打者排行榜</a></li>
             <li><a href="投手排行榜.html">投手排行榜</a></li>
         </ul>
+    </nav>
+
+    <div class="container">
         <div class="image-container">
             <img src="每週戰況.jpg" alt="每週戰況" class="weekly-report-image">
         </div>
     </div>
+
+    <script>
+        function toggleMenu() {
+            var links = document.getElementById('nav-links');
+            // This script now correctly toggles the UL, which is styled
+            // differently on desktop vs mobile by the CSS.
+            links.classList.toggle('active');
+        }
+    </script>
+
 </body>
 </html>
