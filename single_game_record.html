@@ -171,7 +171,7 @@
 
             /* Table adjustments for mobile */
             .table-wrapper {
-                overflow-x: hidden; /* Prevent horizontal scrolling for tables */
+                overflow-x: auto; /* Prevent horizontal scrolling for tables */
             }
             .stats-section table th,
             .stats-section table td,
@@ -182,14 +182,9 @@
                 white-space: normal; /* Allow text to wrap */
                 word-break: break-word; /* Break long words */
             }
-            .stats-section table th,
-            .inning-score-table th {
-                height: auto; /* Allow header rows to adjust height */
-            }
-            /* Specific adjustments for name column might be needed if it's too wide */
-            .stats-section table .fixed-col:nth-child(3), /* Name column */
-            .stats-section table .player-name-cell {
-                min-width: 40px; /* Give name a minimal width */
+            .team-section .stats-section {
+                flex: 1 1 100%; /* Allow sections to take full width and stack */
+                min-width: unset; /* Remove min-width constraint */
             }
         }
         /* Styles from original page */
