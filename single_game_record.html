@@ -194,11 +194,13 @@
         }
         .modal-content {
             background-color: #fff;
-            padding: 25px;
+            padding: 12px; /* Original 25px reduced by 50% */
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
+            width: 45%; /* Original 90% reduced by 50% */
+            max-width: 200px; /* Original 400px reduced by 50% */
+            max-height: 85vh; /* 確保在小螢幕上不會過高 */
+            overflow-y: auto;  /* 當內容溢出時啟用垂直捲動 */
         }
         .modal-content h3 {
             margin-top: 0;
@@ -218,6 +220,19 @@
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ddd;
+        }
+        .inline-input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .inline-input-group label {
+            display: inline; /* Override display: block */
+            margin-bottom: 0;
+            white-space: nowrap; /* Prevent label from wrapping */
+        }
+        .inline-input-group input {
+            width: 70px; /* Set a specific, smaller width */
         }
         .modal-actions {
             text-align: right;
@@ -267,6 +282,29 @@
                 font-size: 14px;
             }
         }
+
+        @media (max-width: 768px) {
+            .table-wrapper {
+                overflow-x: auto; /* Allow horizontal scroll */
+            }
+
+            .stats-section table {
+                table-layout: fixed; /* Force table to obey its width */
+                width: 100%;
+            }
+
+            .stats-section th, .stats-section td {
+                white-space: normal; /* Allow text to wrap */
+                word-wrap: break-word; /* Break long words if necessary */
+                /* Reduce padding on mobile to create more space */
+                padding: 4px 2px;
+            }
+        }
+
+        .delete-pinch-hitter-btn.hidden {
+            display: none !important;
+        }
+
         @media (max-width: 480px) {
             body {
                 margin: 5px;
@@ -289,12 +327,34 @@
                 font-size: 12px;
                 margin-left: 5px;
             }
-            /* Give inning score table cells a fixed width to prevent squishing */
-            .inning-score-table th, .inning-score-table td {
-                min-width: 26px;
+            
+            /* Styles to fit inning score table without scrolling */
+            .game-info .table-wrapper {
+                overflow-x: hidden; /* Prevent scrolling on score table */
             }
+            .inning-score-table {
+                table-layout: fixed; /* Ensure widths are respected */
+                width: 100%;
+            }
+            .inning-score-table th, .inning-score-table td {
+                font-size: 11px; /* Reduce font size */
+                padding: 4px 1px; /* Reduce padding */
+                min-width: 0; /* Unset min-width to allow shrinking */
+                white-space: nowrap; /* Prevent headers like '隊伍' from wrapping */
+                text-align: center; /* Ensure text is centered */
+            }
+            /* Override contenteditable styles for score table on small screens */
+            .inning-score-table td[contenteditable="true"] {
+                padding: 4px 1px !important; /* Force override padding */
+                min-width: 0 !important;     /* Force override min-width */
+            }
+            /* Explicitly set widths for score table columns */
             .inning-score-table th:first-child, .inning-score-table td:first-child {
-                min-width: 50px; /* Team name */
+                width: 16%; /* Team name column */
+                white-space: normal; /* Allow team names to wrap if needed */
+            }
+            .inning-score-table th:not(:first-child), .inning-score-table td:not(:first-child) {
+                width: 7%; /* Other 12 columns */
             }
         }
     </style>
@@ -345,34 +405,34 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="team-name">主隊</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
+                        <td class="team-name">客隊</td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
                     </tr>
                     <tr>
-                        <td class="team-name">客隊</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
-                        <td contenteditable="false">0</td>
+                        <td class="team-name">主隊</td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
+                        <td contenteditable="false"></td>
                     </tr>
                 </tbody>
             </table>
@@ -386,26 +446,27 @@
                 <table>
                     <thead>
                         <tr>
+                            <th class="fixed-col">E</th>
                             <th class="fixed-col">棒次</th>
                             <th class="fixed-col">背號</th>
                             <th class="fixed-col">姓名</th>
-                            <th class="at-bat-column">第一打席</th>
-                            <th class="at-bat-column">第二打席</th>
-                            <th class="at-bat-column">第三打席</th>
-                            <th class="at-bat-column">第四打席</th>
-                            <th class="at-bat-column">第五打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="fixed-col-data">1</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">2</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">3</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">4</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">5</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">6</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">7</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">8</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">9</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">1</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">2</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">3</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">4</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">5</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">6</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">7</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">8</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="home"></td><td class="fixed-col-data">9</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
                     </tbody>
                 </table>
                 </div>
@@ -423,19 +484,26 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>背號</th>
-                            <th>姓名</th>
+                            <th class="fixed-col">E</th>
+                            <th class="fixed-col">背號</th>
+                            <th class="fixed-col">姓名</th>
+                            <th>局數</th>
                             <th>投球數</th>
-                            <th>投球局數</th>
+                            <th>打席數</th>
+                            <th>打數</th>
                             <th>被安打</th>
-                            <th>失分</th>
-                            <th>責失</th>
-                            <th>保送</th>
+                            <th>被全壘打</th>
+                            <th>四壞球</th>
+                            <th>觸身球</th>
                             <th>三振</th>
+                            <th>暴投</th>
+                            <th>犯規</th>
+                            <th>失分</th>
+                            <th>自責分</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td></tr>
+                        <tr><td contenteditable="false" class="pitcher-error-cell" data-team="home"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td></tr>
                     </tbody>
                 </table>
                 </div>
@@ -453,26 +521,27 @@
                 <table>
                     <thead>
                         <tr>
+                            <th class="fixed-col">E</th>
                             <th class="fixed-col">棒次</th>
                             <th class="fixed-col">背號</th>
                             <th class="fixed-col">姓名</th>
-                            <th class="at-bat-column">第一打席</th>
-                            <th class="at-bat-column">第二打席</th>
-                            <th class="at-bat-column">第三打席</th>
-                            <th class="at-bat-column">第四打席</th>
-                            <th class="at-bat-column">第五打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
+                            <th class="at-bat-column">打席</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="fixed-col-data">1</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">2</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">3</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">4</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">5</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">6</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">7</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">8</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
-                        <tr><td class="fixed-col-data">9</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">1</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">2</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">3</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">4</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">5</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">6</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">7</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">8</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
+                        <tr><td contenteditable="false" class="error-cell" data-team="away"></td><td class="fixed-col-data">9</td><td contenteditable="false" class="fixed-col-data"></td><td contenteditable="false" class="fixed-col-data"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td><td class="at-bat-cell"></td></tr>
                     </tbody>
                 </table>
                 </div>
@@ -490,19 +559,26 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>背號</th>
-                            <th>姓名</th>
+                            <th class="fixed-col">E</th>
+                            <th class="fixed-col">背號</th>
+                            <th class="fixed-col">姓名</th>
+                            <th>局數</th>
                             <th>投球數</th>
-                            <th>投球局數</th>
+                            <th>打席數</th>
+                            <th>打數</th>
                             <th>被安打</th>
-                            <th>失分</th>
-                            <th>責失</th>
-                            <th>保送</th>
+                            <th>被全壘打</th>
+                            <th>四壞球</th>
+                            <th>觸身球</th>
                             <th>三振</th>
+                            <th>暴投</th>
+                            <th>犯規</th>
+                            <th>失分</th>
+                            <th>自責分</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td></tr>
+                        <tr><td contenteditable="false" class="pitcher-error-cell" data-team="away"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td><td contenteditable="false"></td></tr>
                     </tbody>
                 </table>
                 </div>
@@ -530,13 +606,39 @@
                 <label for="atBatResult">打席結果：</label>
                 <select id="atBatResult"></select>
             </div>
-            <div class="modal-form-group">
+            <div class="modal-form-group inline-input-group">
                 <label for="atBatRbi">打點 (RBI)：</label>
                 <input type="number" id="atBatRbi" min="0" value="0">
             </div>
-            <div class="modal-form-group">
+            <div class="modal-form-group inline-input-group">
                 <label for="atBatSb">盜壘 (SB)：</label>
                 <input type="number" id="atBatSb" min="0" value="0">
+            </div>
+            <div class="modal-form-group">
+                <label style="display: inline-flex; align-items: center; cursor: pointer;">
+                    盜壘失敗 (CS)
+                    <input type="checkbox" id="atBatCs" value="1" style="margin-left: 8px;">
+                </label>
+            </div>
+            <div class="modal-form-group">
+                <label style="display: inline-flex; align-items: center; cursor: pointer;">
+                    得分 (R)
+                    <input type="checkbox" id="atBatRun" value="1" style="margin-left: 8px;">
+                </label>
+            </div>
+            <div class="modal-form-group">
+                <label style="display: inline-flex; align-items: center; cursor: pointer;">
+                    此打席結束本半局
+                    <input type="checkbox" id="endsInningCheckbox" style="margin-left: 8px;">
+                </label>
+            </div>
+            <div class="modal-form-group inline-input-group" id="inningNumberGroup" style="display: none;">
+                <label for="inningNumberInput">結束局數：</label>
+                <input type="number" id="inningNumberInput" min="1" placeholder="請輸入局數">
+            </div>
+            <div class="modal-form-group inline-input-group" id="lobNumberGroup" style="display: none;">
+                <label for="atBatLob">本局結束殘壘數：</label>
+                <input type="number" id="atBatLob" min="0" value="0">
             </div>
             <div class="modal-actions">
                 <button id="saveAtBatBtn">儲存</button>
@@ -570,7 +672,7 @@
         const adminUID = "NBbLf2yAyZWW9OGfAGwLOnL7V3v1";
         let currentAdminUser = null;
         let activeAtBatCell = null; // Holds the currently editing table cell
-        const atBatOptions = ["", "1安", "2安", "3安", "全壘打", "三振", "保送", "觸身", "野選", "失誤", "雙殺", "不死三振", "滾地", "飛球", "高飛犧牲打", "違規", "三殺"];
+        const atBatOptions = ["", "1安", "2安", "3安", "全壘打", "三振", "保送", "觸身", "野選", "失誤", "雙殺", "不死三振", "滾地", "飛球", "高飛犧牲打", "犧牲觸擊", "違規", "三殺"];
         let playerRoster = { "所有球員": [] };
 
         // --- Function Definitions ---
@@ -591,210 +693,187 @@
             const saveChangesBtn = document.getElementById('saveChangesBtn');
             const resetRecordBtn = document.getElementById('resetRecordBtn');
             const actionButtons = document.querySelectorAll('.table-actions button');
+            const deletePinchHitterBtns = document.querySelectorAll('.delete-pinch-hitter-btn');
 
-            // First, reset all contenteditable to false to ensure clean state
             document.querySelectorAll('[contenteditable]').forEach(el => el.setAttribute('contenteditable', 'false'));
+            document.querySelectorAll('.stats-section table tbody tr > td:first-child').forEach(cell => {
+                cell.style.cursor = 'default';
+            });
             
             if (isAdmin) {
                 adminLoginBtn.textContent = `登出 (${user.displayName})`;
                 saveChangesBtn.style.display = 'inline-block';
                 resetRecordBtn.style.display = 'inline-block';
                 
-                // Only make specific elements editable
                 document.querySelectorAll('td.fixed-col-data, #gameDate, #gameVenue, .inning-score-table td:not(.team-name)').forEach(el => {
                     el.setAttribute('contenteditable', 'true');
                 });
-                 document.querySelectorAll('.team-section .stats-section td:not(.player-name-cell):not(.at-bat-cell):not(.fixed-col-data)').forEach(el => {
+                document.querySelectorAll('.team-section .stats-section td:not(.player-name-cell):not(.at-bat-cell):not(.fixed-col-data)').forEach(el => {
                     el.setAttribute('contenteditable', 'true');
                 });
                 document.querySelectorAll('.team-section .fixed-col-data').forEach(el => {
                     el.setAttribute('contenteditable', 'true');
                 });
 
-
                 document.querySelectorAll('.table-actions').forEach(div => {
                     div.style.display = 'block';
                 });
                 actionButtons.forEach(button => button.disabled = false);
+                document.querySelectorAll('.stats-section table tbody tr > td:first-child').forEach(cell => {
+                    cell.style.cursor = 'pointer';
+                });
+                deletePinchHitterBtns.forEach(btn => btn.classList.remove('hidden')); // 顯示刪除按鈕
             } else {
                 adminLoginBtn.textContent = "管理者登入 (Google)";
                 saveChangesBtn.style.display = 'none';
                 resetRecordBtn.style.display = 'none';
-                // All contenteditable elements are already set to false above
                 document.querySelectorAll('.table-actions').forEach(div => {
                     div.style.display = 'none';
                 });
                 actionButtons.forEach(button => button.disabled = true);
+                deletePinchHitterBtns.forEach(btn => btn.classList.add('hidden')); // 隱藏刪除按鈕
             }
         }
 
-                async function loadRecordData() {
-
-                    const docRef = doc(db, "baseballRecords", gameId);
-
-                    const docSnap = await getDoc(docRef);
-
-                    const isAdmin = currentAdminUser && currentAdminUser.uid === adminUID;
-
-        
-
-                    if (docSnap.exists()) {
-
-                        const data = docSnap.data();
-
-                        document.getElementById('gameDate').textContent = data.gameInfo.date;
-
-                        document.getElementById('homeTeam').textContent = data.gameInfo.homeTeamName;
-
-                        document.getElementById('awayTeam').textContent = data.gameInfo.awayTeamName;
-
-                        document.getElementById('gameVenue').textContent = data.gameInfo.venue;
-
-                        document.getElementById('gameScore').textContent = data.gameInfo.gameScore;
-
-                        syncAllTeamNames('主隊', data.gameInfo.homeTeamName);
-
-                        syncAllTeamNames('客隊', data.gameInfo.awayTeamName);
-
-        
-
-                        const inningRows = document.querySelectorAll('.inning-score-table tbody tr');
-
-                        if (data.inningScores) {
-
-                            data.inningScores.forEach((teamScore, teamIndex) => {
-
-                                const row = inningRows[teamIndex];
-
-                                if (!row) return;
-
-                                teamScore.innings.forEach((score, i) => { row.querySelectorAll('td')[i + 1].textContent = score; });
-
-                                row.querySelectorAll('td')[10].textContent = teamScore.R;
-
-                                row.querySelectorAll('td')[11].textContent = teamScore.H;
-
-                                row.querySelectorAll('td')[12].textContent = teamScore.E;
-
-                            });
-
-                        }
-
-        
-
-                        ['home', 'away'].forEach((teamType, teamIndex) => {
-
-                            const battersData = (teamType === 'home' ? data.homeBatters : data.awayBatters) || [];
-
-                            const tableBody = document.querySelectorAll('.stats-section table tbody')[teamIndex * 2];
-
-                            tableBody.innerHTML = '';
-
-                            
-
-                            let maxAtBats = 5;
-
-                            if (battersData.length > 0) {
-
-                                const lengths = battersData.map(b => (b.atBats || []).length);
-
-                                maxAtBats = Math.max(5, ...lengths);
-
-                            }
-
-        
-
-                            battersData.forEach(batter => {
-
-                                const newRow = document.createElement('tr');
-
-                                const atBatCells = Array.from({ length: maxAtBats }, (_, i) => {
-
-                                    const atBat = (batter.atBats || [])[i] || {};
-
-                                    const atBatData = (typeof atBat === 'string') ? { result: atBat, rbi: 0, sb: 0 } : { result: atBat.result || '', rbi: atBat.rbi || 0, sb: atBat.sb || 0 };
-
-                                    return `<td class="at-bat-cell" data-result="${atBatData.result}" data-rbi="${atBatData.rbi}" data-sb="${atBatData.sb}">${formatAtBatText(atBatData)}</td>`;
-
-                                }).join('');
-
-                                newRow.innerHTML = `<td class="fixed-col-data" contenteditable="${isAdmin}">${batter.battingOrder || ''}</td><td class="fixed-col-data" contenteditable="${isAdmin}">${batter.jerseyNumber || ''}</td><td class="player-name-cell">${batter.name || ''}</td>${atBatCells}`;
-
-                                tableBody.appendChild(newRow);
-
-                            });
-
-                            
-
-                            const theadRow = tableBody.closest('table').querySelector('thead tr');
-
-                            let currentAtBatCols = theadRow.querySelectorAll('th.at-bat-column').length;
-
-                            while (currentAtBatCols > maxAtBats) { theadRow.querySelector('th.at-bat-column:last-of-type').remove(); currentAtBatCols--; }
-
-                            while (currentAtBatCols < maxAtBats) {
-
-                                const newTh = document.createElement('th');
-
-                                newTh.textContent = `第${convertToChineseNumeral(currentAtBatCols + 1)}打席`;
-
-                                newTh.classList.add('at-bat-column');
-
-                                theadRow.appendChild(newTh);
-
-                                currentAtBatCols++;
-
-                            }
-
-                            setupAtBatCellListeners(tableBody);
-
-                            setupNameCellListeners(tableBody);
-
-                        });
-
-        
-
-                        ['home', 'away'].forEach((teamType, teamIndex) => {
-
-                            const pitchersData = (teamType === 'home' ? data.homePitchers : data.awayPitchers) || [];
-
-                            const tableBody = document.querySelectorAll('.stats-section table tbody')[teamIndex * 2 + 1];
-
-                            tableBody.innerHTML = '';
-
-        
-
-                            pitchersData.forEach(pitcher => {
-
-                                const newRow = document.createElement('tr');
-
-                                newRow.innerHTML = `<td contenteditable="${isAdmin}">${pitcher.jerseyNumber || ''}</td><td class="player-name-cell">${pitcher.name || ''}</td><td contenteditable="${isAdmin}">${pitcher.pitchCount || ''}</td><td contenteditable="${isAdmin}">${pitcher.inningsPitched || ''}</td><td contenteditable="${isAdmin}">${pitcher.hitsAllowed || ''}</td><td contenteditable="${isAdmin}">${pitcher.runsAllowed || ''}</td><td contenteditable="${isAdmin}">${pitcher.earnedRuns || ''}</td><td contenteditable="${isAdmin}">${pitcher.walks || ''}</td><td contenteditable="${isAdmin}">${pitcher.strikeouts || ''}</td>`;
-
-                                tableBody.appendChild(newRow);
-
-                            });
-
-                            setupNameCellListeners(tableBody.parentElement); // Call on table to get all name cells
-
-                        });
-
-        
-
-                        document.querySelectorAll('.inning-score-table tbody tr').forEach(row => calculateInningRuns(row));
-
-                        updateGameScore();
-
-                    } else {
-
-                        console.log(`No document for gameId: ${gameId}! Using default values.`);
-
-                        setupAtBatCellListeners(document.body);
-
-                        setupNameCellListeners(document.body);
-
+        async function loadRecordData() {
+            const docRef = doc(db, "baseballRecords", gameId);
+            const docSnap = await getDoc(docRef);
+            const isAdmin = currentAdminUser && currentAdminUser.uid === adminUID;
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('gameDate').textContent = data.gameInfo.date;
+                document.getElementById('homeTeam').textContent = data.gameInfo.homeTeamName;
+                document.getElementById('awayTeam').textContent = data.gameInfo.awayTeamName;
+                document.getElementById('gameVenue').textContent = data.gameInfo.venue;
+                document.getElementById('gameScore').textContent = data.gameInfo.gameScore;
+                syncAllTeamNames('主隊', data.gameInfo.homeTeamName);
+                syncAllTeamNames('客隊', data.gameInfo.awayTeamName);
+
+                const inningRows = document.querySelectorAll('.inning-score-table tbody tr');
+                if (data.inningScores) {
+                    data.inningScores.forEach((teamScore, teamIndex) => {
+                        const row = inningRows[teamIndex];
+                        if (!row) return;
+                        teamScore.innings.forEach((score, i) => { row.querySelectorAll('td')[i + 1].textContent = score; });
+                        row.querySelectorAll('td')[10].textContent = teamScore.R;
+                        row.querySelectorAll('td')[11].textContent = teamScore.H;
+                        row.querySelectorAll('td')[12].textContent = teamScore.E;
+                    });
+                }
+
+                ['home', 'away'].forEach((teamType, teamIndex) => {
+                    const battersData = (teamType === 'home' ? data.homeBatters : data.awayBatters) || [];
+                    const tableBody = document.querySelectorAll('.stats-section table tbody')[teamIndex * 2];
+                    tableBody.innerHTML = '';
+                    
+                    let maxAtBats = 5;
+                    if (battersData.length > 0) {
+                        const lengths = battersData.map(b => (b.atBats || []).length);
+                        maxAtBats = Math.max(5, ...lengths);
                     }
 
-                }
+                    battersData.forEach(batter => {
+                        const newRow = document.createElement('tr');
+                        const atBatCells = Array.from({ length: maxAtBats }, (_, i) => {
+                            const atBat = (batter.atBats || [])[i] || {};
+                            const atBatData = (typeof atBat === 'string') 
+                                ? { result: atBat, rbi: 0, sb: 0, cs: false, run: false, endsInning: false, inningNumber: null, lob: 0 } 
+                                : { result: atBat.result || '', rbi: atBat.rbi || 0, sb: atBat.sb || 0, cs: atBat.cs === true, run: atBat.run === true, endsInning: atBat.endsInning || false, inningNumber: atBat.inningNumber || null, lob: atBat.lob || 0 };
+                            
+                            const endsInningAttr = atBatData.endsInning ? `data-ends-inning="true"` : '';
+                            const inningNumAttr = atBatData.inningNumber ? `data-inning-number="${atBatData.inningNumber}"` : '';
+                            const lobAttr = atBatData.lob ? `data-lob="${atBatData.lob}"` : '';
+                            return `<td class="at-bat-cell" data-result="${atBatData.result}" data-rbi="${atBatData.rbi}" data-sb="${atBatData.sb}" data-cs="${atBatData.cs}" data-run="${atBatData.run}" ${endsInningAttr} ${inningNumAttr} ${lobAttr}>${formatAtBatText(atBatData)}</td>`;
+                        }).join('');
+                        let battingOrderHtml = batter.battingOrder || '';
+                        const isPinchHitter = battingOrderHtml.includes('代打');
+
+                        // 如果是代打，則加上刪除按鈕 (預設隱藏)
+                        if (isPinchHitter && isAdmin) {
+                            const hiddenClass = isAdmin ? '' : ' hidden';
+                            const deleteButtonHtml = ` <button class="delete-pinch-hitter-btn${hiddenClass}" title="移除此代打" style="cursor:pointer; color:red; background:none; border:none; font-weight:bold; font-size:16px; padding:0 5px;">&times;</button>`;
+                            battingOrderHtml += deleteButtonHtml;
+                        }
+
+                        newRow.innerHTML = `<td contenteditable="${isAdmin}" class="error-cell" data-team="${teamType}">${batter.fieldingErrors || ''}</td><td class="fixed-col-data" contenteditable="${isAdmin}">${battingOrderHtml}</td><td class="fixed-col-data" contenteditable="${isAdmin}">${batter.jerseyNumber || ''}</td><td class="player-name-cell">${batter.name || ''}</td>${atBatCells}`;
+                        tableBody.appendChild(newRow);
+
+                        // 為從資料庫載入的代打列的刪除按鈕加上監聽
+                        const deleteBtn = newRow.querySelector('.delete-pinch-hitter-btn');
+                        if (deleteBtn) {
+                            addDeleteButtonListener(deleteBtn);
+                        }
+                    });
+
+                    // 為 E 欄位加上事件監聽
+                    tableBody.querySelectorAll('.error-cell').forEach(cell => {
+                        cell.addEventListener('input', () => updateTeamErrors(cell.dataset.team));
+                    });
+                    updateTeamErrors(teamType); // 初始計算
+                    
+                    const theadRow = tableBody.closest('table').querySelector('thead tr');
+                    let currentAtBatCols = theadRow.querySelectorAll('th.at-bat-column').length;
+                    while (currentAtBatCols > maxAtBats) { theadRow.querySelector('th.at-bat-column:last-of-type').remove(); currentAtBatCols--; }
+                    while (currentAtBatCols < maxAtBats) {
+                        const newTh = document.createElement('th');
+                        newTh.textContent = `打席`;
+                        newTh.classList.add('at-bat-column');
+                        theadRow.appendChild(newTh);
+                        currentAtBatCols++;
+                    }
+                    setupAtBatCellListeners(tableBody);
+                    setupNameCellListeners(tableBody);
+                    setupBattingOrderListeners(tableBody);
+                });
+
+                ['home', 'away'].forEach((teamType, teamIndex) => {
+                    const pitchersData = (teamType === 'home' ? data.homePitchers : data.awayPitchers) || [];
+                    const tableBody = document.querySelectorAll('.stats-section table tbody')[teamIndex * 2 + 1];
+                    tableBody.innerHTML = '';
+
+                    pitchersData.forEach(pitcher => {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td contenteditable="${isAdmin}" class="pitcher-error-cell" data-team="${teamType}">${pitcher.fieldingErrors || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.jerseyNumber || ''}</td>
+                            <td class="player-name-cell">${pitcher.name || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.inningsPitched || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.pitchCount || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.battersFaced || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.atBatsCount || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.hitsAllowed || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.homeRunsAllowed || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.walks || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.hitByPitch || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.strikeouts || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.wildPitches || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.balks || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.runsAllowed || ''}</td>
+                            <td contenteditable="${isAdmin}">${pitcher.earnedRuns || ''}</td>
+                        `;
+                        tableBody.appendChild(newRow);
+
+                        // 為新加的投手錯誤儲存格加上監聽
+                        const errorCell = newRow.querySelector('.pitcher-error-cell');
+                        if(errorCell) {
+                            errorCell.addEventListener('input', () => updateTeamErrors(teamType));
+                        }
+                    });
+                    setupNameCellListeners(tableBody.parentElement);
+                });
+
+                renderInningSeparators(); // 在載入所有資料後繪製分隔線
+                document.querySelectorAll('.inning-score-table tbody tr').forEach(row => calculateInningRuns(row));
+                updateGameScore();
+
+            } else {
+                console.log(`No document for gameId: ${gameId}! Using default values.`);
+                setupAtBatCellListeners(document.body);
+                setupNameCellListeners(document.body);
+                setupBattingOrderListeners(document.body);
+            }
+        }
 
         async function saveRecordData() {
             if (!currentAdminUser || currentAdminUser.uid !== adminUID) {
@@ -828,14 +907,32 @@
                 const batters = [];
                 batterTableBody.querySelectorAll('tr').forEach(row => {
                     const cells = row.querySelectorAll('td');
-                    const atBats = Array.from(row.querySelectorAll('.at-bat-cell')).map(cell => ({
-                        result: cell.dataset.result || '',
-                        rbi: parseInt(cell.dataset.rbi) || 0,
-                        sb: parseInt(cell.dataset.sb) || 0,
-                    }));
+                    const atBats = [];
+                    // 從第5個儲存格（索引為4）開始，那裡是第一個打席的位置
+                    for (let i = 4; i < cells.length; i++) {
+                        const cell = cells[i];
+                        if (cell.classList.contains('at-bat-cell')) {
+                            atBats.push({
+                                result: cell.dataset.result || '',
+                                rbi: parseInt(cell.dataset.rbi) || 0,
+                                sb: parseInt(cell.dataset.sb) || 0,
+                                cs: cell.dataset.cs === 'true', // Correctly save as boolean
+                                run: cell.dataset.run === 'true', // Save run as boolean
+                                endsInning: cell.dataset.endsInning === 'true',
+                                inningNumber: cell.dataset.inningNumber || null,
+                                lob: parseInt(cell.dataset.lob) || 0
+                            });
+                        } else {
+                            // 這是一個被清空的儲存格，推送一筆空紀錄
+                            atBats.push({ result: '', rbi: 0, sb: 0, endsInning: false, inningNumber: null });
+                        }
+                    }
                     batters.push({
-                        battingOrder: cells[0].textContent, jerseyNumber: cells[1].textContent,
-                        name: cells[2].textContent, atBats: atBats
+                        fieldingErrors: cells[0].textContent, // 新增守備失誤欄位
+                        battingOrder: cells[1].textContent, 
+                        jerseyNumber: cells[2].textContent,
+                        name: cells[3].textContent, 
+                        atBats: atBats
                     });
                 });
 
@@ -844,15 +941,22 @@
                 pitcherTableBody.querySelectorAll('tr').forEach(row => {
                     const cells = row.querySelectorAll('td');
                     pitchers.push({
-                        jerseyNumber: cells[0].textContent, 
-                        name: cells[1].textContent, 
-                        pitchCount: cells[2].textContent,
-                        inningsPitched: cells[3].textContent, 
-                        hitsAllowed: cells[4].textContent, 
-                        runsAllowed: cells[5].textContent, 
-                        earnedRuns: cells[6].textContent, 
-                        walks: cells[7].textContent, 
-                        strikeouts: cells[8].textContent
+                        fieldingErrors: cells[0].textContent, // E
+                        jerseyNumber: cells[1].textContent, // 背號
+                        name: cells[2].textContent, // 姓名
+                        inningsPitched: cells[3].textContent, // 局數
+                        pitchCount: cells[4].textContent, // 投球數
+                        battersFaced: cells[5].textContent, // 打席數
+                        atBatsCount: cells[6].textContent, // 打數
+                        hitsAllowed: cells[7].textContent, // 被安打
+                        homeRunsAllowed: cells[8].textContent, // 被全壘打
+                        walks: cells[9].textContent, // 四壞球
+                        hitByPitch: cells[10].textContent, // 觸身球
+                        strikeouts: cells[11].textContent, // 三振
+                        wildPitches: cells[12].textContent, // 暴投
+                        balks: cells[13].textContent, // 犯規
+                        runsAllowed: cells[14].textContent, // 失分
+                        earnedRuns: cells[15].textContent // 自責分
                     });
                 });
 
@@ -898,10 +1002,36 @@
             const details = [];
             if (data.rbi > 0) details.push(`${data.rbi}打點`);
             if (data.sb > 0) details.push(`${data.sb}盜壘`);
+            if (data.cs) details.push(`盜壘失敗`); // Changed condition to check for boolean true
+            if (data.run) details.push(`得分`); // Add run info
             if (details.length > 0) {
                 text += ` (${details.join(', ')})`;
             }
             return text;
+        }
+
+        function updateTeamErrors(teamType) {
+            let totalErrors = 0;
+            // 找出指定隊伍的所有打者失誤儲存格
+            document.querySelectorAll(`.error-cell[data-team="${teamType}"]`).forEach(cell => {
+                totalErrors += parseInt(cell.textContent, 10) || 0;
+            });
+            // 找出指定隊伍的所有投手失誤儲存格
+            document.querySelectorAll(`.pitcher-error-cell[data-team="${teamType}"]`).forEach(cell => {
+                totalErrors += parseInt(cell.textContent, 10) || 0;
+            });
+
+            // 找到對應的得分表儲存格並更新
+            // 假設主隊在得分表中是第二列(索引1)，客隊是第一列(索引0)
+            const teamRowIndex = (teamType === 'home') ? 1 : 0; 
+            const scoreTable = document.querySelector('.inning-score-table');
+            if (scoreTable) {
+                // 'E' 是第13個欄位 (索引12)
+                const errorCell = scoreTable.rows[teamRowIndex + 1].cells[12]; 
+                if (errorCell) {
+                    errorCell.textContent = totalErrors;
+                }
+            }
         }
 
         function openAtBatModal(cell) {
@@ -910,6 +1040,13 @@
             const resultSelect = document.getElementById('atBatResult');
             const rbiInput = document.getElementById('atBatRbi');
             const sbInput = document.getElementById('atBatSb');
+            const csInput = document.getElementById('atBatCs'); // Changed to checkbox
+            const runInput = document.getElementById('atBatRun'); // New checkbox for Run
+            const endsInningCheckbox = document.getElementById('endsInningCheckbox');
+            const inningNumberGroup = document.getElementById('inningNumberGroup');
+            const inningNumberInput = document.getElementById('inningNumberInput');
+            const lobNumberGroup = document.getElementById('lobNumberGroup');
+            const atBatLobInput = document.getElementById('atBatLob');
 
             resultSelect.innerHTML = '';
             atBatOptions.forEach(optionText => {
@@ -922,6 +1059,22 @@
             resultSelect.value = cell.dataset.result || '';
             rbiInput.value = cell.dataset.rbi || 0;
             sbInput.value = cell.dataset.sb || 0;
+            csInput.checked = cell.dataset.cs === 'true'; // Handle checkbox state
+            runInput.checked = cell.dataset.run === 'true'; // Handle new run checkbox state
+            endsInningCheckbox.checked = cell.dataset.endsInning === 'true';
+
+            // 根據checkbox狀態顯示/隱藏並填入局數和殘壘
+            if (endsInningCheckbox.checked) {
+                inningNumberGroup.style.display = 'block';
+                lobNumberGroup.style.display = 'block';
+                inningNumberInput.value = cell.dataset.inningNumber || '';
+                atBatLobInput.value = cell.dataset.lob || 0;
+            } else {
+                inningNumberGroup.style.display = 'none';
+                lobNumberGroup.style.display = 'none';
+                inningNumberInput.value = '';
+                atBatLobInput.value = 0;
+            }
 
             modal.style.display = 'flex';
         }
@@ -931,17 +1084,85 @@
             activeAtBatCell = null;
         }
 
+        function renderInningSeparators() {
+            // 首先，重置所有先前的分隔線樣式和文字
+            // 移除舊的inning-end-text span
+            document.querySelectorAll('.inning-end-text').forEach(span => {
+                span.remove();
+            });
+            // 移除所有打席儲存格上先前的border-bottom樣式
+            document.querySelectorAll('.at-bat-cell').forEach(cell => {
+                cell.style.borderBottom = ''; // 清除inline樣式
+            });
+
+            // 處理主隊和客隊的打者紀錄表
+            document.querySelectorAll('.team-section .stats-section:nth-child(odd)').forEach(section => {
+                const table = section.querySelector('table');
+                if (!table || !table.querySelector('th.at-bat-column')) return; // 確保這是打者表格
+
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    // 找出該列中所有結束半局的儲存格
+                    const inningEndCells = row.querySelectorAll('.at-bat-cell[data-ends-inning="true"]');
+                    
+                    inningEndCells.forEach(inningEndCell => {
+                        const inningNumber = inningEndCell.dataset.inningNumber;
+                        if (!inningNumber) return; // 如果沒有局數，則不渲染
+
+                        // 直接為結束該半局的儲存格加上border-bottom
+                        inningEndCell.style.borderBottom = '2px solid #0056b3';
+
+                        // 建立要附加的文字span
+                        const textSpan = document.createElement('span');
+                        textSpan.classList.add('inning-end-text'); // 標記以便於移除
+                        textSpan.style.color = '#0056b3';
+                        textSpan.style.fontWeight = 'bold';
+                        textSpan.style.fontSize = '0.9em';
+                        textSpan.style.marginLeft = '8px';
+                        
+                        const lob = inningEndCell.dataset.lob;
+                        let endText = `${inningNumber}局結束`;
+                        if (lob && parseInt(lob, 10) > 0) {
+                            endText += `, ${lob}殘壘`;
+                        }
+                        textSpan.textContent = `(${endText})`;
+                        
+                        // 將文字span附加到結束該局的儲存格中
+                        inningEndCell.appendChild(textSpan);
+                    });
+                });
+            });
+        }
+
         function saveAtBatModal() {
             if (!activeAtBatCell) return;
             const result = document.getElementById('atBatResult').value;
             const rbi = parseInt(document.getElementById('atBatRbi').value) || 0;
             const sb = parseInt(document.getElementById('atBatSb').value) || 0;
+            const cs = document.getElementById('atBatCs').checked; // Get boolean from checkbox
+            const run = document.getElementById('atBatRun').checked; // Get boolean from new run checkbox
+            const endsInning = document.getElementById('endsInningCheckbox').checked;
+            const inningNumber = document.getElementById('inningNumberInput').value;
+            const lob = parseInt(document.getElementById('atBatLob').value) || 0;
 
             activeAtBatCell.dataset.result = result;
             activeAtBatCell.dataset.rbi = rbi;
             activeAtBatCell.dataset.sb = sb;
-            activeAtBatCell.textContent = formatAtBatText({ result, rbi, sb });
+            activeAtBatCell.dataset.cs = cs.toString(); // Save boolean as string
+            activeAtBatCell.dataset.run = run.toString(); // Save boolean run as string
+            activeAtBatCell.dataset.endsInning = endsInning;
+
+            if (endsInning) {
+                activeAtBatCell.dataset.inningNumber = inningNumber;
+                activeAtBatCell.dataset.lob = lob;
+            } else {
+                delete activeAtBatCell.dataset.inningNumber;
+                delete activeAtBatCell.dataset.lob;
+            }
+            
+            activeAtBatCell.textContent = formatAtBatText({ result, rbi, sb, cs, run });
+            
             closeAtBatModal();
+            renderInningSeparators(); // 每次變更後重新渲染分隔線
         }
 
         function setupAtBatCellListeners(targetElement) {
@@ -959,6 +1180,164 @@
                 cell.dataset.listenerAttached = 'true';
             });
         }
+        
+        function setupBattingOrderListeners(targetElement) {
+            const rowsToSetup = targetElement.tagName === 'TR'
+                ? [targetElement]
+                : Array.from(targetElement.querySelectorAll('tr'));
+
+            rowsToSetup.forEach(row => {
+                const battingOrderCell = row.querySelector('td:nth-child(2)');
+                if (battingOrderCell && !battingOrderCell.dataset.listenerAttached) {
+                    battingOrderCell.addEventListener('click', function() {
+                        if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
+                        
+                        const currentRow = this.closest('tr');
+                        // 從被點擊的儲存格本身（也就是棒次儲存格）獲取文字
+                        let baseBattingOrderText = this.textContent.trim();
+                        let baseBattingOrderNumber = parseInt(baseBattingOrderText, 10);
+
+                        // 如果當前列是代打，則向上追溯找到原始的棒次數字
+                        if (isNaN(baseBattingOrderNumber)) {
+                            let previousRow = currentRow;
+                            while (previousRow = previousRow.previousElementSibling) {
+                                // 在前一列中尋找棒次儲存格
+                                const prevBattingOrderCell = previousRow.querySelector('td:nth-child(2)');
+                                if (prevBattingOrderCell) {
+                                    const prevOrderText = prevBattingOrderCell.textContent.trim();
+                                    const prevOrderNumber = parseInt(prevOrderText, 10);
+                                    if (!isNaN(prevOrderNumber)) {
+                                        baseBattingOrderNumber = prevOrderNumber;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // 如果在所有先前的列中都找不到數字，則使用 '?' 作為備用
+                        if (isNaN(baseBattingOrderNumber)) {
+                            baseBattingOrderNumber = '?';
+                        }
+                        
+                        const tableBody = currentRow.parentNode;
+                        const newBattingOrderText = `代打(${baseBattingOrderNumber})`;
+                        
+                        const deleteButtonHtml = `<button class="delete-pinch-hitter-btn ${currentAdminUser && currentAdminUser.uid === adminUID ? '' : 'hidden'}" title="移除此代打" style="cursor:pointer; color:red; background:none; border:none; font-weight:bold; font-size:16px; padding:0 5px;">&times;</button>`;
+                        
+                        // 找到新球員的打席應該從哪裡開始
+                        const currentAtBats = Array.from(currentRow.querySelectorAll('td')); // 獲取所有儲存格以保持索引
+                        let lastAtBatIndex = -1;
+                        const battingCellOffset = 4; // E, 棒, 背, 名
+
+                        currentAtBats.forEach((cell, index) => {
+                            if (index >= battingCellOffset && cell.classList.contains('at-bat-cell')) {
+                                if (cell.dataset.result && cell.dataset.result.trim() !== '') {
+                                    lastAtBatIndex = index - battingCellOffset;
+                                }
+                            }
+                        });
+                        const pinchHitterStartsAt = lastAtBatIndex + 1;
+
+                        // 建立新的代打者列
+                        const newRow = document.createElement('tr');
+                        const numAtBats = tableBody.closest('.stats-section').querySelectorAll('th.at-bat-column').length;
+                        
+                        let newRowAtBatCells = '';
+                        for (let i = 0; i < numAtBats; i++) {
+                            if (i < pinchHitterStartsAt) {
+                                newRowAtBatCells += `<td></td>`;
+                            } else {
+                                newRowAtBatCells += `<td class="at-bat-cell" data-result="" data-rbi="0" data-sb="0"></td>`;
+                            }
+                        }
+                        
+                        const battingOrderCellHtml = `${newBattingOrderText} ${deleteButtonHtml}`;
+                        
+                        const teamType = this.closest('.stats-section').querySelector('.add-batter-row').dataset.team;
+                        newRow.innerHTML = `<td contenteditable="true" class="error-cell" data-team="${teamType}"></td><td class="fixed-col-data" contenteditable="false">${battingOrderCellHtml}</td><td contenteditable="true" class="fixed-col-data"></td><td class="player-name-cell"></td>${newRowAtBatCells}`;
+                        
+                        // 清空原打者未來的打席
+                        currentAtBats.forEach((cell, index) => {
+                            if (index >= (pinchHitterStartsAt + battingCellOffset)) {
+                                if (cell.classList.contains('at-bat-cell')) {
+                                    const blankTd = document.createElement('td');
+                                    cell.parentNode.replaceChild(blankTd, cell);
+                                }
+                            }
+                        });
+
+                        // 新增新的列
+                        tableBody.insertBefore(newRow, currentRow.nextSibling);
+                        
+                        // 為新的錯誤儲存格加上監聽
+                        const errorCell = newRow.querySelector('.error-cell');
+                        if(errorCell) {
+                            errorCell.addEventListener('input', () => updateTeamErrors(errorCell.dataset.team));
+                        }
+                        
+                        // 為新的列設定監聽器
+                        setupAtBatCellListeners(newRow);
+                        setupNameCellListeners(newRow);
+                        setupBattingOrderListeners(newRow); 
+                        
+                        const deleteBtn = newRow.querySelector('.delete-pinch-hitter-btn');
+                        if (deleteBtn) {
+                            addDeleteButtonListener(deleteBtn);
+                        }
+
+                        toggleAdminMode(currentAdminUser);
+                    });
+                    battingOrderCell.dataset.listenerAttached = 'true';
+                }
+            });
+        }
+
+        function addDeleteButtonListener(button) {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止觸發父級(td)的點擊事件
+
+                if (!confirm("您確定要移除此代打紀錄嗎？原打者的後續打席將會恢復。")) {
+                    return;
+                }
+
+                const rowToDelete = this.closest('tr');
+                const prevRow = rowToDelete.previousElementSibling;
+
+                if (prevRow) {
+                    // 找到代打的打席是從哪裡開始的
+                    let startIndex = -1;
+                    const cellsInDeletedRow = rowToDelete.querySelectorAll('td');
+                    for (let i = 0; i < cellsInDeletedRow.length; i++) {
+                        if (cellsInDeletedRow[i].classList.contains('at-bat-cell')) {
+                            startIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (startIndex !== -1) {
+                        const cellsInPrevRow = prevRow.querySelectorAll('td');
+                        // 還原前一位打者被清空的打席
+                        for (let i = startIndex; i < cellsInPrevRow.length; i++) {
+                            const oldCell = cellsInPrevRow[i];
+                            if (oldCell && oldCell.tagName.toLowerCase() === 'td' && !oldCell.classList.contains('at-bat-cell')) {
+                                const newAtBatCell = document.createElement('td');
+                                newAtBatCell.className = 'at-bat-cell';
+                                newAtBatCell.dataset.result = '';
+                                newAtBatCell.dataset.rbi = '0';
+                                newAtBatCell.dataset.sb = '0';
+                                oldCell.parentNode.replaceChild(newAtBatCell, oldCell);
+                                setupAtBatCellListeners(newAtBatCell); // 重新綁定監聽
+                            }
+                        }
+                    }
+                }
+                
+                rowToDelete.remove();
+                renderInningSeparators(); // 重新渲染局數分隔線
+            });
+        }
+
+
 
         async function fetchPlayerRoster() {
             const BATTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT_X5jYPR24dk5oqUSr1py8glTu-jHZJwuzhyJN7RrjMkgkXjwv0hVgmn7KlieQy_-CZEn6UQofqTbz/pub?gid=546432089&single=true&output=csv";
@@ -969,7 +1348,7 @@
                 if (lines.length < 2) return [];
                 const headers = lines[0].split(',').map(h => h.trim());
                 const nameIndex = headers.findIndex(h => h.includes('姓名'));
-                const teamIndex = headers.findIndex(h => h.includes('隊')); // Assuming '隊' is the team header
+                const teamIndex = headers.findIndex(h => h.includes('隊'));
                 
                 if (nameIndex === -1 || teamIndex === -1) {
                     console.warn("CSV headers missing '姓名' or '隊' for player roster parsing.");
@@ -981,7 +1360,7 @@
                     const name = cells[nameIndex];
                     const team = cells[teamIndex];
                     return (name && team) ? { name, team } : null;
-                }).filter(Boolean); // Filter out null/empty player objects
+                }).filter(Boolean);
             };
 
             try {
@@ -997,7 +1376,7 @@
 
                 const uniqueTeams = [...new Set(allPlayersWithTeams.map(p => p.team))].sort();
                 
-                const groupedRoster = { "所有球員": [...new Set(allPlayersWithTeams.map(p => p.name))].sort() }; // Flat list of all names
+                const groupedRoster = { "所有球員": [...new Set(allPlayersWithTeams.map(p => p.name))].sort() };
                 uniqueTeams.forEach(team => {
                     groupedRoster[team] = [...new Set(allPlayersWithTeams.filter(p => p.team === team).map(p => p.name))].sort();
                 });
@@ -1006,7 +1385,7 @@
                 console.log('Player roster loaded:', Object.keys(playerRoster).length -1, 'teams,', allPlayersWithTeams.length, 'total players');
             } catch (error) {
                 console.error("Failed to build player roster:", error);
-                playerRoster = { "所有球員": [] }; // Ensure it's not undefined
+                playerRoster = { "所有球員": [] };
             }
         }
 
@@ -1064,7 +1443,6 @@
                                 this.textContent = selectedValue;
                                 this.setAttribute('contenteditable', 'false');
                             }
-                            // In both cases, the select should be removed
                             if(this.contains(select)) {
                                 select.remove();
                             }
@@ -1072,7 +1450,6 @@
                         
                         select.addEventListener('change', saveAndExit);
                         select.addEventListener('blur', () => {
-                           // Use a small timeout to allow the change event to fire first
                            setTimeout(() => {
                                 if (document.body.contains(select)) {
                                     saveAndExit();
@@ -1113,7 +1490,7 @@
 
                         const saveAndSync = () => {
                             const newValue = select.value;
-                            this.textContent = newValue || valueOnFocus; // Revert if no selection
+                            this.textContent = newValue || valueOnFocus;
                             select.remove();
                             if (valueOnFocus !== newValue && newValue) {
                                 syncAllTeamNames(valueOnFocus, newValue);
@@ -1162,8 +1539,12 @@
         // --- Event Listeners and Initial Calls ---
 
         onAuthStateChanged(auth, async (user) => {
-            toggleAdminMode(user);
+            // 1. 先設定當前使用者
+            currentAdminUser = user;
+            // 2. 等待所有資料載入並建立 DOM
             await loadRecordData();
+            // 3. 最後根據完整 DOM 和使用者身份，切換管理員介面可見性
+            toggleAdminMode(user);
         });
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1199,6 +1580,12 @@
             document.getElementById('cancelAtBatBtn').addEventListener('click', closeAtBatModal);
             document.getElementById('atBatModal').addEventListener('click', (e) => { if (e.target.id === 'atBatModal') closeAtBatModal(); });
 
+            document.getElementById('endsInningCheckbox').addEventListener('change', function() {
+                const displayStyle = this.checked ? 'block' : 'none';
+                document.getElementById('inningNumberGroup').style.display = displayStyle;
+                document.getElementById('lobNumberGroup').style.display = displayStyle;
+            });
+
             document.querySelectorAll('.add-batter-row').forEach(button => {
                 button.addEventListener('click', function() {
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
@@ -1206,10 +1593,27 @@
                     const newRow = document.createElement('tr');
                     const numAtBats = this.closest('.stats-section').querySelectorAll('th.at-bat-column').length || 5;
                     const atBatCells = Array(numAtBats).fill('<td class="at-bat-cell" data-result="" data-rbi="0" data-sb="0"></td>').join('');
-                    newRow.innerHTML = `<td class="fixed-col-data" contenteditable="true">${tableBody.children.length + 1}</td><td contenteditable="true" class="fixed-col-data"></td><td class="player-name-cell"></td>${atBatCells}`;
+                    const teamType = this.dataset.team;
+                    const deleteButtonHtml = `<button class="delete-pinch-hitter-btn ${currentAdminUser && currentAdminUser.uid === adminUID ? '' : 'hidden'}" title="移除此代打" style="cursor:pointer; color:red; background:none; border:none; font-weight:bold; font-size:16px; padding:0 5px;">&times;</button>`;
+                    newRow.innerHTML = `<td contenteditable="true" class="error-cell" data-team="${teamType}"></td><td class="fixed-col-data" contenteditable="false">代打 ${deleteButtonHtml}</td><td contenteditable="true" class="fixed-col-data"></td><td class="player-name-cell"></td>${atBatCells}`;
                     tableBody.appendChild(newRow);
+
+                    // 為新的錯誤儲存格加上監聽
+                    const errorCell = newRow.querySelector('.error-cell');
+                    if(errorCell) {
+                        errorCell.addEventListener('input', () => updateTeamErrors(errorCell.dataset.team));
+                    }
+
+                    // 為新的列設定監聽器
                     setupAtBatCellListeners(newRow);
                     setupNameCellListeners(newRow);
+
+                    const deleteBtn = newRow.querySelector('.delete-pinch-hitter-btn');
+                    if (deleteBtn) {
+                        addDeleteButtonListener(deleteBtn);
+                    }
+
+                    // toggleAdminMode(currentAdminUser); // No need to toggle admin mode here, it's already set.
                 });
             });
 
@@ -1233,7 +1637,7 @@
                         setupAtBatCellListeners(newTd);
                     });
                     const newTh = document.createElement('th');
-                    newTh.textContent = `第${table.querySelectorAll('th.at-bat-column').length + 1}打席`;
+                    newTh.textContent = `打席`;
                     newTh.classList.add('at-bat-column');
                     table.querySelector('thead tr').appendChild(newTh);
                 });
@@ -1255,9 +1659,16 @@
                     if (!currentAdminUser || currentAdminUser.uid !== adminUID) return;
                     const tableBody = this.closest('.stats-section').querySelector('table tbody');
                     const newRow = document.createElement('tr');
-                    newRow.innerHTML = `<td contenteditable="true"></td><td class="player-name-cell"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>`;
+                    newRow.innerHTML = `<td contenteditable="true" class="pitcher-error-cell" data-team="${this.dataset.team}"></td><td contenteditable="true"></td><td class="player-name-cell"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>`;
                     tableBody.appendChild(newRow);
                     setupNameCellListeners(newRow);
+
+                    // 為新加的投手錯誤儲存格加上監聽
+                    const errorCell = newRow.querySelector('.pitcher-error-cell');
+                    if(errorCell) {
+                        const teamType = this.dataset.team; // Get teamType from the button that triggered the add
+                        errorCell.addEventListener('input', () => updateTeamErrors(teamType));
+                    }
                 });
             });
 
