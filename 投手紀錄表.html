@@ -50,6 +50,9 @@
     td:nth-child(1), td:nth-child(2) { background-color: #fff; }
     thead th:nth-child(1), thead th:nth-child(2) { background-color: #f9f9f9; z-index: 3; }
 
+    .career-view-table {
+      background-color: #e6f7ff; /* Light blue for career view */
+    }
 
     @media (max-width: 768px) {
       body { margin: 0; background-color: #fff; }
@@ -62,11 +65,8 @@
 </head>
 <body>
 
-
-
 <div class="container">
   <h1>台中市 CBL 企業交流聯盟 投手成績查詢</h1>
-
 
   <p style="font-size: 14px; color: #666; margin-bottom: 16px;">成績更新時間：<span id="last-updated">讀取中...</span></p>
 
@@ -75,9 +75,10 @@
   </div>
 
   <div class="controls">
-    <input id="search" type="text" placeholder="搜尋：背號/姓名" />
+    <input id="search" type="text" placeholder="搜尋：球員姓名" />
     <select id="team"><option value="">全部球隊</option></select>
-    <select id="season"><option value="">全部賽季</option></select>
+    <select id="season"><option value="">全部屆數</option></select>
+    <button id="toggle-career-view">查看生涯成績</button>
   </div>
 
   <div class="table-wrapper">
@@ -89,7 +90,7 @@
 </div>
 
   <script>
-    // 👇 把這裡換成 Google 試算表 CSV 連結
+    // 👇 投手紀錄的 Google 試算表 CSV 連結
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmnSzqJij7qN0DkHrUHSTUbQv609l1OkQU-1BlZqO2t2Jry0zvcMyQa1DpbGKYSXtF94pg2CU-I3X8/pub?gid=1969750057&single=true&output=csv";
 
     const searchInput = document.getElementById('search');
@@ -97,206 +98,333 @@
     const seasonSelect = document.getElementById('season');
     const headerRow = document.getElementById('header-row');
     const tbody = document.getElementById('tbody');
-    let rows = [], headers = [];
+    const careerViewBtn = document.getElementById('toggle-career-view');
+    
+    let originalRows = [], careerStats = [], headers = [];
+    let isCareerView = false;
+    let sortKey = '', sortOrder = 'none';
 
-    async function fetchCSV() {
+    // --- 主要資料處理流程 ---
+    async function main() {
       try {
-        const res = await fetch(CSV_URL);
-        if (!res.ok) throw new Error('讀取失敗：HTTP ' + res.status);
-        const text = await res.text();
-        parseCSV(text); // Populates global 'headers' and 'rows'
-
-        const AA1_COLUMN_INDEX = 26; // 0-indexed for 27th column (AA1)
-
-        // Extract and display update time
-        const updateTimeElement = document.getElementById('last-updated');
-        if (updateTimeElement && headers.length > AA1_COLUMN_INDEX) {
-          const updateTimeFromAA1 = headers[AA1_COLUMN_INDEX];
-          if (updateTimeFromAA1) {
-            updateTimeElement.textContent = updateTimeFromAA1;
-          } else {
-            updateTimeElement.textContent = '無法取得更新時間 (AA1 為空)';
-          }
-        } else if (updateTimeElement) {
-          updateTimeElement.textContent = 'CSV資料不足 (無 AA1 欄位)';
-        }
-
-        // Create displayHeaders for rendering (excluding AA1)
-        window.displayHeaders = headers.filter((_, index) => index !== AA1_COLUMN_INDEX);
-
-        // Set headerRow.innerHTML here, after window.displayHeaders is defined
-        headerRow.innerHTML = window.displayHeaders.map(h => {
-          if (h.includes('勝投')) {
-            return `<th>${h} <span id="sort-wins-toggle" style="cursor: pointer;"></span></th>`;
-          }
-          if (h.includes('防禦率')) {
-            return `<th>${h} <span id="sort-era-toggle" style="cursor: pointer;"></span></th>`;
-          }
-          return `<th>${h}</th>`;
-        }).join('');
-
-        buildFilters(); // Uses global 'headers' and 'rows'
-        render(); // Uses global 'rows' and 'window.displayHeaders'
-
-        let winsSortOrder = 'none'; // none, 'asc', 'desc'
-        const sortWinsToggle = document.getElementById('sort-wins-toggle');
-
-        if (sortWinsToggle) {
-          sortWinsToggle.innerHTML = '&#9670;'; // Initial: lozenge
-          sortWinsToggle.addEventListener('click', () => {
-            if (winsSortOrder === 'desc') {
-              winsSortOrder = 'asc';
-              sortWinsToggle.innerHTML = '&#9650;'; // Up arrow
-            } else {
-              winsSortOrder = 'desc';
-              sortWinsToggle.innerHTML = '&#9660;'; // Down arrow
-            }
-
-            const winKey = headers.find(h => h.includes('勝投'));
-            if (winKey) {
-              rows.sort((a, b) => {
-                const winA = parseInt(a[winKey], 10);
-                const winB = parseInt(b[winKey], 10);
-                if (isNaN(winA)) return 1;
-                if (isNaN(winB)) return -1;
-
-                if (winsSortOrder === 'asc') {
-                  return winA - winB;
-                } else {
-                  return winB - winA;
-                }
-              });
-              render();
-            }
-          });
-        }
-
-        let eraSortOrder = 'none'; // none, 'asc', 'desc'
-        const sortEraToggle = document.getElementById('sort-era-toggle');
-
-        if (sortEraToggle) {
-          sortEraToggle.innerHTML = '&#9670;'; // Initial: lozenge
-          sortEraToggle.addEventListener('click', () => {
-            if (eraSortOrder === 'asc') {
-              eraSortOrder = 'desc';
-              sortEraToggle.innerHTML = '&#9660;'; // Down arrow
-            } else {
-              eraSortOrder = 'asc';
-              sortEraToggle.innerHTML = '&#9650;'; // Up arrow
-            }
-
-            const eraKey = headers.find(h => h.includes('防禦率'));
-            if (eraKey) {
-              rows.sort((a, b) => {
-                const eraA = parseFloat(a[eraKey]);
-                const eraB = parseFloat(b[eraKey]);
-                if (isNaN(eraA)) return 1;
-                if (isNaN(eraB)) return -1;
-
-                if (eraSortOrder === 'asc') {
-                  return eraA - eraB;
-                } else {
-                  return eraB - eraA;
-                }
-              });
-              render();
-            }
-          });
-        }
+        const text = await fetchCSV(CSV_URL);
+        parseCSV(text); // -> populates headers and originalRows
+        
+        extractAndUpdateTime();
+        calculateCareerStats();
+        
+        buildFilters();
+        setupEventListeners();
+        render();
+        
       } catch (err) {
-        tbody.innerHTML = '<tr><td>' + err.message + '</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="10">${err.message}</td></tr>`;
+        console.error('診斷：main 函式執行錯誤:', err);
       }
+    }
+
+    async function fetchCSV(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`讀取失敗：HTTP ${res.status}`);
+      return res.text();
     }
 
     function parseCSV(text) {
       const lines = text.replace(/\r/g,'').split('\n').filter(l => l.trim() !== '');
       headers = splitCSVLine(lines[0]).map(h => h.trim());
-      rows = lines.slice(1).map(line => {
+      originalRows = lines.slice(1).map(line => {
         const cells = splitCSVLine(line);
         const obj = {};
-        headers.forEach((h,i)=> obj[h] = (cells[i]||'').trim());
+        headers.forEach((h, i) => obj[h] = (cells[i] || '').trim());
         return obj;
       });
-      headerRow.innerHTML = headers.map(h => {
-        if (h.includes('勝投')) {
-          return `<th>${h} <span id="sort-wins-toggle" style="cursor: pointer;"></span></th>`;
+    }
+
+    // --- 工具函數：轉換 IP 格式 ---
+    function convertIpToDecimal(ipString) {
+      if (!ipString) return 0;
+      const parts = String(ipString).split('.');
+      const innings = parseInt(parts[0] || 0, 10);
+      const outs = parseInt(parts[1] || 0, 10);
+      if (outs > 2) return innings + 1; // e.g., 1.3 should be 2.0
+      return innings + (outs / 3);
+    }
+    
+    function calculateCareerStats() {
+      const nameKey = headers.find(h => h.includes('姓名')) || "背號/姓名";
+      const teamKey = headers.find(h => h.includes('隊')) || "隊伍";
+      const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+      const nonStatKeys = [nameKey, teamKey, seasonKey]; 
+
+      const ipKey = headers.find(h => h.includes('IP') || h.includes('投球局數') || h.includes('局數')) || 'IP';
+      const playerStats = new Map();
+
+      for (const row of originalRows) {
+        const playerName = row[nameKey] ? row[nameKey].trim() : null;
+        if (!playerName) continue;
+
+        if (!playerStats.has(playerName)) {
+          const newStats = {
+            [nameKey]: playerName,
+            [teamKey]: row[teamKey], 
+            [seasonKey]: '生涯',
+            lastSeason: row[seasonKey],
+          };
+          for (const h of headers) {
+            if (!nonStatKeys.includes(h)) {
+                if (h === ipKey) {
+                    newStats[h] = convertIpToDecimal(row[h]);
+                } else {
+                    newStats[h] = (Number(row[h]) || 0);
+                }
+            }
+          }
+          playerStats.set(playerName, newStats);
+        } else {
+          const stats = playerStats.get(playerName);
+          
+          if (row[seasonKey] > stats.lastSeason) {
+            stats.lastSeason = row[seasonKey];
+            stats[teamKey] = row[teamKey];
+          }
+
+          for (const h of headers) {
+            if (!nonStatKeys.includes(h)) {
+                if (h === ipKey) {
+                    stats[h] += convertIpToDecimal(row[h]);
+                } else {
+                    stats[h] += (Number(row[h]) || 0);
+                }
+            }
+          }
         }
-        if (h.includes('防禦率')) {
-          return `<th>${h} <span id="sort-era-toggle" style="cursor: pointer;"></span></th>`;
+      }
+
+      const erKey = headers.find(h => h.includes('ER') || h.includes('自責分')) || 'ER';
+      // *** MODIFIED hKey to be precise for '被安打總數' ***
+      const hKey = headers.find(h => h === 'H' || h.includes('被安打總數')) || 'H';
+      const bbKey = headers.find(h => h.includes('BB') || h.includes('四壞') || h.includes('保送')) || 'BB';
+      const hbpKey = headers.find(h => h.includes('HBP') || h.includes('觸身')) || 'HBP'; // Already correct
+      
+      const eraKey = headers.find(h => h.includes('ERA') || h.includes('防禦率')) || 'ERA';
+      const whipKey = headers.find(h => h.includes('WHIP')) || 'WHIP';
+
+      // --- 重新計算並強制覆蓋比率數據 ---
+      careerStats = Array.from(playerStats.values()).map(stats => {
+        const totalIP = stats[ipKey] || 0;
+        const totalER = stats[erKey] || 0;
+        const totalH = stats[hKey] || 0;
+        const totalBB = stats[bbKey] || 0;
+        const totalHBP = stats[hbpKey] || 0;
+        
+        // 將累加的小數 IP 轉回 x.1, x.2 的格式
+        const fullInnings = Math.floor(totalIP);
+        const outs = Math.round((totalIP - fullInnings) * 3);
+        stats[ipKey] = `${fullInnings}.${outs}`;
+
+        const calculatedERA = totalIP > 0 ? ((totalER / totalIP) * 9) : 0;
+        stats[eraKey] = calculatedERA.toFixed(2);
+
+        // --- 偵錯日誌 (ERA) ---
+        console.log(
+            `[防禦率計算偵錯] 球員: ${stats[nameKey]}, ` +
+            `總自責分 (totalER): ${totalER}, ` +
+            `總投球局數 (totalIP): ${totalIP > 0 ? totalIP.toFixed(3) : 0}, ` +
+            `計算公式: (${totalER} / ${totalIP > 0 ? totalIP.toFixed(3) : 0}) * 9, ` +
+            `計算結果 (ERA): ${stats[eraKey]}`
+        );
+        // --- 偵錯日誌結束 (ERA) ---
+
+        // WHIP calculation
+        const calculatedWHIP = totalIP > 0 ? ((totalH + totalBB + totalHBP) / totalIP) : 0;
+        stats[whipKey] = calculatedWHIP.toFixed(2);
+
+        // --- 偵錯日誌 (WHIP) ---
+        console.log(
+            `[WHIP計算偵錯] 球員: ${stats[nameKey]}, ` +
+            `總被安打 (totalH): ${totalH}, ` +
+            `總四壞 (totalBB): ${totalBB}, ` +
+            `總觸身 (totalHBP): ${totalHBP}, ` +
+            `總投球局數 (totalIP): ${totalIP > 0 ? totalIP.toFixed(3) : 0}, ` +
+            `計算公式: ((${totalH} + ${totalBB} + ${totalHBP}) / ${totalIP > 0 ? totalIP.toFixed(3) : 0}), ` +
+            `計算結果 (WHIP): ${stats[whipKey]}`
+        );
+        // --- 偵錯日誌結束 (WHIP) ---
+        
+        return stats;
+      });
+    }
+
+    function render() {
+      const dataToRender = isCareerView ? careerStats : originalRows;
+      
+      const nameKey = searchInput.dataset.nameKey;
+      const teamKey = teamSelect.dataset.teamKey;
+      const seasonKey = seasonSelect.dataset.seasonKey;
+      
+      const kw = searchInput.value.trim().toLowerCase();
+      const team = teamSelect.value;
+      const season = seasonSelect.value;
+      
+      const filtered = dataToRender.filter(r => {
+        const passName = kw ? String(r[nameKey] || '').toLowerCase().includes(kw) : true;
+        const passTeam = team ? r[teamKey] === team : true;
+        const passSeason = isCareerView ? true : (season ? r[seasonKey] === season : true);
+        return passName && passTeam && passSeason;
+      });
+
+      if (sortKey && sortOrder !== 'none') {
+        const isNumeric = !['ERA', 'WHIP'].includes(sortKey) && headers.includes(sortKey);
+        filtered.sort((a, b) => {
+          let valA, valB;
+          if (sortKey.includes('IP')) {
+            valA = convertIpToDecimal(a[sortKey]);
+            valB = convertIpToDecimal(b[sortKey]);
+          } else {
+             valA = isNumeric ? Number(a[sortKey] || 0) : parseFloat(a[sortKey] || 0);
+             valB = isNumeric ? Number(b[sortKey] || 0) : parseFloat(b[sortKey] || 0);
+          }
+          if (isNaN(valA)) return 1;
+          if (isNaN(valB)) return -1;
+          // ERA, WHIP 升序，其他降序
+          const defaultAsc = ['ERA', 'WHIP'].includes(sortKey);
+          if (sortOrder === 'asc') return defaultAsc ? valA - valB : valA - valB;
+          return defaultAsc ? valB - valA : valB - valA;
+        });
+      }
+
+      renderHeaders();
+      renderBody(filtered);
+      
+      updateStickyColumns();
+    }
+    
+    function renderHeaders() {
+      const UPDATE_TIME_COLUMN_INDEX = 26; // AA1 欄位
+      const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季'));
+      
+      window.displayHeaders = headers.filter((h, index) => {
+        if (index === UPDATE_TIME_COLUMN_INDEX) return false;
+        return true;
+      });
+
+      headerRow.innerHTML = window.displayHeaders.map(h => {
+        const isSortable = originalRows.length > 0 && (Number(originalRows[0][h]) >= 0 || ['ERA', 'WHIP', 'IP'].includes(h));
+        if (!isSortable || h === '背號/姓名') return `<th>${h}</th>`;
+        
+        let sortIndicator = '&#9670;';
+        if (sortKey === h) {
+          sortIndicator = sortOrder === 'asc' ? '&#9650;' : '&#9660;';
         }
-        return `<th>${h}</th>`;
+        return `<th>${h} <span class="sort-toggle" data-key="${h}" style="cursor: pointer;">${sortIndicator}</span></th>`;
       }).join('');
     }
 
+    function renderBody(data) {
+       tbody.innerHTML = data.map(r => `<tr>` + window.displayHeaders.map(h => `<td>${r[h] ?? ''}</td>`).join('') + `</tr>`).join('')
+        || `<tr><td colspan="${(window.displayHeaders || []).length}">找不到符合的資料</td></tr>`;
+    }
+
+    function setupEventListeners() {
+      searchInput.addEventListener('input', render);
+      [teamSelect, seasonSelect].forEach(el => el.addEventListener('change', render));
+      
+      careerViewBtn.addEventListener('click', () => {
+        isCareerView = !isCareerView;
+        careerViewBtn.textContent = isCareerView ? '返回賽季成績' : '查看生涯成績';
+        seasonSelect.disabled = isCareerView;
+        document.getElementById('table').classList.toggle('career-view-table', isCareerView);
+        sortKey = '';
+        sortOrder = 'none';
+        render();
+      });
+
+      headerRow.addEventListener('click', e => {
+        const target = e.target.closest('.sort-toggle');
+        if (!target) return;
+        
+        const key = target.dataset.key;
+        // WHIP 和 ERA 預設為升序，其他為降序
+        const defaultOrder = ['ERA', 'WHIP'].includes(key) ? 'asc' : 'desc';
+
+        if (sortKey === key) {
+          sortOrder = (sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+          sortKey = key;
+          sortOrder = defaultOrder;
+        }
+        render();
+      });
+
+      window.addEventListener('resize', updateStickyColumns);
+      
+      try {
+        const thead = document.querySelector('#table thead');
+        if (thead) {
+          new IntersectionObserver(([e]) => thead.classList.toggle('is-sticky', e.intersectionRatio < 1), { threshold: [1] }).observe(thead);
+        }
+      } catch (e) {
+        console.error('診斷：Sticky header observer failed:', e);
+      }
+    }
+
+    function buildFilters() {
+      const teamKey = headers.find(h => h.includes('隊')) || "隊伍";
+      const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+      const nameKey = headers.find(h => h.includes('姓名')) || "背號/姓名";
+
+      const teams = [...new Set(originalRows.map(r => r[teamKey]).filter(Boolean))].sort();
+      const seasons = [...new Set(originalRows.map(r => r[seasonKey]).filter(Boolean))].sort().reverse();
+      
+      teamSelect.innerHTML = '<option value="">全部球隊</option>' + teams.map(t => `<option>${t}</option>`).join('');
+      seasonSelect.innerHTML = '<option value="">全部屆數</option>' + seasons.map(s => `<option>${s}</option>`).join('');
+      
+      // 預設顯示第二屆
+      seasonSelect.value = '第二屆';
+
+      searchInput.dataset.nameKey = nameKey;
+      teamSelect.dataset.teamKey = teamKey;
+      seasonSelect.dataset.seasonKey = seasonKey;
+    }
+
+    function extractAndUpdateTime() {
+      const UPDATE_TIME_COLUMN_INDEX = 26; // AA1
+      const updateTimeElement = document.getElementById('last-updated');
+      if (!updateTimeElement) return;
+
+      if (headers.length > UPDATE_TIME_COLUMN_INDEX) {
+        updateTimeElement.textContent = headers[UPDATE_TIME_COLUMN_INDEX] || '無法取得更新時間';
+      } else {
+        updateTimeElement.textContent = 'CSV資料不足';
+      }
+    }
+
     function splitCSVLine(line) {
-      const out=[]; let cur='', inQuotes=false;
-      for (let i=0; i<line.length; i++) {
-        const c=line[i], n=line[i+1];
+      const out = []; let cur = '', inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i], n = line[i+1];
         if (c === '"' && inQuotes && n === '"') { cur += '"'; i++; }
         else if (c === '"') { inQuotes = !inQuotes; }
-        else if (c === ',' && !inQuotes) { out.push(cur); cur=''; }
+        else if (c === ',' && !inQuotes) { out.push(cur); cur = ''; }
         else { cur += c; }
       }
       out.push(cur);
       return out;
     }
-
-    function buildFilters() {
-      const teamKey = headers.find(h => h.includes('隊')) || "隊伍";
-      const seasonKey = headers.find(h => h.includes('賽季')) || "賽季";
-      const nameKey = headers.find(h => h.includes('姓名')) || "背號/姓名";
-      const teams = [...new Set(rows.map(r => r[teamKey]).filter(Boolean))].sort();
-      const seasons = [...new Set(rows.map(r => r[seasonKey]).filter(Boolean))].sort().reverse();
-      teamSelect.innerHTML = '<option value="">全部球隊</option>' + teams.map(t=>`<option>${t}</option>`).join('');
-      seasonSelect.innerHTML = '<option value="">全部賽季</option>' + seasons.map(s=>`<option>${s}</option>`).join('');
-      [searchInput,teamSelect,seasonSelect].forEach(el=>el.addEventListener('input',render));
-      searchInput.dataset.nameKey=nameKey; teamSelect.dataset.teamKey=teamKey; seasonSelect.dataset.seasonKey=seasonKey;
-    }
-
+    
     function updateStickyColumns() {
       const firstCol = document.querySelector('#table th:nth-child(1)');
       if (!firstCol) return;
-      const firstColWidth = firstCol.offsetWidth;
       
+      const firstColWidth = firstCol.offsetWidth;
       const secondColElems = document.querySelectorAll('#table th:nth-child(2), #table td:nth-child(2)');
+      
       secondColElems.forEach(elem => {
         elem.style.left = firstColWidth + 'px';
       });
     }
 
-    function render() {
-      const nameKey=searchInput.dataset.nameKey, teamKey=teamSelect.dataset.teamKey, seasonKey=seasonSelect.dataset.seasonKey;
-      const kw=searchInput.value.trim().toLowerCase(), team=teamSelect.value, season=seasonSelect.value;
-      const filtered=rows.filter(r=>{
-        const passName=kw?String(r[nameKey]||'').toLowerCase().includes(kw):true;
-        const passTeam=team?r[teamKey]===team:true;
-        const passSeason=season?r[seasonKey]===season:true;
-        return passName && passTeam && passSeason;
-      });
-      tbody.innerHTML=filtered.map(r=>`<tr>`+window.displayHeaders.map(h=>`<td>${r[h]??''}</td>`).join('')+`</tr>`).join('')
-        || `<tr><td colspan="${window.displayHeaders.length}">找不到符合的資料</td></tr>`;
-      
-      // Update sticky columns after rendering table
-      updateStickyColumns();
-    }
-
-    window.addEventListener('resize', updateStickyColumns);
-
-    fetchCSV();
-
-    // Observer for sticky header shadow
-    try {
-      const thead = document.querySelector('#table thead');
-      if (thead) {
-        const observer = new IntersectionObserver(
-          ([e]) => thead.classList.toggle('is-sticky', e.intersectionRatio < 1),
-          { threshold: [1] }
-        );
-        observer.observe(thead);
-      }
-    } catch (e) {
-      console.error('Sticky header observer failed:', e);
-    }
+    main();
   </script>
 
 </body>

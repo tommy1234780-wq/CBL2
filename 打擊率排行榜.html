@@ -39,7 +39,7 @@
 </head>
 <body>
 
-    <h1>打擊排行榜 <span style="font-size: 0.5em;">(當屆季賽總場數*1.7=入選打席數)</span></h1>
+    <h1>打擊排行榜 <span style="font-size: 0.5em;">(當屆季賽總場數*1.9=入選打席數，如果成績一樣依照打席數多者排名較前)</span></h1>
 
     <div class="table-container">
         <table>
@@ -69,7 +69,7 @@
                 
                 const lines = text.trim().split(/\n/);
                 const headers = lines[0].split(',').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
+                let data = lines.slice(1).map(line => {
                     const values = [];
                     let current_value = "";
                     let in_quotes = false;
@@ -95,35 +95,46 @@
                     return row_data;
                 });
 
+                const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+                data = data.filter(row => row[seasonKey] === '第二屆');
+
                 const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
                 const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
                 const batting_avg_key = headers.find(h => h.includes('打擊率')) || '打擊率';
-                const ab_key = headers.find(h => h.includes('打數')) || '打數';
+                const pa_key = headers.find(h => h.includes('打席')) || '打席';
 
                 const filtered_data = [];
                 for (const entry of data) {
                     let batting_avg;
                     try {
                         batting_avg = parseFloat(entry[batting_avg_key]);
+                        if (isNaN(batting_avg)) batting_avg = 0.0;
                     } catch (e) {
-                        batting_avg = 0.0; // Handle #DIV/0! or other non-numeric values
+                        batting_avg = 0.0;
                     }
-                    entry[batting_avg_key] = batting_avg;
-
-                    let ab;
+                    
+                    let pa;
                     try {
-                        ab = parseInt(entry[ab_key], 10);
+                        pa = parseInt(entry[pa_key], 10);
+                        if (isNaN(pa)) pa = 0;
                     } catch (e) {
-                        ab = 0;
+                        pa = 0;
                     }
-                    entry[ab_key] = ab;
 
-                    if (ab >= 15) {
-                        filtered_data.push(entry);
+                    if (pa >= 30) {
+                        const new_entry = {...entry};
+                        new_entry[batting_avg_key] = batting_avg;
+                        new_entry[pa_key] = pa;
+                        filtered_data.push(new_entry);
                     }
                 }
-
-                const sorted_data = filtered_data.sort((a, b) => b[batting_avg_key] - a[batting_avg_key]);
+                
+                const sorted_data = filtered_data.sort((a, b) => {
+                    if (b[batting_avg_key] !== a[batting_avg_key]) {
+                        return b[batting_avg_key] - a[batting_avg_key];
+                    }
+                    return b[pa_key] - a[pa_key];
+                });
 
                 let html_rows = "";
                 let rank = 0;

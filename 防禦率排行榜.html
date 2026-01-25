@@ -39,7 +39,7 @@
 </head>
 <body>
 
-    <h1>防禦率排行榜 <span style="font-size: 0.5em;">(當屆季賽總場數*1.1=入選局數)</span></h1>
+    <h1>防禦率排行榜 <span style="font-size: 0.5em;">(當屆季賽總場數*1.2=入選局數)</span></h1>
 
     <div class="table-container">
         <table>
@@ -69,7 +69,7 @@
                 
                 const lines = text.trim().split(/\n/);
                 const headers = lines[0].split(',').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
+                let data = lines.slice(1).map(line => {
                     const values = [];
                     let current_value = "";
                     let in_quotes = false;
@@ -95,6 +95,9 @@
                     return row_data;
                 });
 
+                const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+                data = data.filter(row => row[seasonKey] === '第二屆');
+
                 const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
                 const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
                 const era_key = headers.find(h => h.includes('防禦率')) || '防禦率';
@@ -118,7 +121,7 @@
                     }
                     entry[ip_key] = ip;
 
-                    if (ip >= 10) {
+                    if (ip >= 19) {
                         filtered_data.push(entry);
                     }
                 }

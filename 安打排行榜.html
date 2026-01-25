@@ -39,7 +39,7 @@
 </head>
 <body>
 
-    <h1>安打排行榜</h1>
+    <h1>安打排行榜 <span style="font-size: 0.5em;">(如安打數相同，打擊率高者排名較前)</span></h1>
 
     <div class="table-container">
         <table>
@@ -69,7 +69,7 @@
                 
                 const lines = text.trim().split(/\n/);
                 const headers = lines[0].split(',').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
+                let data = lines.slice(1).map(line => {
                     const values = [];
                     let current_value = "";
                     let in_quotes = false;
@@ -95,23 +95,34 @@
                     return row_data;
                 });
 
+                const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+                data = data.filter(row => row[seasonKey] === '第二屆');
+
                 const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
                 const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
                 const hits_key = headers.find(h => h.includes('安打總數')) || '安打總數'; // Key for Hits
+                const batting_avg_key = headers.find(h => h.includes('打擊率')) || '打擊率';
 
                 data.forEach(entry => {
                     entry[hits_key] = parseInt(entry[hits_key], 10) || 0;
+                    entry[batting_avg_key] = parseFloat(entry[batting_avg_key]) || 0;
                 });
 
                 const sorted_data = data
                     .filter(entry => entry[hits_key] > 0)
-                    .sort((a, b) => b[hits_key] - a[hits_key]);
+                    .sort((a, b) => {
+                        if (b[hits_key] !== a[hits_key]) {
+                            return b[hits_key] - a[hits_key];
+                        }
+                        return b[batting_avg_key] - a[batting_avg_key];
+                    });
 
                 let html_rows = "";
                 let rank = 0;
-                let last_score = -1;
+                let last_hits = -1;
+                let last_avg = -1;
                 sorted_data.slice(0, 10).forEach((player, index) => {
-                    if (player[hits_key] !== last_score) {
+                    if (player[hits_key] !== last_hits || player[batting_avg_key] !== last_avg) {
                         rank = index + 1;
                     }
                     let rank_display = rank;
@@ -130,7 +141,8 @@
                             <td><span${style}>${player[hits_key]}</span></td>
                         </tr>
                     `;
-                    last_score = player[hits_key];
+                    last_hits = player[hits_key];
+                    last_avg = player[batting_avg_key];
                 });
                 tbody.innerHTML = html_rows;
 

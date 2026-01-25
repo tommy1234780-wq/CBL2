@@ -69,7 +69,7 @@
                 
                 const lines = text.trim().split(/\n/);
                 const headers = lines[0].split(',').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
+                let data = lines.slice(1).map(line => {
                     const values = [];
                     let current_value = "";
                     let in_quotes = false;
@@ -95,6 +95,9 @@
                     return row_data;
                 });
 
+                const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+                data = data.filter(row => row[seasonKey] === '第二屆');
+
                 const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
                 const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
                 const rbi_key = headers.find(h => h.includes('打點')) || '打點'; // Key for RBI
@@ -103,7 +106,7 @@
                 for (const entry of data) {
                     let rbi_count;
                     try {
-                        rbi_count = parseInt(entry[rbi_key]);
+                        rbi_count = parseInt(entry[rbi_key], 10);
                     } catch (e) {
                         rbi_count = 0; // Handle non-numeric values
                     }

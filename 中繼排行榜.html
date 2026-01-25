@@ -69,7 +69,7 @@
                 
                 const lines = text.trim().split(/\n/);
                 const headers = lines[0].split(',').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
+                let data = lines.slice(1).map(line => {
                     const values = [];
                     let current_value = "";
                     let in_quotes = false;
@@ -94,6 +94,9 @@
                     headers.forEach((h, i) => row_data[h] = values[i] || "");
                     return row_data;
                 });
+                
+                const seasonKey = headers.find(h => h.includes('屆數') || h.includes('屆別') || h.includes('賽季')) || "屆數";
+                data = data.filter(row => row[seasonKey] === '第二屆');
 
                 const player_key = headers.find(h => h.includes('姓名')) || '背號/姓名';
                 const team_key = headers.find(h => h.includes('隊伍')) || '隊伍';
@@ -108,7 +111,9 @@
                         holds = 0; // Handle non-numeric values
                     }
                     entry[hold_key] = holds;
-                    filtered_data.push(entry);
+                    if (holds > 0) {
+                        filtered_data.push(entry);
+                    }
                 }
 
                 const sorted_data = filtered_data.sort((a, b) => b[hold_key] - a[hold_key]);
