@@ -46,9 +46,16 @@
       /* 'left' is set by JS */
     }
 
+    th:nth-child(3), td:nth-child(3) {
+      position: sticky;
+      z-index: 1;
+      border-right: 1px solid #ddd;
+      /* 'left' is set by JS */
+    }
+
     /* Set backgrounds for sticky columns */
-    td:nth-child(1), td:nth-child(2) { background-color: #fff; }
-    thead th:nth-child(1), thead th:nth-child(2) { background-color: #f9f9f9; z-index: 3; }
+    td:nth-child(1), td:nth-child(2), td:nth-child(3) { background-color: #fff; }
+    thead th:nth-child(1), thead th:nth-child(2), thead th:nth-child(3) { background-color: #f9f9f9; z-index: 3; }
 
     .career-view-table {
       background-color: #e6f7ff; /* Light blue for career view */
@@ -414,13 +421,20 @@
     
     function updateStickyColumns() {
       const firstCol = document.querySelector('#table th:nth-child(1)');
-      if (!firstCol) return;
+      const secondCol = document.querySelector('#table th:nth-child(2)');
+      if (!firstCol || !secondCol) return;
       
       const firstColWidth = firstCol.offsetWidth;
+      const secondColWidth = secondCol.offsetWidth;
+
       const secondColElems = document.querySelectorAll('#table th:nth-child(2), #table td:nth-child(2)');
-      
       secondColElems.forEach(elem => {
         elem.style.left = firstColWidth + 'px';
+      });
+
+      const thirdColElems = document.querySelectorAll('#table th:nth-child(3), #table td:nth-child(3)');
+      thirdColElems.forEach(elem => {
+        elem.style.left = (firstColWidth + secondColWidth) + 'px';
       });
     }
 
