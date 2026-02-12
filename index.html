@@ -87,6 +87,62 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
+        .section-title {
+            color: #0d47a1;
+            font-size: 1.5em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .weekly-videos-container {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr; /* Single column for mobile */
+            gap: 20px;
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .carousel-slide {
+            display: flex;
+            width: 200%; /* 100% for original images + 100% for duplicated images */
+            animation: slide 30s linear infinite;
+        }
+        .carousel-slide img {
+            width: 10%; /* To show fewer images and make them larger */
+            height: auto;
+        }
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%); /* Slides the width of the original set of images */
+            }
+        }
+
         /* --- Mobile Styles --- */
         @media (max-width: 992px) {
             body {
@@ -180,6 +236,11 @@
                 border-bottom: none;
             }
         }
+        @media (min-width: 768px) {
+            .weekly-videos-container {
+                grid-template-columns: repeat(3, 1fr); /* Three columns for desktop */
+            }
+        }
     </style>
 </head>
 <body>
@@ -208,6 +269,45 @@
     <div class="container">
         <div class="image-container">
             <img src="每週戰況.jpg" alt="每週戰況" class="weekly-report-image">
+        </div>
+
+        <h2 class="section-title">每周賽事影片</h2>
+        <div class="weekly-videos-container">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/GYhbRvwC3iw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/EnbsiiewS8Q" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/WN90OL-_D6M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-slide">
+                <img src="球隊輪播/A.jpg" alt="Team A">
+                <img src="球隊輪播/B.jpg" alt="Team B">
+                <img src="球隊輪播/C.jpg" alt="Team C">
+                <img src="球隊輪播/D.jpg" alt="Team D">
+                <img src="球隊輪播/E.jpg" alt="Team E">
+                <img src="球隊輪播/F.jpg" alt="Team F">
+                <img src="球隊輪播/G.jpg" alt="Team G">
+                <img src="球隊輪播/H.jpg" alt="Team H">
+                <img src="球隊輪播/I.jpg" alt="Team I">
+                <img src="球隊輪播/J.jpg" alt="Team J">
+                <!-- Duplicate for seamless loop -->
+                <img src="球隊輪播/A.jpg" alt="Team A">
+                <img src="球隊輪播/B.jpg" alt="Team B">
+                <img src="球隊輪播/C.jpg" alt="Team C">
+                <img src="球隊輪播/D.jpg" alt="Team D">
+                <img src="球隊輪播/E.jpg" alt="Team E">
+                <img src="球隊輪播/F.jpg" alt="Team F">
+                <img src="球隊輪播/G.jpg" alt="Team G">
+                <img src="球隊輪播/H.jpg" alt="Team H">
+                <img src="球隊輪播/I.jpg" alt="Team I">
+                <img src="球隊輪播/J.jpg" alt="Team J">
+            </div>
         </div>
     </div>
 
