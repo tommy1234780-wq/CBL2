@@ -19,6 +19,23 @@
             background-color: #ffffff;
             padding: 20px;
             border-bottom: 1px solid #e0e0e0;
+            position: relative; /* Add this for absolute positioning of social links */
+        }
+        .social-links {
+            position: absolute;
+            top: 20px; /* Adjust as needed */
+            right: 20px; /* Adjust as needed */
+            display: flex;
+            gap: 10px;
+        }
+        .social-links a {
+            text-decoration: none;
+            color: #1565c0;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .social-links a:hover {
+            color: #0d47a1;
         }
         .title-group {
             display: inline-block; /* Centered by header's text-align */
@@ -164,6 +181,7 @@
                 display: flex;
                 align-items: center;
                 gap: 15px;
+                order: 1; /* Ensure title is first */
             }
             .title-group img {
                 width: 50px; /* Smaller logo for mobile header */
@@ -171,6 +189,16 @@
             }
             .title-group h1 {
                 font-size: 1.2em; /* Smaller title for mobile header */
+            }
+            /* Mobile specific styles for social links to prevent overlap */
+            .social-links {
+                position: static; /* Remove absolute positioning */
+                order: 2; /* Place between title and hamburger */
+                margin-left: auto; /* Push to the right */
+                margin-right: 10px; /* Added space to the right of social links */
+                display: flex; /* Ensure flex behavior */
+                gap: 10px;
+                align-items: center; /* Vertically align icons */
             }
             .navbar {
                 padding: 0;
@@ -186,6 +214,7 @@
                 font-size: 1.5em; /* Reverted to larger size */
                 padding: 0px 12px; /* Reverted to previous padding */
                 line-height: 1.2;
+                order: 3; /* Ensure hamburger is last */
             }
             .menu-toggle:hover {
                  background-color: #0d47a1;
@@ -249,6 +278,26 @@
         <div class="title-group">
             <img src="CBL.jpg" alt="CBL">
             <h1>台中市CBL企業交流聯盟</h1>
+        </div>
+        <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61577963293322&sk=about" target="_blank" aria-label="Facebook">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 2H14C12.3431 2 11 3.34315 11 5V8H8V12H11V22H15V12H18L19 8H15V5C15 4.44772 15.4477 4 16 4H17V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="https://www.instagram.com/cbl7192868286?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" aria-label="Instagram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="https://www.youtube.com/@CBL7868" target="_blank" aria-label="YouTube">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.54 6.42C22.78 7.26 22.9 8.1 22.9 9.05V15.05C22.9 16 22.78 16.84 22.54 17.68C22.3 18.52 21.9 19.26 21.34 19.82C20.78 20.38 20.04 20.78 19.2 21.02C18.36 21.26 17.52 21.38 16.57 21.38H7.43C6.48 21.38 5.64 21.26 4.8 21.02C3.96 20.78 3.22 20.38 2.66 19.82C2.1 19.26 1.7 18.52 1.46 17.68C1.22 16.84 1.1 16 1.1 15.05V9.05C1.1 8.1 1.22 7.26 1.46 6.42C1.7 5.58 2.1 4.84 2.66 4.28C3.22 3.72 3.96 3.32 4.8 3.08C5.64 2.84 6.48 2.72 7.43 2.72H16.57C17.52 2.72 18.36 2.84 19.2 3.08C20.04 3.32 20.78 3.72 21.34 4.28C21.9 4.84 22.3 5.58 22.54 6.42Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 8L16 12L10 16V8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
         </div>
         <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
     </header>
