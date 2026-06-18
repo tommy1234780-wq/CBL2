@@ -5,23 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中繼排行榜</title>
     <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #333;
+            --header-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --link-color: #1565c0;
+            --link-border: #1565c0;
+            --link-hover-bg: #1565c0;
+            --link-hover-text: #ffffff;
+            --border-color: #e0e0e0;
+            --title-color: #0d47a1;
+            --card-bg: #ffffff;
+            --section-title-border: #e0e0e0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --text-color: #e0e0e0;
+                --header-bg: #1e1e1e;
+                --nav-bg: #1e1e1e;
+                --link-color: #4e9af1;
+                --link-border: #4e9af1;
+                --link-hover-bg: #4e9af1;
+                --link-hover-text: #ffffff;
+                --border-color: #333333;
+                --title-color: #4e9af1;
+                --card-bg: #1e1e1e;
+                --section-title-border: #333333;
+            }
+            th { background-color: #242526 !important; color: #e0e0e0 !important; }
+            td { border-bottom: 1px solid #333 !important; color: #e0e0e0 !important; }
+            table { background-color: #1e1e1e !important; }
+        }
+
         * {
             box-sizing: border-box;
         }
         body {
             font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        h1 {
+            color: var(--title-color);
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            background-color: var(--card-bg);
         }
         th, td {
-            border: 1px solid #dddddd;
+            border: 1px solid var(--border-color);
             text-align: left;
             padding: 8px;
+            color: var(--text-color);
         }
         th {
-            background-color: #f2f2f2;
+            background-color: var(--header-bg);
         }
 
         @media screen and (max-width: 600px) {
