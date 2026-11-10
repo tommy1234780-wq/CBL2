@@ -36,6 +36,13 @@ self.addEventListener("fetch", (event) => {
   if (path.endsWith("/admin.html") || path.endsWith("/content-admin.html") || path.endsWith("/賽程戰績表.html")) return;
   if (url.origin !== self.location.origin) return;
 
+  // Content-management responses change whenever an administrator updates the homepage.
+  // Never serve or store these dynamic API responses from the offline cache.
+  if (path.includes("/.netlify/functions/")) {
+    event.respondWith(fetch(new Request(event.request, { cache: "no-store" })));
+    return;
+  }
+
   const isDocument = event.request.mode === "navigate" || event.request.destination === "document" || path.endsWith(".html");
   const isFreshAsset = event.request.destination === "style" || event.request.destination === "script" || path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".json") || path.endsWith(".webmanifest");
 
