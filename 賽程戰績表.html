@@ -1,351 +1,179 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>賽程戰績表 - 台中市CBL企業交流聯盟</title>
-    <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --text-color: #333;
-            --header-bg: #ffffff;
-            --nav-bg: #ffffff;
-            --link-color: #1565c0;
-            --link-border: #1565c0;
-            --link-hover-bg: #1565c0;
-            --link-hover-text: #ffffff;
-            --border-color: #e0e0e0;
-            --title-color: #0d47a1;
-            --card-bg: #ffffff;
-            --section-title-border: #e0e0e0;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #121212;
-                --text-color: #e0e0e0;
-                --header-bg: #1e1e1e;
-                --nav-bg: #1e1e1e;
-                --link-color: #4e9af1;
-                --link-border: #4e9af1;
-                --link-hover-bg: #4e9af1;
-                --link-hover-text: #ffffff;
-                --border-color: #333333;
-                --title-color: #4e9af1;
-                --card-bg: #1e1e1e;
-                --section-title-border: #333333;
-            }
-            /* Specific for sub-nav in some pages */
-            .sub-nav a { background-color: #2c2c2c !important; color: #4e9af1 !important; border-color: #444 !important; }
-            .sub-nav a.active { background-color: #4e9af1 !important; color: #ffffff !important; border-color: #4e9af1 !important; }
-            /* Specific for table headers/rows in ranking pages */
-            th { background-color: #242526 !important; color: #e0e0e0 !important; }
-            td { border-bottom: 1px solid #333 !important; color: #e0e0e0 !important; }
-            table { background-color: #1e1e1e !important; }
-            .report-image { border: 1px solid #333 !important; }
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
-
-        /* --- Desktop Styles --- */
-        .header {
-            text-align: center;
-            background-color: var(--header-bg);
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .title-group {
-            display: inline-block;
-        }
-        .title-group img {
-            width: 80px;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        .title-group h1 {
-            color: var(--title-color);
-            margin: 0;
-            font-size: 2em;
-        }
-        .navbar {
-            background-color: var(--nav-bg);
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-        }
-        .nav-links {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center; /* Reverted to center */
-            flex-wrap: wrap; /* Re-added wrap */
-        }
-
-        .nav-links li {
-            margin: 5px 10px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--link-color);
-            font-size: 0.9em;
-            padding: 8px 15px;
-            border: 2px solid var(--link-border);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            background-color: var(--link-hover-bg);
-            color: var(--link-hover-text);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .menu-toggle {
-            display: none;
-        }
-
-        .container {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-            text-align: center;
-        }
-        .image-container {
-            margin-top: 20px;
-        }
-        .report-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        /* --- New Tab Styles (CPBL inspired) --- */
-        .sub-nav {
-            list-style-type: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-            border-bottom: 2px solid var(--border-color); /* Separator line */
-            text-align: left; /* Align tabs to the left */
-            display: flex; /* Use flexbox for horizontal layout */
-            flex-wrap: nowrap; /* Prevent wrapping */
-            justify-content: flex-start; /* Align tabs to the left */
-            overflow-x: auto; /* Enable horizontal scrolling if content overflows */
-            -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
-            /* Hide scrollbar for a cleaner look */
-            scrollbar-width: none;  /* Firefox */
-            -ms-overflow-style: none;   /* IE and Edge */
-        }
-        .sub-nav::-webkit-scrollbar { /* Chrome, Safari, Opera */
-            display: none;
-        }
-        .sub-nav li {
-            margin: 0; /* No margin between li items */
-            flex-shrink: 0; /* Prevent items from shrinking too much */
-        }
-        .sub-nav a {
-            text-decoration: none;
-            color: var(--title-color); /* Blue text for inactive */
-            background-color: var(--bg-color); /* Light background for inactive */
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-bottom: none; /* Remove default border-bottom */
-            border-radius: 5px 5px 0 0; /* Rounded top corners */
-            transition: all 0.2s ease;
-            cursor: pointer;
-            font-size: 1em; /* Slightly smaller for tab feel */
-            display: block; /* Make the whole area clickable */
-            white-space: nowrap; /* Prevent text from wrapping */
-        }
-        .sub-nav a:hover {
-            background-color: var(--link-hover-bg); /* Slightly darker on hover */
-            color: var(--link-hover-text);
-        }
-        .sub-nav a.active {
-            color: var(--link-hover-text); /* White text for active */
-            background-color: var(--link-hover-bg); /* Blue background for active */
-            border-color: var(--link-hover-bg);
-            font-weight: bold;
-            z-index: 1; /* Bring active tab to front */
-            position: relative;
-            transform: translateY(1px); /* Push active tab down slightly for visual effect */
-        }
-
-
-        /* --- Mobile Styles --- */
-        @media (max-width: 992px) {
-            body {
-                padding-top: 70px;
-            }
-            .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 15px;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-            .title-group {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            }
-            .title-group img {
-                width: 50px;
-                margin-bottom: 0;
-            }
-            .title-group h1 {
-                font-size: 1.2em;
-            }
-            .navbar {
-                padding: 0;
-                border: none;
-            }
-            .menu-toggle {
-                display: block; /* Show hamburger */
-                background-color: transparent;
-                color: var(--title-color);
-                border: 2px solid var(--title-color);
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 1.5em; /* Reverted to larger size */
-                padding: 0px 12px; /* Reverted to previous padding */
-                line-height: 1.2;
-            }
-            .menu-toggle:hover {
-                 background-color: var(--title-color);
-                 color: white;
-            }
-            .nav-links {
-                display: none; /* Hidden by default */
-                position: fixed;
-                top: 70px; /* Position below fixed header */
-                left: 0;
-                right: 0;
-                background: var(--header-bg);
-                box-shadow: 0 44px 8px rgba(0,0,0,0.1);
-                flex-direction: column;
-                padding: 0;
-                margin: 0;
-                z-index: 999; /* Ensure menu is on top of other content */
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .nav-links li {
-                width: 100%;
-                margin: 0;
-            }
-            .nav-links a {
-                display: block;
-                padding: 15px;
-                border-radius: 0;
-                border: none;
-                border-bottom: 1px solid var(--border-color);
-                color: var(--link-color); /* Default link color in dropdown */
-                background-color: var(--header-bg); /* Default background in dropdown */
-            }
-            .nav-links a:hover {
-                background-color: var(--bg-color); /* Light grey on hover */
-                color: var(--title-color); /* Ensure text is visible on hover */
-            }
-            .nav-links a.active {
-                background-color: var(--bg-color); /* Light blue for active item */
-                color: var(--title-color); /* Dark blue text for active item */
-                font-weight: bold; /* Make it stand out */
-                transform: none;
-                box-shadow: none;
-            }
-            .nav-links li:last-child a {
-                border-bottom: none;
-            }
-
-            /* Sub-nav mobile adjustments */
-            .sub-nav {
-                overflow-x: hidden; /* Prevent horizontal scrolling explicitly */
-                flex-wrap: nowrap; /* Explicitly prevent wrapping */
-                /* justify-content: flex-start; (default, no need to explicitly set if global is flex-start) */
-            }
-            .sub-nav li {
-                flex-shrink: 1; /* Allow items to shrink */
-                margin: 2px 3px; /* Adjust margin for tighter fit */
-            }
-            .sub-nav a {
-                white-space: nowrap; /* Prevent text from wrapping within the link */
-                font-size: 0.7em; /* Even smaller font size */
-                padding: 5px 8px; /* Even tighter padding */
-                text-align: center; /* Center text within each tab */
-            }
-            .sub-nav::-webkit-scrollbar { /* Keep scrollbar hidden */
-                display: none;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CBL 第三屆上半季正式賽程，提供黑洞組、恆星組、跨組交流與球隊賽程篩選。">
+  <meta name="theme-color" content="#03101f">
+  <meta property="og:title" content="CBL 第三屆賽程戰績">
+  <meta property="og:description" content="查看黑洞組、恆星組與跨組交流的第三屆上半季正式賽程及分組戰績。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="CBL 台中市企業交流棒球聯盟">
+  <meta property="og:url" content="https://cblcbl.netlify.app/%E8%B3%BD%E7%A8%8B%E6%88%B0%E7%B8%BE%E8%A1%A8.html">
+  <meta property="og:image" content="https://cblcbl.netlify.app/assets/cbl-season3-social-share.jpg">
+  <meta property="og:image:secure_url" content="https://cblcbl.netlify.app/assets/cbl-season3-social-share.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CBL 台中市企業交流棒球聯盟第三屆官方主視覺">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CBL 第三屆賽程戰績">
+  <meta name="twitter:description" content="查看黑洞組、恆星組與跨組交流的第三屆上半季正式賽程及分組戰績。">
+  <meta name="twitter:image" content="https://cblcbl.netlify.app/assets/cbl-season3-social-share.jpg">
+  <title>第三屆上半季賽程｜CBL 官方網站</title>
+  <link rel="canonical" href="https://cblcbl.netlify.app/%E8%B3%BD%E7%A8%8B%E6%88%B0%E7%B8%BE%E8%A1%A8.html">
+  <link rel="icon" href="assets/cbl-pwa-icon.png">
+  <link rel="stylesheet" href="assets/season3-site.css">
+  <link rel="stylesheet" href="assets/season3-schedule.css?v=20261014-sync1">
 </head>
-<body onload="showImage('賽程表.jpg', '賽程', document.querySelector('.sub-nav a'))">
+<body class="schedule-page">
+  <header class="header">
+    <a class="title-group" href="index.html" aria-label="回到 CBL 第三屆首頁">
+      <img src="assets/season3-main-logo.webp" alt="CBL 第三屆官方主 LOGO">
+      <span class="season-badge">CBL SEASON 3 · OFFICIAL WEBSITE</span>
+      <h1>台中市 CBL 企業交流聯盟</h1>
+    </a>
+    <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-controls="nav-links" aria-label="開啟主選單">&#9776;</button>
+  </header>
 
-    <header class="header">
-        <div class="title-group">
-            <img src="CBL.jpg" alt="CBL">
-            <h1>賽程戰績表</h1>
+  <nav class="navbar" aria-label="主要導覽">
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="賽程戰績表.html" class="active" aria-current="page">賽程戰績表</a></li>
+      <li><a href="數據統計.html">選手數據查詢</a></li>
+      <li><a href="打者排行榜.html">打者排行榜</a></li>
+      <li><a href="投手排行榜.html">投手排行榜</a></li>
+      <li><a href="CBL名人堂.html">CBL 名人堂</a></li>
+      <li><a href="team_introduction.html">球隊介紹</a></li>
+    </ul>
+  </nav>
+
+  <main class="schedule-main">
+    <section class="schedule-hero" aria-labelledby="schedule-title">
+      <div>
+        <span class="schedule-eyebrow">CBL TAICHUNG · SEASON 3 · FIRST HALF</span>
+        <h1 id="schedule-title">第三屆上半季賽程</h1>
+        <p>黑洞組與恆星組各自展開循環賽，最終依分組排名進入跨組交流。選擇組別或球隊，即可快速找到想看的場次。</p>
+        <div class="season-facts" aria-label="上半季賽程摘要">
+          <span>36 場正式賽程</span>
+          <span>12 個比賽日</span>
+          <span>大肚溪 A 球場</span>
         </div>
-        <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
-    </header>
+      </div>
+      <img src="assets/season3-main-logo.webp" alt="CBL 第三屆官方主 LOGO">
+    </section>
 
-    <nav class="navbar">
-        <ul class="nav-links" id="nav-links">
-            <li><a href="index.html">首頁</a></li>
-            <li><a href="賽程戰績表.html">賽程戰績表</a></li>
-            <li><a href="數據統計.html">選手數據查詢</a></li>
-            <li><a href="打者排行榜.html">打者排行榜</a></li>
-            <li><a href="投手排行榜.html">投手排行榜</a></li>
-            <li><a href="CBL名人堂.html">CBL名人堂</a></li>
-            <li><a href="team_introduction.html">球隊介紹</a></li>
-        </ul>
-    </nav>
+    <section class="schedule-workspace" aria-label="第三屆賽程與戰績">
+      <div class="schedule-view-tabs" role="tablist" aria-label="查看賽程或戰績">
+        <button type="button" role="tab" data-schedule-view="schedule" aria-selected="true" aria-controls="schedule-panel">詳細賽程</button>
+        <button type="button" role="tab" data-schedule-view="overview" aria-selected="false" aria-controls="overview-panel">賽季總覽</button>
+        <button type="button" role="tab" data-schedule-view="standings" aria-selected="false" aria-controls="standings-panel">戰績排名</button>
+      </div>
 
-    <div class="container">
-        <ul class="sub-nav">
-            <li><a class="active" onclick="showImage('賽程表.jpg', '賽程', this)">賽程</a></li>
-            <li><a onclick="showImage('隊伍排名.jpg', '戰績排名', this)">戰績排名</a></li>
-        </ul>
-
-        <div class="image-container">
-            <img id="report-image" src="賽程表.jpg" alt="戰績排名" class="report-image">
+      <section class="schedule-panel" id="schedule-panel" data-view-panel="schedule" role="tabpanel">
+        <div class="schedule-filter-shell">
+          <div class="schedule-filter-row">
+            <div class="schedule-filter-group">
+              <label>依賽事類型查看</label>
+              <div class="schedule-filter-buttons" aria-label="賽事類型篩選">
+                <button type="button" data-schedule-division="all" aria-pressed="true">全部 36 場</button>
+                <button type="button" data-schedule-division="black-hole" aria-pressed="false">黑洞組 15 場</button>
+                <button type="button" data-schedule-division="stellar" aria-pressed="false">恆星組 15 場</button>
+                <button type="button" data-schedule-division="crossover" aria-pressed="false">跨組交流 6 場</button>
+              </div>
+            </div>
+            <div class="team-filter-field">
+              <label for="schedule-team">直接查詢球隊</label>
+              <select id="schedule-team" data-schedule-team aria-label="選擇球隊查看上半季賽程"></select>
+            </div>
+          </div>
+          <p class="schedule-filter-status" data-schedule-status aria-live="polite"></p>
+          <div class="schedule-version-note" aria-label="賽程版本資訊">
+            <span data-schedule-updated>賽程最後更新</span>
+            <span data-schedule-notice>如有賽程異動，以聯盟最新公告為準。</span>
+          </div>
         </div>
+
+        <div class="schedule-list" data-schedule-list></div>
+        <noscript><div class="schedule-empty">請啟用 JavaScript 以瀏覽第三屆上半季賽程。</div></noscript>
+      </section>
+
+      <section class="schedule-panel" id="overview-panel" data-view-panel="overview" role="tabpanel" hidden>
+        <div class="overview-shell">
+          <div class="overview-heading">
+            <div>
+              <span class="schedule-section-kicker">FIRST HALF OVERVIEW</span>
+              <h2>上半季總賽程</h2>
+            </div>
+            <p>按月與比賽日整理全部 36 場賽事，方便球隊、球員與觀眾提前安排行程。</p>
+          </div>
+          <div class="overview-controls">
+            <div class="team-filter-field">
+              <label for="overview-team">查看指定球隊</label>
+              <select id="overview-team" data-overview-team aria-label="選擇球隊查看賽季總覽"></select>
+            </div>
+            <nav class="overview-month-nav" data-overview-months aria-label="賽程月份篩選"></nav>
+          </div>
+          <p class="schedule-filter-status" data-overview-status aria-live="polite"></p>
+          <div class="schedule-version-note" aria-label="賽季總覽版本資訊">
+            <span data-overview-updated>賽程最後更新</span>
+            <span>本總覽與詳細賽程使用同一份官方資料。</span>
+          </div>
+        </div>
+        <div class="overview-list" data-overview-list></div>
+        <noscript><div class="schedule-empty">請啟用 JavaScript 以瀏覽上半季總賽程。</div></noscript>
+      </section>
+
+      <section class="schedule-panel" id="standings-panel" data-view-panel="standings" role="tabpanel" hidden>
+        <div class="standings-shell">
+          <div class="standings-heading">
+            <div>
+              <span class="schedule-section-kicker">SEASON 3 STANDINGS</span>
+              <h2>第三屆分組戰績</h2>
+            </div>
+            <p>戰績與排名依聯盟正式紀錄更新。分組循環賽完成後，排名將作為跨組交流對戰依據。</p>
+          </div>
+          <div class="standings-filter" aria-label="戰績組別篩選">
+            <button type="button" data-standings-division="black-hole" aria-pressed="true">黑洞組</button>
+            <button type="button" data-standings-division="stellar" aria-pressed="false">恆星組</button>
+          </div>
+          <div class="standings-status-bar" aria-label="戰績資料狀態">
+            <div><span>目前狀態</span><strong data-standings-status>尚未開賽</strong></div>
+            <div><span>本組已完成</span><strong data-standings-games>0 場</strong></div>
+            <div><span>資料更新</span><strong data-standings-updated>賽季開始後更新</strong></div>
+          </div>
+          <div class="standings-board" data-standings-board aria-live="polite"></div>
+          <div class="standings-rule-note">
+            <strong>排名規則</strong>
+            <span>勝 2 分、和 1 分、敗 0 分；跨組交流賽計入各隊所屬組別戰績。同分時依聯盟規章比較。</span>
+          </div>
+          <noscript><div class="schedule-empty">請啟用 JavaScript 以瀏覽第三屆分組戰績。</div></noscript>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <strong>CBL TAICHUNG · SEASON 3 OFFICIAL WEBSITE</strong>
+    <p>台中市 CBL 企業交流棒球聯盟｜黑洞組 × 恆星組</p>
+    <div class="footer-links" aria-label="CBL 官方聯絡管道">
+      <a class="line" href="https://line.me/R/ti/p/@cbl7286826" target="_blank"><b>LINE</b><span>@cbl7286826</span></a>
+      <a class="facebook" href="https://www.facebook.com/profile.php?id=61577963293322&amp;sk=about" target="_blank"><b>FB</b><span>官方 Facebook</span></a>
+      <a href="https://www.instagram.com/cbl7192868286" target="_blank"><b>IG</b><span>官方 Instagram</span></a>
+      <a href="https://www.youtube.com/@CBL7868" target="_blank"><b>YT</b><span>官方 YouTube</span></a>
     </div>
+  </footer>
 
-    <script>
-        function showImage(src, alt, element) {
-            if (element) {
-                var siblings = element.parentNode.parentNode.querySelectorAll('a');
-                siblings.forEach(function(el) {
-                    el.classList.remove('active');
-                });
-                element.classList.add('active');
-            }
-
-            var img = document.getElementById('report-image');
-            img.src = src;
-            img.alt = alt;
-        }
-
-        function toggleMenu() {
-            var links = document.getElementById('nav-links');
-            links.classList.toggle('active');
-        }
-    </script>
+  <script>
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("active");
+    }
+  </script>
+  <script src="assets/season3-data.js?v=20261014-main1"></script>
+  <script src="assets/season3-schedule-data.js?v=20261014-sync1"></script>
+  <script src="assets/season3-results-data.js?v=20261014-results1"></script>
+  <script src="assets/season3-schedule.js?v=20261014-sync1"></script>
+  <script src="assets/season3-site.js"></script>
 </body>
 </html>

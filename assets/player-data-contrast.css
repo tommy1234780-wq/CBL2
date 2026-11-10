@@ -1,0 +1,212 @@
+:root {
+  --data-card-surface: #0b213a;
+  --data-card-surface-2: #102a46;
+  --data-stat-surface: #173652;
+  --data-stat-border: rgba(255, 255, 255, 0.14);
+  --data-card-border: rgba(159, 178, 197, 0.22);
+}
+
+/* 打者 / 投手共用：讓數據卡與頁面背景拉開層次 */
+.mobile-player-card {
+  margin: 0 0 12px;
+  padding: 0 14px 12px;
+  background: linear-gradient(145deg, var(--data-card-surface-2) 0%, var(--data-card-surface) 100%);
+  border: 1px solid var(--data-card-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.mobile-card-head {
+  padding: 16px 0 12px;
+}
+
+.mobile-summary {
+  gap: 8px;
+  padding: 2px 0 14px;
+}
+
+.mobile-summary-stat {
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 5px;
+  background: rgba(30, 64, 94, 0.9);
+  border: 1px solid var(--data-stat-border);
+  border-top-color: rgba(242, 184, 64, 0.24);
+  border-radius: 7px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.mobile-summary-stat span,
+.mobile-summary-stat small {
+  color: #b7c6d5;
+}
+
+.mobile-summary-stat strong,
+.mobile-summary-stat b {
+  color: #f7f4ec;
+}
+
+.mobile-toggle {
+  margin-top: 2px;
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+/* 展開後的生涯與完整數據也使用較明顯的卡片層級 */
+.mobile-details,
+.mobile-profile-inline,
+.player-profile-inline {
+  background: rgba(8, 24, 41, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-section {
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-section-heading strong {
+  color: #ffe2a0;
+}
+
+.profile-section-heading span {
+  color: #9fb2c5;
+}
+
+.profile-stats {
+  gap: 10px;
+}
+
+.profile-stat {
+  padding: 10px 8px;
+  background: #173652;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 2px solid rgba(242, 184, 64, 0.42);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.profile-stat span {
+  color: #b8c7d5;
+}
+
+.profile-stat strong {
+  color: #f7f4ec;
+}
+
+.profile-stat.primary strong {
+  color: #ff8a5b;
+}
+
+/* 歷屆紀錄 */
+.profile-history-wrap {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(14, 34, 55, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.profile-history {
+  width: 100%;
+  min-width: 610px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.profile-history th {
+  padding: 8px !important;
+  color: #07101d !important;
+  background: #f2b840 !important;
+  border-right: 1px solid rgba(7, 16, 29, 0.16) !important;
+  border-bottom: 1px solid rgba(7, 16, 29, 0.14) !important;
+}
+
+.profile-history td {
+  padding: 8px !important;
+  color: #eef4f8 !important;
+  text-align: center !important;
+  background: #163552 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.profile-history tbody tr:nth-child(even) td {
+  background: #1a3d5f !important;
+}
+
+.profile-history tbody tr:hover td {
+  background: #21486d !important;
+}
+
+/* 精準對應「完整單季數據」區塊：JS 實際產生的是 .mobile-detail-grid > .detail-stat */
+.mobile-details > .profile-section:last-child {
+  padding-top: 16px;
+  padding-bottom: 6px;
+}
+
+.mobile-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobile-detail-grid .detail-stat {
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 5px;
+  text-align: center;
+  background: #1e405e !important;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(242, 184, 64, 0.26);
+  border-radius: 7px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.mobile-detail-grid .detail-stat span {
+  display: block;
+  color: #b7c6d5 !important;
+  font-weight: 800;
+}
+
+.mobile-detail-grid .detail-stat b {
+  display: block;
+  margin-top: 5px;
+  color: #f7f4ec !important;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+/* 桌機表格同步增加列與背景對比，不改動原本排序與固定欄位功能 */
+#integrated-player-table td {
+  background: #0b2741;
+}
+
+#integrated-player-table tbody .player-data-row:nth-of-type(even) td {
+  background: #10304e;
+}
+
+#integrated-player-table .player-data-row:hover td {
+  background: #173c5f;
+}
+
+#integrated-player-table .player-data-row td.sticky-column {
+  background: #0c2944 !important;
+}
+
+@media (max-width: 760px) {
+  .integrated-mobile-list {
+    padding-top: 4px;
+  }
+
+  .mobile-player-card {
+    overflow: hidden;
+  }
+}
