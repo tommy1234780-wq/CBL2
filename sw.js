@@ -1,17 +1,17 @@
-const CACHE_NAME = "cbl-season-3-v23-team-alias-20261015";
+const CACHE_NAME = "cbl-season-3-v28-opening-20261110";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/season3-site.css",
-  "./assets/season3-home.css?v=20261014-sync1",
+  "./assets/season3-home.css?v=20261110-opening",
   "./assets/pwa.css",
   "./assets/season3-site.js",
   "./assets/season3-data.js?v=20261014-main1",
-  "./assets/season3-home-data.js?v=20261014-sync1",
-  "./assets/season3-schedule-data.js?v=20261014-sync1",
+  "./assets/season3-home-data.js?v=20261110-opening",
+  "./assets/season3-schedule-data.js?v=20261110-schedule",
   "./assets/season3-results-data.js?v=20261014-results1",
-  "./assets/content.js?v=20261014-sync1",
+  "./assets/content.js?v=20261110-opening",
   "./assets/pwa.js?v=20261014-perf1",
   "./數據統計.html",
   "./assets/player-data-center.css?v=20261015-id1",
@@ -36,8 +36,8 @@ self.addEventListener("fetch", (event) => {
   if (path.endsWith("/admin.html") || path.endsWith("/content-admin.html") || path.endsWith("/賽程戰績表.html")) return;
   if (url.origin !== self.location.origin) return;
 
-  // Content-management responses change whenever an administrator updates the homepage.
-  // Never serve or store these dynamic API responses from the offline cache.
+  // Homepage content is edited in the admin panel and must never be served
+  // from the offline cache after an update.
   if (path.includes("/.netlify/functions/")) {
     event.respondWith(fetch(new Request(event.request, { cache: "no-store" })));
     return;

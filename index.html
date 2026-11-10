@@ -32,12 +32,12 @@
   <link rel="preload" as="image" href="assets/homepage-season3-key-visual.webp" media="(min-width: 761px)" fetchpriority="high">
   <link rel="preload" as="image" href="assets/homepage-season3-mobile-bg.webp" media="(max-width: 760px)" fetchpriority="high">
   <link rel="stylesheet" href="assets/season3-site.css">
-  <link rel="stylesheet" href="assets/season3-home.css?v=20261015-mobile-gap-fix">
+  <link rel="stylesheet" href="assets/season3-home.css?v=20261110-opening">
   <link rel="stylesheet" href="assets/pwa.css?v=20260813-theme2">
 </head>
 <body class="home-page">
   <header class="header">
-    <a class="title-group" href="index.html" aria-label="回到 CBL 第三屆首頁">
+    <a class="title-group" href="/" aria-label="回到 CBL 第三屆首頁">
       <img src="assets/season3-main-logo.webp" alt="CBL 第三屆官方主 LOGO">
       <span class="season-badge">CBL SEASON 3 · OFFICIAL WEBSITE</span>
       <h1>台中市 CBL 企業交流聯盟</h1>
@@ -48,13 +48,13 @@
 
   <nav class="navbar" aria-label="主要導覽">
     <ul class="nav-links" id="nav-links">
-      <li><a href="index.html" class="active" aria-current="page">首頁</a></li>
+      <li><a href="/" class="active" aria-current="page">首頁</a></li>
       <li><a href="賽程戰績表.html">賽程戰績表</a></li>
       <li><a href="數據統計.html">選手數據查詢</a></li>
       <li><a href="打者排行榜.html">打者排行榜</a></li>
       <li><a href="投手排行榜.html">投手排行榜</a></li>
       <li><a href="CBL名人堂.html">CBL 名人堂</a></li>
-      <li><a href="team_introduction.html">球隊介紹</a></li>
+      <li><a href="/team_introduction">球隊介紹</a></li>
     </ul>
   </nav>
 
@@ -76,11 +76,11 @@
       </div>
 
       <div class="hero-divisions" aria-label="第三屆聯盟分組">
-        <a class="hero-division" href="team_introduction.html?division=black-hole" aria-label="查看黑洞組 6 支正式球隊">
+        <a class="hero-division" href="/team_introduction?division=black-hole" aria-label="查看黑洞組 6 支正式球隊">
           <img src="assets/black-hole-division-logo.webp" alt="黑洞組 LOGO">
           <div><span>黑洞組</span><small>查看 6 支正式球隊</small></div>
         </a>
-        <a class="hero-division" href="team_introduction.html?division=stellar" aria-label="查看恆星組 6 支正式球隊">
+        <a class="hero-division" href="/team_introduction?division=stellar" aria-label="查看恆星組 6 支正式球隊">
           <img src="assets/stellar-division-logo.webp" alt="恆星組 LOGO">
           <div><span>恆星組</span><small>查看 6 支正式球隊</small></div>
         </a>
@@ -91,7 +91,7 @@
       <a href="賽程戰績表.html"><strong>賽程與戰績</strong><span>雙組賽程、戰績排名</span></a>
       <a href="數據統計.html"><strong>選手數據</strong><span>打者與投手完整紀錄</span></a>
       <a href="打者排行榜.html"><strong>聯盟排行榜</strong><span>打擊、投球各項領先者</span></a>
-      <a href="team_introduction.html"><strong>第三屆球隊</strong><span>認識本屆參賽隊伍</span></a>
+      <a href="/team_introduction"><strong>第三屆球隊</strong><span>認識本屆參賽隊伍</span></a>
     </section>
 
     <section class="home-section notification-section" aria-labelledby="notification-title">
@@ -120,32 +120,32 @@
       </div>
     </section>
 
-    <section class="home-section" aria-labelledby="weekly-title">
+    <section class="home-section" data-weekly-mode="preview" aria-labelledby="weekly-title">
       <div class="section-heading">
         <div>
-          <span class="kicker">WEEKLY REPORT</span>
-          <h2 id="weekly-title">每週戰況</h2>
+          <span class="kicker" data-weekly-kicker>OPENING DAY</span>
+          <h2 id="weekly-title">第三屆開季賽程</h2>
         </div>
-        <p>掌握本週賽果與聯盟焦點，完整賽程及分組戰績可前往賽程戰績表查詢。</p>
+        <p data-weekly-description>11/21（六）開打｜大肚溪 A 球場</p>
       </div>
       <div class="weekly-panel">
-        <a class="weekly-report-link" data-weekly-report-link href="賽程戰績表.html#schedule" aria-label="查看第三屆上半季賽程">
+        <a class="weekly-report-link" data-weekly-report-link href="賽程戰績表.html?week=2026-11-21#schedule" aria-label="查看 11/21 開季三場賽程">
+          <span class="weekly-link-action" data-weekly-link-action>查看 11/21 三場賽程</span>
           <div class="weekly-stage" id="weekly-report" data-state="ready">
-            <img src="assets/weekly-report.webp" alt="CBL 第三屆每週戰況" class="weekly-report-image" id="weekly-report-image" loading="lazy" decoding="async" fetchpriority="low">
+            <img src="assets/season3-opening-schedule-20261121.webp" alt="CBL 第三屆 11/21 開季賽程預告" width="1080" height="1920" class="weekly-report-image" id="weekly-report-image" loading="lazy" decoding="async" fetchpriority="low">
             <div class="weekly-status" role="status" aria-live="polite">
               <img src="assets/season3-main-logo.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
-              <span>CBL WEEKLY REPORT</span>
-              <strong class="weekly-loading-title">正在更新本週戰報</strong>
-              <strong class="weekly-empty-title">本週戰報整理中</strong>
-              <p>賽果完成確認後，聯盟將於此處發布正式戰報。</p>
+              <span data-weekly-status-kicker>CBL OPENING DAY</span>
+              <strong class="weekly-loading-title">正在載入公告圖</strong>
+              <strong class="weekly-empty-title" data-weekly-empty>11/21 開季賽程</strong>
+              <p data-weekly-status-description>開賽時間、對戰組合與球場可在賽程頁查詢。</p>
             </div>
-            <span class="weekly-link-action" data-weekly-link-action>查看上半季賽程</span>
           </div>
         </a>
       </div>
     </section>
 
-    <section class="home-section" aria-labelledby="division-title">
+    <section class="home-section dual-division-showcase" id="dual-division" aria-labelledby="division-title">
       <div class="section-heading">
         <div>
           <span class="kicker">TWO DIVISIONS · ONE LEAGUE</span>
@@ -154,27 +154,23 @@
         <p>兩種天體性格，代表兩條競逐勝利的軌道；最終都在同一座 CBL 棒球星系交會。</p>
       </div>
 
-      <div class="division-grid">
-        <a class="division-card hole" href="team_introduction.html?division=black-hole" aria-label="探索黑洞組 6 支正式球隊">
-          <img src="assets/black-hole-division-logo.webp" alt="黑洞組官方 LOGO" loading="lazy" decoding="async">
-          <div class="copy">
-            <span class="label">BLACK HOLE DIVISION</span>
-            <h3>黑洞組</h3>
-            <p>象徵壓迫、牽引、未知與極限。每支球隊都要在強大重力場中，找到屬於自己的勝利軌道。</p>
-            <strong>深不可測，萬有引力。</strong>
-            <span class="division-card-action">探索黑洞組 6 支球隊 <b aria-hidden="true">→</b></span>
-          </div>
-        </a>
+      <figure class="division-showcase-art" aria-label="第三屆聯盟主徽章居中，黑洞組與恆星組分列宇宙棒球場兩側">
+        <img class="showcase-scene" src="assets/season3-dual-division-brand-safe.webp" width="1671" height="941" alt="" loading="lazy" decoding="async" fetchpriority="low">
+        <img class="showcase-logo showcase-logo-main" src="assets/season3-main-logo.webp" width="900" height="900" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        <img class="showcase-logo showcase-logo-hole" src="assets/black-hole-division-logo.webp" width="420" height="420" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        <img class="showcase-logo showcase-logo-stellar" src="assets/stellar-division-logo.webp" width="420" height="420" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      </figure>
 
-        <a class="division-card stellar" href="team_introduction.html?division=stellar" aria-label="探索恆星組 6 支正式球隊">
-          <img src="assets/stellar-division-logo.webp" alt="恆星組官方 LOGO" loading="lazy" decoding="async">
-          <div class="copy">
-            <span class="label">STELLAR DIVISION</span>
-            <h3>恆星組</h3>
-            <p>象徵光芒、熱血、穩定與爆發。球隊在整季燃燒能量，並於關鍵時刻照亮整座戰場。</p>
-            <strong>燃燒核心，照亮戰場。</strong>
-            <span class="division-card-action">探索恆星組 6 支球隊 <b aria-hidden="true">→</b></span>
-          </div>
+      <div class="division-showcase-links" aria-label="查看第三屆分組球隊">
+        <a class="division-showcase-link hole" href="/team_introduction?division=black-hole" aria-label="查看黑洞組 6 支正式球隊">
+          <img src="assets/black-hole-division-logo.webp" width="420" height="420" alt="" loading="lazy" decoding="async">
+          <span class="division-showcase-copy"><small>BLACK HOLE DIVISION</small><strong>黑洞組</strong><span>深不可測，萬有引力。</span></span>
+          <span class="division-showcase-go">6 支球隊 <b aria-hidden="true">↗</b></span>
+        </a>
+        <a class="division-showcase-link stellar" href="/team_introduction?division=stellar" aria-label="查看恆星組 6 支正式球隊">
+          <img src="assets/stellar-division-logo.webp" width="420" height="420" alt="" loading="lazy" decoding="async">
+          <span class="division-showcase-copy"><small>STELLAR DIVISION</small><strong>恆星組</strong><span>燃燒核心，照亮戰場。</span></span>
+          <span class="division-showcase-go">6 支球隊 <b aria-hidden="true">↗</b></span>
         </a>
       </div>
     </section>
@@ -220,8 +216,8 @@
     <strong>CBL TAICHUNG · SEASON 3 OFFICIAL WEBSITE</strong>
     <p>台中市 CBL 企業交流棒球聯盟｜黑洞組 × 恆星組</p>
     <div class="footer-links" aria-label="CBL 官方聯絡管道">
-      <a href="admin.html"><b>推播</b><span>官方管理</span></a>
-      <a href="content-admin.html"><b>內容</b><span>賽事管理</span></a>
+      <a href="/admin"><b>推播</b><span>官方管理</span></a>
+      <a href="/content-admin"><b>內容</b><span>賽事管理</span></a>
       <a class="line" href="https://line.me/R/ti/p/@cbl7286826" target="_blank"><b>LINE</b><span>@cbl7286826</span></a>
       <a class="facebook" href="https://www.facebook.com/profile.php?id=61577963293322&amp;sk=about" target="_blank"><b>FB</b><span>官方 Facebook</span></a>
       <a href="https://www.instagram.com/cbl7192868286" target="_blank"><b>IG</b><span>官方 Instagram</span></a>
@@ -235,11 +231,11 @@
     }
   </script>
   <script src="assets/season3-data.js?v=20261014-main1"></script>
-  <script src="assets/season3-schedule-data.js?v=20261014-sync1"></script>
+  <script src="assets/season3-schedule-data.js?v=20261110-schedule"></script>
   <script src="assets/season3-results-data.js?v=20261014-results1"></script>
-  <script src="assets/season3-home-data.js?v=20261014-sync1"></script>
+  <script src="assets/season3-home-data.js?v=20261110-opening"></script>
   <script src="assets/season3-site.js"></script>
   <script src="assets/pwa.js?v=20261014-perf1"></script>
-  <script src="assets/content.js?v=20261014-sync1"></script>
+  <script src="assets/content.js?v=20261110-opening"></script>
 </body>
 </html>

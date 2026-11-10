@@ -4,39 +4,9 @@
   window.CBL_SEASON3_SCHEDULE = {
   "title": "第三屆上半季賽程",
   "venue": "大肚溪A球場",
-  "updatedAt": "2026-10-13",
+  "updatedAt": "2026-11-09",
   "notice": "如有賽程異動，以聯盟最新公告為準。",
   "games": [
-    {
-      "id": "S3-001",
-      "date": "2026-11-07",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "venue": "大肚溪A球場",
-      "away": "good-chill",
-      "home": "hell-angels"
-    },
-    {
-      "id": "S3-002",
-      "date": "2026-11-07",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "venue": "大肚溪A球場",
-      "away": "ngu",
-      "home": "nomads"
-    },
-    {
-      "id": "S3-003",
-      "date": "2026-11-07",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "venue": "大肚溪A球場",
-      "away": "jtron",
-      "home": "anmu-tech"
-    },
     {
       "id": "S3-004",
       "date": "2026-11-21",
@@ -78,13 +48,13 @@
       "home": "anmu-tech"
     },
     {
-      "id": "S3-008",
+      "id": "S3-014",
       "date": "2026-11-28",
       "time": "10:50",
       "slot": 2,
       "division": "stellar",
       "venue": "大肚溪A球場",
-      "away": "ngu",
+      "away": "nomads",
       "home": "rakuten"
     },
     {
@@ -148,13 +118,13 @@
       "home": "good-chill"
     },
     {
-      "id": "S3-014",
+      "id": "S3-008",
       "date": "2026-12-12",
       "time": "13:40",
       "slot": 3,
       "division": "stellar",
       "venue": "大肚溪A球場",
-      "away": "nomads",
+      "away": "ngu",
       "home": "rakuten"
     },
     {
@@ -308,8 +278,38 @@
       "home": "nomads"
     },
     {
-      "id": "S3-031",
+      "id": "S3-001",
       "date": "2027-02-13",
+      "time": "08:00",
+      "slot": 1,
+      "division": "black-hole",
+      "venue": "大肚溪A球場",
+      "away": "good-chill",
+      "home": "hell-angels"
+    },
+    {
+      "id": "S3-002",
+      "date": "2027-02-13",
+      "time": "10:50",
+      "slot": 2,
+      "division": "stellar",
+      "venue": "大肚溪A球場",
+      "away": "ngu",
+      "home": "nomads"
+    },
+    {
+      "id": "S3-003",
+      "date": "2027-02-13",
+      "time": "13:40",
+      "slot": 3,
+      "division": "black-hole",
+      "venue": "大肚溪A球場",
+      "away": "jtron",
+      "home": "anmu-tech"
+    },
+    {
+      "id": "S3-031",
+      "date": "2027-02-20",
       "time": "08:00",
       "slot": 1,
       "division": "crossover",
@@ -319,7 +319,7 @@
     },
     {
       "id": "S3-032",
-      "date": "2027-02-13",
+      "date": "2027-02-20",
       "time": "10:50",
       "slot": 2,
       "division": "crossover",
@@ -329,7 +329,7 @@
     },
     {
       "id": "S3-033",
-      "date": "2027-02-13",
+      "date": "2027-02-20",
       "time": "13:40",
       "slot": 3,
       "division": "crossover",
@@ -339,7 +339,7 @@
     },
     {
       "id": "S3-034",
-      "date": "2027-02-20",
+      "date": "2027-02-27",
       "time": "08:00",
       "slot": 1,
       "division": "crossover",
@@ -349,7 +349,7 @@
     },
     {
       "id": "S3-035",
-      "date": "2027-02-20",
+      "date": "2027-02-27",
       "time": "10:50",
       "slot": 2,
       "division": "crossover",
@@ -359,7 +359,7 @@
     },
     {
       "id": "S3-036",
-      "date": "2027-02-20",
+      "date": "2027-02-27",
       "time": "13:40",
       "slot": 3,
       "division": "crossover",

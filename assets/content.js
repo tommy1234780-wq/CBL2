@@ -20,7 +20,7 @@
       if (!response.ok) return;
       const data = await response.json();
       const assets = Object.fromEntries((data.assets || []).map((asset) => [asset.asset_key, asset]));
-      if (weeklyImage && assets.weekly_report) {
+      if (weeklyImage && assets.weekly_report && weeklyStage?.closest("[data-weekly-mode]")?.dataset.weeklyMode === "results") {
         setWeeklyState("loading");
         weeklyImage.src = assets.weekly_report.url;
         weeklyImage.alt = assets.weekly_report.alt_text || "CBL 第三屆每週戰況";

@@ -73,6 +73,7 @@
 
   const weeklyLink = document.querySelector("[data-weekly-report-link]");
   const weeklyAction = document.querySelector("[data-weekly-link-action]");
+  const weeklySection = weeklyLink?.closest("[data-weekly-mode]");
   const schedule = window.CBL_SEASON3_SCHEDULE;
   const results = window.CBL_SEASON3_RESULTS;
   if (weeklyLink && schedule && results) {
@@ -81,7 +82,19 @@
       .map((game) => game.date)
       .sort()
       .pop();
-    if (latestDate) {
+    if (latestDate && weeklySection) {
+      weeklySection.dataset.weeklyMode = "results";
+      weeklySection.querySelector("[data-weekly-kicker]").textContent = "WEEKLY REPORT";
+      weeklySection.querySelector("#weekly-title").textContent = "每週戰況";
+      weeklySection.querySelector("[data-weekly-description]").textContent = "第三屆最新正式賽果與每週戰報。";
+      weeklySection.querySelector("[data-weekly-status-kicker]").textContent = "CBL WEEKLY REPORT";
+      weeklySection.querySelector("[data-weekly-empty]").textContent = "本週戰報整理中";
+      weeklySection.querySelector("[data-weekly-status-description]").textContent = "正式賽果已公布，可先查看完整比分。";
+      const stage = weeklySection.querySelector("#weekly-report");
+      const image = stage.querySelector("#weekly-report-image");
+      stage.dataset.state = "empty";
+      for (const attribute of ["src", "width", "height"]) image.removeAttribute(attribute);
+      image.alt = "CBL 第三屆每週戰況";
       weeklyLink.href = "賽程戰績表.html?result=latest#schedule";
       weeklyLink.setAttribute("aria-label", `查看 ${latestDate} 當週完整賽果`);
       if (weeklyAction) weeklyAction.textContent = "查看當週完整賽果";

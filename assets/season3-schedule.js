@@ -197,7 +197,9 @@
 
     const team = getTeam(activeTeam);
     const label = team ? team.displayName : divisionLabels[activeDivision];
-    const focusLabel = focusDate ? `· 已定位 ${formatDateParts(focusDate).dateText} 賽果` : "";
+    const focusHasResults = schedule.games.some((game) =>
+      game.date === focusDate && ["完賽", "沒收"].includes(getGameResult(game.id)?.status));
+    const focusLabel = focusDate ? `· 已定位 ${formatDateParts(focusDate).dateText} ${focusHasResults ? "賽果" : "賽程"}` : "";
     statusRoot.innerHTML = `<strong>目前顯示：${escapeHtml(label)} ${escapeHtml(focusLabel)}</strong><span>共 ${games.length} 場上半季賽事</span>`;
     divisionButtons.forEach((button) => {
       button.setAttribute("aria-pressed", String(!activeTeam && button.dataset.scheduleDivision === activeDivision));

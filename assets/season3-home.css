@@ -339,6 +339,11 @@
   box-shadow: 0 24px 54px rgba(0, 0, 0, 0.27);
 }
 
+[data-weekly-mode="preview"] .weekly-panel {
+  max-width: 500px;
+  margin-inline: auto;
+}
+
 .weekly-report-link {
   display: block;
   color: inherit;
@@ -365,12 +370,10 @@
 }
 
 .weekly-link-action {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  z-index: 3;
-  display: inline-flex;
-  min-height: 38px;
+  display: flex;
+  width: fit-content;
+  min-height: 44px;
+  margin: 0 0 10px auto;
   padding: 0 14px;
   align-items: center;
   color: #07101d;
@@ -386,11 +389,6 @@
 .weekly-report-link:hover .weekly-link-action {
   background: #ffe0a0;
   transform: translateY(-2px);
-}
-
-.weekly-stage[data-state="loading"] .weekly-link-action,
-.weekly-stage[data-state="empty"] .weekly-link-action {
-  display: none;
 }
 
 .weekly-status {
@@ -473,7 +471,7 @@
 
 .weekly-stage[data-state="loading"] .weekly-report-image,
 .weekly-stage[data-state="empty"] .weekly-report-image {
-  visibility: hidden;
+  display: none;
 }
 
 .weekly-stage[data-state="empty"] .weekly-loading-title {
@@ -484,115 +482,129 @@
   display: block;
 }
 
-.division-grid {
+.dual-division-showcase {
+  scroll-margin-top: 22px;
+}
+
+.division-showcase-art {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(230, 176, 77, 0.42);
+  background: #030713;
+}
+
+.division-showcase-art .showcase-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.division-showcase-art .showcase-logo {
+  position: absolute;
+  display: block;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.72));
+}
+
+.division-showcase-art .showcase-logo-main {
+  z-index: 2;
+  top: 11%;
+  left: 50%;
+  width: 30%;
+  transform: translateX(-50%);
+}
+
+.division-showcase-art .showcase-logo-hole,
+.division-showcase-art .showcase-logo-stellar {
+  z-index: 1;
+  top: 43%;
+  width: 22%;
+}
+
+.division-showcase-art .showcase-logo-hole {
+  left: 17%;
+}
+
+.division-showcase-art .showcase-logo-stellar {
+  right: 17%;
+}
+
+.division-showcase-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  border: 1px solid rgba(230, 176, 77, 0.3);
+  border-top: 0;
+  background: #071526;
 }
 
-.division-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 142px minmax(0, 1fr);
-  min-height: 220px;
-  padding: 25px;
-  gap: 22px;
+.division-showcase-link {
+  display: flex;
+  min-width: 0;
+  min-height: 100px;
+  padding: 20px 28px;
   align-items: center;
-  overflow: hidden;
-  background: rgba(5, 20, 39, 0.88);
-  border: 1px solid rgba(242, 184, 64, 0.18);
-  border-radius: 8px;
-  color: inherit;
+  justify-content: space-between;
+  gap: 15px;
+  color: #f8f8f6;
   text-decoration: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.18s ease;
 }
 
-.division-card:hover,
-.division-card:focus-visible {
-  transform: translateY(-3px);
-  border-color: rgba(242, 184, 64, 0.5);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+.division-showcase-link + .division-showcase-link {
+  border-left: 1px solid rgba(230, 176, 77, 0.24);
 }
 
-.division-card::after {
-  content: "";
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  right: -100px;
-  bottom: -120px;
-  border-radius: 50%;
-  opacity: 0.24;
+.division-showcase-link:hover,
+.division-showcase-link:focus-visible {
+  background: #10233a;
 }
 
-.division-card.hole::after {
-  background: var(--cbl-hole);
-  box-shadow: 0 0 80px var(--cbl-hole);
+.division-showcase-link:focus-visible {
+  outline: 2px solid #f2b840;
+  outline-offset: -3px;
 }
 
-.division-card.stellar::after {
-  background: var(--cbl-stellar);
-  box-shadow: 0 0 80px var(--cbl-stellar);
+.division-showcase-link img {
+  display: none;
 }
 
-.division-card img {
-  position: relative;
-  z-index: 1;
-  width: 136px;
-  height: 152px;
-  object-fit: contain;
-  filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.48));
+.division-showcase-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
 }
 
-.division-card .copy {
-  position: relative;
-  z-index: 1;
-}
-
-.division-card .label {
-  color: var(--cbl-gold);
+.division-showcase-copy small {
+  color: #dcb76d;
   font-family: Arial, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.15em;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
-.division-card h3 {
-  margin: 7px 0 8px;
-  color: #fff;
-  font-size: 1.65rem;
+.division-showcase-copy strong {
+  font-size: 1.3rem;
+  line-height: 1.2;
 }
 
-.division-card p {
-  margin: 0;
-  color: #b7c5d5;
-  font-size: 0.9rem;
-  line-height: 1.7;
+.division-showcase-copy > span {
+  color: #b8c6d7;
+  font-size: 0.82rem;
 }
 
-.division-card strong {
-  display: block;
-  margin-top: 13px;
-  color: #fff;
-  font-size: 0.96rem;
-  letter-spacing: 0.05em;
+.division-showcase-go {
+  flex: none;
+  color: #f0c570;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
-.division-card .division-card-action {
-  display: inline-flex;
-  margin-top: 17px;
-  padding-top: 12px;
-  gap: 8px;
-  align-items: center;
-  color: var(--cbl-gold-pale);
-  font-size: 0.78rem;
-  font-weight: 850;
-  border-top: 1px solid rgba(242, 184, 64, 0.18);
-}
-
-.division-card .division-card-action b {
-  color: var(--cbl-gold);
-  font-size: 1rem;
+.division-showcase-go b {
+  margin-left: 4px;
+  font-size: 1.08rem;
 }
 
 .video-grid {
@@ -970,16 +982,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .division-card {
-    grid-template-columns: 110px minmax(0, 1fr);
-    padding: 20px;
-    gap: 16px;
-  }
-
-  .division-card img {
-    width: 108px;
-    height: 130px;
-  }
 }
 
 @media (max-width: 760px) {
@@ -1099,21 +1101,77 @@
   }
 
   .weekly-link-action {
-    right: 9px;
-    bottom: 9px;
-    min-height: 34px;
     padding-inline: 11px;
-    font-size: 0.7rem;
   }
 
-  .division-grid,
   .video-grid {
     grid-template-columns: 1fr;
   }
 
-  .division-card {
-    min-height: auto;
-    overflow: hidden;
+  .division-showcase-art {
+    margin-inline: -12px;
+    border-inline: 0;
+  }
+
+  .division-showcase-art .showcase-logo-main {
+    top: 12%;
+    width: 31%;
+  }
+
+  .division-showcase-art .showcase-logo-hole,
+  .division-showcase-art .showcase-logo-stellar {
+    top: 44%;
+    width: 24%;
+  }
+
+  .division-showcase-art .showcase-logo-hole {
+    left: 10%;
+  }
+
+  .division-showcase-art .showcase-logo-stellar {
+    right: 10%;
+  }
+
+  .division-showcase-links {
+    grid-template-columns: 1fr;
+    margin-inline: -12px;
+    border-inline: 0;
+  }
+
+  .division-showcase-link {
+    min-height: 92px;
+    padding: 12px 17px;
+    justify-content: start;
+    gap: 12px;
+  }
+
+  .division-showcase-link + .division-showcase-link {
+    border-top: 1px solid rgba(230, 176, 77, 0.24);
+    border-left: 0;
+  }
+
+  .division-showcase-link img {
+    display: block;
+    flex: none;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+  }
+
+  .division-showcase-copy {
+    flex: 1;
+  }
+
+  .division-showcase-copy strong {
+    font-size: 1.18rem;
+  }
+
+  .division-showcase-go {
+    font-size: 0;
+  }
+
+  .division-showcase-go b {
+    font-size: 1.25rem;
   }
 
   .division-video-panel {
@@ -1145,27 +1203,6 @@
 
   .quick-links a {
     min-height: 74px;
-  }
-
-  .division-card {
-    grid-template-columns: 88px minmax(0, 1fr);
-    min-height: auto;
-    padding: 16px;
-    gap: 13px;
-  }
-
-  .division-card img {
-    width: 86px;
-    height: 108px;
-  }
-
-  .division-card h3 {
-    font-size: 1.35rem;
-  }
-
-  .division-card p {
-    font-size: 0.82rem;
-    line-height: 1.65;
   }
 
   .footer-links {
@@ -1294,7 +1331,7 @@
 @media (min-width: 1041px) {
   .hero-copy {
     width: 410px;
-    transform: translateX(-90px);
+    transform: translateX(clamp(-90px, calc(600px - 50vw), 0px));
   }
 }
 
@@ -1324,7 +1361,7 @@
 
 @media (max-width: 760px) {
   .season-hero {
-    min-height: auto;
+    min-height: 0;
     background-image:
       linear-gradient(180deg, rgba(2, 9, 20, 0.04) 0 26%, rgba(2, 9, 20, 0.36) 38%, rgba(2, 9, 20, 0.9) 58%, #020914 82%),
       url("homepage-season3-mobile-bg.webp");
@@ -1357,7 +1394,7 @@
   .hero-grid {
     display: flex;
     min-height: 0;
-    padding: 0 14px 20px;
+    padding: 0 14px 132px;
     align-items: flex-start;
     text-align: left;
   }
@@ -1381,13 +1418,8 @@
   }
 
   .hero-divisions {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    left: auto;
+    bottom: 16px;
     width: calc(100% - 28px);
-    margin: 0 auto 16px;
-    transform: none;
   }
 }
 
@@ -1404,7 +1436,7 @@
 
   .hero-grid {
     padding-top: 0;
-    padding-bottom: 16px;
+    padding-bottom: 142px;
   }
 
   .hero-copy h1 {
@@ -1426,7 +1458,7 @@
   }
 }
 
-/* Mobile hero: keep division links immediately below the intro card. */
+/* Keep the division shortcuts in flow immediately below the mobile intro. */
 @media (max-width: 760px) {
   .home-page .season-hero {
     display: flex;
@@ -1435,6 +1467,7 @@
     min-height: 0;
     padding-bottom: 0;
   }
+
   .home-page .hero-grid {
     flex: 0 0 auto;
     height: auto;
@@ -1442,6 +1475,7 @@
     margin: 0;
     padding-bottom: 16px;
   }
+
   .home-page .hero-divisions {
     position: static;
     flex: 0 0 auto;
