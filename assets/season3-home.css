@@ -369,6 +369,25 @@
   border-radius: 5px;
 }
 
+/* The opening-day artwork is portrait.  On desktop it is a preview, so keep
+   it within a single viewport; the linked schedule page remains the full view. */
+@media (min-width: 761px) {
+  [data-weekly-mode="preview"] .weekly-panel {
+    max-width: 420px;
+  }
+
+  [data-weekly-mode="preview"] .weekly-stage {
+    min-height: 0;
+  }
+
+  [data-weekly-mode="preview"] .weekly-report-image {
+    width: auto;
+    max-width: 100%;
+    max-height: min(62vh, 560px);
+    margin-inline: auto;
+  }
+}
+
 .weekly-link-action {
   display: flex;
   width: fit-content;
