@@ -339,11 +339,6 @@
   box-shadow: 0 24px 54px rgba(0, 0, 0, 0.27);
 }
 
-[data-weekly-mode="preview"] .weekly-panel {
-  max-width: 500px;
-  margin-inline: auto;
-}
-
 .weekly-report-link {
   display: block;
   color: inherit;
@@ -369,23 +364,8 @@
   border-radius: 5px;
 }
 
-/* The opening-day artwork is portrait.  On desktop it is a preview, so keep
-   it within a single viewport; the linked schedule page remains the full view. */
-@media (min-width: 761px) {
-  [data-weekly-mode="preview"] .weekly-panel {
-    max-width: 420px;
-  }
-
-  [data-weekly-mode="preview"] .weekly-stage {
-    min-height: 0;
-  }
-
-  [data-weekly-mode="preview"] .weekly-report-image {
-    width: auto;
-    max-width: 100%;
-    max-height: min(62vh, 560px);
-    margin-inline: auto;
-  }
+[data-weekly-mode="preview"] .weekly-stage[data-state="ready"] {
+  min-height: 0;
 }
 
 .weekly-link-action {
@@ -1121,6 +1101,11 @@
 
   .weekly-link-action {
     padding-inline: 11px;
+  }
+
+  [data-weekly-mode="preview"] .weekly-link-action {
+    width: 100%;
+    justify-content: center;
   }
 
   .video-grid {

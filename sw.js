@@ -1,10 +1,10 @@
-const CACHE_NAME = "cbl-season-3-v28-opening-20261110";
+const CACHE_NAME = "cbl-season-3-v29-first-half-20261110";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/season3-site.css",
-  "./assets/season3-home.css?v=20261110-opening",
+  "./assets/season3-home.css?v=20261110-first-half",
   "./assets/pwa.css",
   "./assets/season3-site.js",
   "./assets/season3-data.js?v=20261014-main1",
