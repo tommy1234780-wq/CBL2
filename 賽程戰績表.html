@@ -26,6 +26,7 @@
   <link rel="icon" href="assets/cbl-pwa-icon.png">
   <link rel="stylesheet" href="assets/season3-site.css">
   <link rel="stylesheet" href="assets/season3-schedule.css?v=20261014-sync1">
+  <link rel="stylesheet" href="assets/team-archive/archive.css">
 </head>
 <body class="schedule-page">
   <header class="header">
@@ -65,10 +66,17 @@
     </section>
 
     <section class="schedule-workspace" aria-label="第三屆賽程與戰績">
-      <div class="schedule-view-tabs" role="tablist" aria-label="查看賽程或戰績">
-        <button type="button" role="tab" data-schedule-view="schedule" aria-selected="true" aria-controls="schedule-panel">詳細賽程</button>
-        <button type="button" role="tab" data-schedule-view="overview" aria-selected="false" aria-controls="overview-panel">賽季總覽</button>
-        <button type="button" role="tab" data-schedule-view="standings" aria-selected="false" aria-controls="standings-panel">戰績排名</button>
+      <div class="schedule-view-row">
+        <div class="schedule-view-tabs" role="tablist" aria-label="查看賽程或戰績">
+          <button type="button" role="tab" data-schedule-view="schedule" aria-selected="true" aria-controls="schedule-panel">詳細賽程</button>
+          <button type="button" role="tab" data-schedule-view="overview" aria-selected="false" aria-controls="overview-panel">賽季總覽</button>
+          <button type="button" role="tab" data-schedule-view="standings" aria-selected="false" aria-controls="standings-panel">戰績排名</button>
+        </div>
+        <a class="archive-entry" href="歷屆球隊戰績.html" data-team-archive-entry>
+          <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 3h10v8a5 5 0 0 1-10 0V3ZM7 5H4v3a3 3 0 0 0 3 3m10-6h3v3a3 3 0 0 1-3 3"/></svg>
+          <span><strong>歷屆球隊戰績</strong><small>第一屆、第二屆｜例行賽與季後賽</small></span>
+          <svg class="archive-entry-arrow" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
       </div>
 
       <section class="schedule-panel" id="schedule-panel" data-view-panel="schedule" role="tabpanel">
@@ -173,7 +181,7 @@
   <script src="assets/season3-data.js?v=20261014-main1"></script>
   <script src="assets/season3-schedule-data.js?v=20261110-schedule"></script>
   <script src="assets/season3-results-data.js?v=20261014-results1"></script>
-  <script src="assets/season3-schedule.js?v=20261110-schedule"></script>
+  <script src="assets/season3-schedule.js?v=20261111-archive"></script>
   <script src="assets/season3-site.js"></script>
 </body>
 </html>

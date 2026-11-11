@@ -74,11 +74,37 @@
   const weeklyLink = document.querySelector("[data-weekly-report-link]");
   const weeklyAction = document.querySelector("[data-weekly-link-action]");
   const weeklySection = weeklyLink?.closest("[data-weekly-mode]");
+  const nextGameDay = document.querySelector("[data-next-game-day]");
   const schedule = window.CBL_SEASON3_SCHEDULE;
   const results = window.CBL_SEASON3_RESULTS;
+  const gameStatus = (game) => results?.gameResults?.[game.id]?.status;
+  const finalStatuses = new Set(["完賽", "沒收"]);
+  if (nextGameDay && Array.isArray(schedule?.games)) {
+    const taipei = { timeZone: "Asia/Taipei" };
+    const calendar = new Intl.DateTimeFormat("en-CA", { ...taipei, year: "numeric", month: "2-digit", day: "2-digit" });
+    const displayDate = new Intl.DateTimeFormat("zh-TW", { ...taipei, month: "numeric", day: "numeric", weekday: "short" });
+    function showNextGameDay() {
+      const parts = Object.fromEntries(calendar.formatToParts(new Date()).map(({ type, value }) => [type, value]));
+      const today = `${parts.year}-${parts.month}-${parts.day}`;
+      const next = schedule.games
+        .filter((game) => game.date >= today && !finalStatuses.has(gameStatus(game)) && gameStatus(game) !== "延期")
+        .map((game) => game.date)
+        .sort()[0];
+      nextGameDay.hidden = !next;
+      if (!next) return;
+      const label = next === today ? "今日賽程" : "下一個比賽日";
+      nextGameDay.href = `賽程戰績表.html?week=${next}#schedule`;
+      nextGameDay.textContent = `${label}：${displayDate.format(new Date(`${next}T12:00:00+08:00`))}`;
+    }
+    showNextGameDay();
+    window.addEventListener("pageshow", showNextGameDay);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) showNextGameDay();
+    });
+  }
   if (weeklyLink && schedule && results) {
     const latestDate = schedule.games
-      .filter((game) => ["完賽", "沒收"].includes(results.gameResults?.[game.id]?.status))
+      .filter((game) => finalStatuses.has(gameStatus(game)))
       .map((game) => game.date)
       .sort()
       .pop();

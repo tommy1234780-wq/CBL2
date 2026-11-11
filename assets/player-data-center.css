@@ -349,13 +349,31 @@ th.sorted-asc .sort-icon::after { content: " ▲"; }
 .detail-stat { padding: 8px 3px; text-align: center; background: rgba(13, 40, 65, 0.58); }
 .detail-stat b { color: #edf3f8; font-size: 0.78rem; }
 
-.data-error { padding: 18px 0; color: #ff9872; border-top: 1px solid rgba(255, 90, 31, 0.38); border-bottom: 1px solid rgba(255, 90, 31, 0.38); }
+.data-loading,
+.data-error { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--data-line); }
+.data-loading[hidden],
+.data-error[hidden] { display: none; }
+.data-loading p,
+.data-error p { margin: 0; font-size: 0.88rem; }
+.data-error { color: #ffb397; }
+.data-error button {
+  min-height: 44px;
+  padding: 0 16px;
+  color: #07101d;
+  background: var(--data-gold);
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.data-error button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.data-query-toolbar :disabled { opacity: 0.58; cursor: not-allowed; }
 .data-empty { padding: 30px; color: var(--data-muted); text-align: center; }
-.data-loading { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2, 9, 20, 0.94); }
-.data-loading[hidden] { display: none; }
-.data-loading > span { width: 38px; height: 38px; border: 3px solid rgba(242, 184, 64, 0.2); border-top-color: var(--data-gold); border-radius: 50%; animation: data-spin 0.85s linear infinite; }
-.data-loading p { color: var(--data-gold-pale); font-size: 0.78rem; font-weight: 800; }
+.data-loading > span { width: 18px; height: 18px; border: 2px solid rgba(242, 184, 64, 0.2); border-top-color: var(--data-gold); border-radius: 50%; animation: data-spin 0.85s linear infinite; }
+.data-loading p { color: var(--data-gold-pale); }
 @keyframes data-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .data-loading > span { animation: none; } }
 
 @media (max-width: 1050px) {
   .data-query-toolbar { grid-template-columns: minmax(220px, 1.5fr) repeat(2, minmax(130px, 1fr)); }

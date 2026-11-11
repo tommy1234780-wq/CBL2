@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03101f">
+  <meta name="description" content="查閱 CBL 歷屆例行賽排名、季後賽成果與得獎球隊合照。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CBL 歷屆球隊戰績">
+  <meta property="og:description" content="查閱 CBL 歷屆例行賽排名、季後賽成果與得獎球隊合照。">
+  <meta property="og:url" content="https://cblcbl.netlify.app/%E6%AD%B7%E5%B1%86%E7%90%83%E9%9A%8A%E6%88%B0%E7%B8%BE.html">
+  <meta property="og:image" content="https://cblcbl.netlify.app/assets/cbl-season3-social-share.jpg">
+  <title>歷屆球隊戰績｜CBL 台中市企業交流棒球聯盟</title>
+  <link rel="canonical" href="https://cblcbl.netlify.app/%E6%AD%B7%E5%B1%86%E7%90%83%E9%9A%8A%E6%88%B0%E7%B8%BE.html">
+  <link rel="icon" href="assets/cbl-pwa-icon.png">
+  <link rel="stylesheet" href="assets/season3-site.css">
+  <link rel="stylesheet" href="assets/team-archive/archive.css">
+  <script defer src="assets/season3-site.js"></script>
+  <script defer src="assets/team-archive/archive-data.js"></script>
+  <script defer src="assets/team-archive/archive.js"></script>
+</head>
+<body class="archive-page">
+  <header class="header">
+    <a class="title-group" href="index.html" aria-label="回到 CBL 第三屆首頁">
+      <img src="assets/season3-main-logo.webp" alt="">
+      <span class="season-badge">CBL SEASON 3 · OFFICIAL WEBSITE</span>
+      <strong class="archive-brand-name">台中市 CBL 企業交流聯盟</strong>
+    </a>
+    <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-controls="nav-links" aria-label="開啟主選單">&#9776;</button>
+  </header>
+  <nav class="navbar" aria-label="主要導覽">
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">首頁</a></li>
+      <li><a href="賽程戰績表.html" class="active" data-schedule-return>賽程戰績表</a></li>
+      <li><a href="數據統計.html">選手數據查詢</a></li>
+      <li><a href="打者排行榜.html">打者排行榜</a></li>
+      <li><a href="投手排行榜.html">投手排行榜</a></li>
+      <li><a href="CBL名人堂.html">CBL 名人堂</a></li>
+      <li><a href="team_introduction.html">球隊介紹</a></li>
+    </ul>
+  </nav>
+
+  <main class="archive-main">
+    <nav class="breadcrumbs" aria-label="目前位置">
+      <a href="賽程戰績表.html" data-schedule-return>賽程與戰績</a><span aria-hidden="true">›</span><span aria-current="page">歷屆球隊戰績</span>
+    </nav>
+    <header class="page-heading">
+      <div>
+        <p class="eyebrow">CBL TEAM RECORDS</p>
+        <h1>歷屆球隊戰績</h1>
+      </div>
+      <div class="season-switch" role="group" aria-label="選擇屆次">
+        <button type="button" data-season="1" aria-pressed="false">第一屆</button>
+        <button type="button" data-season="2" aria-pressed="true">第二屆</button>
+      </div>
+    </header>
+    <div class="view-tabs" role="tablist" aria-label="戰績類別">
+      <button type="button" id="tab-postseason" data-view="postseason" role="tab" aria-selected="true" aria-controls="archive-panel">季後賽成果</button>
+      <button type="button" id="tab-regular" data-view="regular" role="tab" aria-selected="false" aria-controls="archive-panel" tabindex="-1">例行賽排名</button>
+    </div>
+    <section id="archive-panel" role="tabpanel" aria-labelledby="tab-postseason" tabindex="0">
+      <noscript><p>請啟用 JavaScript 以查看歷屆球隊戰績。</p></noscript>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <strong>CBL TAICHUNG · SEASON 3 OFFICIAL WEBSITE</strong>
+    <p>台中市 CBL 企業交流棒球聯盟｜黑洞組 × 恆星組</p>
+  </footer>
+  <dialog id="photo-dialog" aria-labelledby="photo-title">
+    <div class="photo-dialog-head">
+      <strong id="photo-title"></strong>
+      <form method="dialog">
+        <button type="submit" class="close-photo" title="關閉照片" aria-label="關閉照片">×</button>
+      </form>
+    </div>
+    <img id="photo-image" alt="">
+  </dialog>
+  <script>
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("active");
+    }
+  </script>
+</body>
+</html>

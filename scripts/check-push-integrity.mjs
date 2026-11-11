@@ -12,7 +12,7 @@ requireText('assets/pwa.js', 'subscribe_409', 'must keep endpoint conflict diagn
 requireText('assets/pwa.js', 'anonymous_signin_failed', 'must keep anonymous auth failure handling');
 requireText('assets/pwa.js', 'push_subscription_failed', 'must keep push subscription failure handling');
 requireText('assets/pwa.js', 'function getAuthClient()', 'must keep the Supabase client deferred until notification opt-in');
-requireText('sw.js', 'const CACHE_NAME = "cbl-season-3-v29-first-half-20261110"', 'cache version must match the current protected version');
+requireText('sw.js', 'const CACHE_NAME = "cbl-season-3-v30-preseason-20261110"', 'cache version must match the current protected version');
 requireText('sw.js', './assets/pwa.js?v=20261014-perf1', 'service worker must cache the protected push client version');
 requireText('index.html', 'assets/pwa.js?v=20261014-perf1', 'homepage must load the protected push client version');
 

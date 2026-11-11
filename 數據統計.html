@@ -7,7 +7,7 @@
   <title>選手數據中心｜CBL 第三屆官方網站</title>
   <link rel="icon" href="assets/season3-main-logo.webp">
   <link rel="stylesheet" href="assets/season3-site.css">
-  <link rel="stylesheet" href="assets/player-data-center.css?v=20261015-id1">
+  <link rel="stylesheet" href="assets/player-data-center.css?v=20261110-preseason">
   <link rel="stylesheet" href="assets/player-data-contrast.css">
 </head>
 <body class="player-data-page">
@@ -20,13 +20,13 @@
   </header>
   <nav class="navbar" aria-label="主要導覽">
     <ul class="nav-links" id="nav-links">
-      <li><a href="index.html">首頁</a></li>
+      <li><a href="/">首頁</a></li>
       <li><a href="賽程戰績表.html">賽程戰績表</a></li>
       <li><a href="數據統計.html">選手數據查詢</a></li>
       <li><a href="打者排行榜.html">打者排行榜</a></li>
       <li><a href="投手排行榜.html">投手排行榜</a></li>
       <li><a href="CBL名人堂.html">CBL名人堂</a></li>
-      <li><a href="team_introduction.html">球隊介紹</a></li>
+      <li><a href="/team_introduction">球隊介紹</a></li>
     </ul>
   </nav>
 
@@ -79,26 +79,31 @@
         </div>
       </div>
 
-      <div class="data-result-bar">
-        <div><span id="data-mode-label">打者 · 精簡檢視</span><strong><b id="data-result-count">0</b> 位球員</strong></div>
-        <p><span>點選球員查看完整紀錄</span><span>桌機點擊欄位可排序</span><span>更新：<b id="data-updated-time">讀取中</b></span></p>
+      <div id="data-loading" class="data-loading" role="status">
+        <span aria-hidden="true"></span><p>正式數據讀取中</p>
       </div>
-
-      <div id="data-error" class="data-error" hidden></div>
-      <div class="integrated-table-wrap">
-        <table id="integrated-player-table">
-          <thead><tr id="integrated-header-row"></tr></thead>
-          <tbody id="integrated-table-body"></tbody>
-        </table>
+      <div id="data-error" class="data-error" hidden>
+        <p role="alert">目前無法載入正式數據，請重試。</p>
+        <button id="data-retry" type="button">重試</button>
       </div>
-      <div id="data-floating-header" class="data-floating-header" hidden aria-hidden="true">
-        <table class="data-floating-table"><thead><tr id="data-floating-header-row"></tr></thead></table>
+      <div id="data-results" hidden>
+        <div class="data-result-bar">
+          <div><span id="data-mode-label">打者 · 精簡檢視</span><strong><b id="data-result-count">0</b> 位球員</strong></div>
+          <p><span>點選球員查看完整紀錄</span><span>桌機點擊欄位可排序</span><span>更新：<b id="data-updated-time">讀取中</b></span></p>
+        </div>
+        <div class="integrated-table-wrap">
+          <table id="integrated-player-table">
+            <thead><tr id="integrated-header-row"></tr></thead>
+            <tbody id="integrated-table-body"></tbody>
+          </table>
+        </div>
+        <div id="data-floating-header" class="data-floating-header" hidden aria-hidden="true">
+          <table class="data-floating-table"><thead><tr id="data-floating-header-row"></tr></thead></table>
+        </div>
+        <div id="integrated-mobile-list" class="integrated-mobile-list"></div>
       </div>
-      <div id="integrated-mobile-list" class="integrated-mobile-list"></div>
     </section>
   </main>
-
-  <div id="data-loading" class="data-loading" aria-live="polite"><span></span><p>正式數據讀取中</p></div>
 
   <script>
     function toggleMenu() {
@@ -107,6 +112,6 @@
   </script>
   <script src="assets/season3-data.js?v=20261014-main1"></script>
   <script src="assets/season3-site.js"></script>
-  <script src="assets/player-data-shell.js?v=20261015-id1"></script>
+  <script src="assets/player-data-shell.js?v=20261110-preseason"></script>
 </body>
 </html>

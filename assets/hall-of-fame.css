@@ -141,6 +141,7 @@
   top: 0;
   z-index: 20;
   display: flex;
+  flex-wrap: wrap;
   margin: 12px 0 30px;
   padding: 7px;
   align-items: center;
@@ -152,6 +153,23 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(12px);
 }
+
+.hall-archive-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  width: fit-content;
+  margin-left: auto;
+  color: var(--cbl-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hall-archive-link:hover { color: var(--hof-gold-pale); }
+.hall-archive-link:focus-visible { outline: 2px solid var(--hof-gold); outline-offset: 3px; }
+.hall-archive-link svg { flex: none; }
 
 .season-tabs,
 .hall-category-tabs {

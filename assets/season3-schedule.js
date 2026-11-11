@@ -320,6 +320,15 @@
       url.hash = "schedule";
     }
     history.replaceState({}, "", url);
+    syncArchiveEntry();
+  }
+
+  function syncArchiveEntry() {
+    const entry = document.querySelector("[data-team-archive-entry]");
+    if (!entry) return;
+    const destination = new URL(entry.href);
+    destination.searchParams.set("return", "賽程戰績表.html" + location.search + location.hash);
+    entry.href = destination.href;
   }
 
   function renderStandings() {
@@ -444,6 +453,8 @@
   renderVersionNote();
   renderSchedule();
   setView(activeView, false);
+  syncArchiveEntry();
+  window.addEventListener("pageshow", syncArchiveEntry);
   if (activeView === "schedule" && focusDate) {
     requestAnimationFrame(() => document.querySelector(`[data-schedule-date="${focusDate}"]`)?.scrollIntoView({ block: "start" }));
   }

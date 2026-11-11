@@ -11,6 +11,7 @@
   const hittingRoot = document.querySelector("[data-hall-hitting]");
   const pitchingRoot = document.querySelector("[data-hall-pitching]");
   const status = document.querySelector("[data-hall-status]");
+  const teamArchiveLink = document.querySelector("[data-hall-team-archive]");
   let currentSeason = hall.defaultSeason;
   let currentCategory = "all";
 
@@ -130,6 +131,11 @@
     const season = hall.seasons[seasonKey];
     if (!season) return;
     currentSeason = seasonKey;
+    if (teamArchiveLink) {
+      const destination = new URL(teamArchiveLink.href);
+      destination.searchParams.set("season", currentSeason);
+      teamArchiveLink.href = destination.href;
+    }
     setSummary(season);
     highlightsRoot.classList.toggle("single", season.highlights.length === 1);
     highlightsRoot.innerHTML = season.highlights.map((item, index) => renderHighlight(item, index, season)).join("");

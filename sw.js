@@ -1,22 +1,22 @@
-const CACHE_NAME = "cbl-season-3-v29-first-half-20261110";
+const CACHE_NAME = "cbl-season-3-v30-preseason-20261110";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/season3-site.css",
-  "./assets/season3-home.css?v=20261110-first-half",
+  "./assets/season3-home.css?v=20261110-preseason",
   "./assets/pwa.css",
   "./assets/season3-site.js",
   "./assets/season3-data.js?v=20261014-main1",
-  "./assets/season3-home-data.js?v=20261110-opening",
+  "./assets/season3-home-data.js?v=20261110-preseason",
   "./assets/season3-schedule-data.js?v=20261110-schedule",
   "./assets/season3-results-data.js?v=20261014-results1",
   "./assets/content.js?v=20261110-opening",
   "./assets/pwa.js?v=20261014-perf1",
   "./數據統計.html",
-  "./assets/player-data-center.css?v=20261015-id1",
+  "./assets/player-data-center.css?v=20261110-preseason",
   "./assets/player-data-contrast.css",
-  "./assets/player-data-shell.js?v=20261015-id1",
+  "./assets/player-data-shell.js?v=20261110-preseason",
   "./assets/data/player-stats.json"
 ];
 

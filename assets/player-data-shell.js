@@ -34,11 +34,14 @@
     floatingRow: document.getElementById("data-floating-header-row"),
     mobile: document.getElementById("integrated-mobile-list"),
     loading: document.getElementById("data-loading"),
-    error: document.getElementById("data-error")
+    error: document.getElementById("data-error"),
+    retry: document.getElementById("data-retry"),
+    results: document.getElementById("data-results")
   };
 
   const cache = {};
   let officialDataPromise = null;
+  let activeRequest = 0;
   const state = {
     type: "hitter",
     career: false,
@@ -55,25 +58,24 @@
   }
 
   async function activateType(type) {
+    const request = ++activeRequest;
     state.type = type;
     state.career = false;
     state.full = false;
     state.sortKey = "";
     state.sortOrder = "none";
     state.selectedProfile = "";
-    elements.search.value = "";
-    setLoading(true);
-    setError("");
     updateTypeControls();
+    setDataState("loading");
 
     try {
       if (!cache[type]) cache[type] = await loadDataset(type);
+      if (request !== activeRequest) return;
       populateFilters();
+      setDataState("ready");
       render();
-    } catch (error) {
-      setError(`正式數據讀取失敗：${error.message}`);
-    } finally {
-      setLoading(false);
+    } catch (_) {
+      if (request === activeRequest) setDataState("error");
     }
   }
 
@@ -82,6 +84,9 @@
       officialDataPromise = fetch(DATA_URL, { cache: "no-store" }).then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
+      }).catch((error) => {
+        officialDataPromise = null;
+        throw error;
       });
     }
     const officialData = await officialDataPromise;
@@ -246,6 +251,7 @@
   }
 
   function render() {
+    if (!currentDataset() || elements.results.hidden) return;
     const rows = filteredRows();
     const displayHeaders = getDisplayHeaders();
     elements.count.textContent = String(rows.length);
@@ -400,6 +406,11 @@
     }));
 
     elements.search.addEventListener("input", resetProfileAndRender);
+    elements.retry.addEventListener("click", () => {
+      officialDataPromise = null;
+      delete cache[state.type];
+      activateType(state.type);
+    });
     elements.team.addEventListener("change", resetProfileAndRender);
     elements.season.addEventListener("change", resetProfileAndRender);
     elements.reset.addEventListener("click", () => {
@@ -476,7 +487,6 @@
       button.setAttribute("aria-selected", active ? "true" : "false");
     });
     elements.career.textContent = "查看生涯成績";
-    elements.season.disabled = false;
     elements.simple.classList.add("active");
     elements.full.classList.remove("active");
   }
@@ -662,13 +672,15 @@
     return Array.from(new Set(values));
   }
 
-  function setLoading(loading) {
-    elements.loading.hidden = !loading;
-  }
-
-  function setError(message) {
-    elements.error.hidden = !message;
-    elements.error.textContent = message;
+  function setDataState(status) {
+    const ready = status === "ready";
+    elements.loading.hidden = status !== "loading";
+    elements.error.hidden = status !== "error";
+    elements.results.hidden = !ready;
+    for (const control of [elements.team, elements.career, elements.simple, elements.full, elements.reset]) {
+      control.disabled = !ready;
+    }
+    elements.season.disabled = !ready || state.career;
   }
 
   function escapeHtml(value) {

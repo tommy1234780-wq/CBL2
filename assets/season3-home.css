@@ -329,6 +329,27 @@
   text-align: right;
 }
 
+.schedule-heading-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.next-game-day {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cbl-gold);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-underline-offset: 4px;
+}
+
+.next-game-day[hidden] { display: none; }
+.next-game-day:hover { color: #ffe0a0; }
+.next-game-day:focus-visible { outline: 2px solid var(--cbl-gold); outline-offset: 3px; }
+
 .weekly-panel {
   padding: 16px;
   background:
@@ -1094,6 +1115,8 @@
     margin-top: 8px;
     text-align: left;
   }
+
+  .schedule-heading-meta { align-items: flex-start; }
 
   .weekly-panel {
     padding: 7px;
