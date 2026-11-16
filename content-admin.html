@@ -11,7 +11,7 @@
 <section class="panel"><h2>圖片更新</h2><p class="hint">支援 JPG、PNG、WebP，單張上限 5MB。上傳後會直接取代官網對應圖片。</p><div id="asset-grid" class="asset-grid"></div></section>
 <section class="panel"><div class="bar"><div><h2>賽事影片</h2><p class="hint">首頁為聯盟綜合影片區，依排序顯示最前面的三則。</p></div><button id="clear-video" class="secondary" type="button">新增影片</button></div><input id="video-division" type="hidden" value="black-hole"><label for="video-order">排序（小的在前）</label><input id="video-order" type="number" value="0"><label for="video-title">影片標題</label><input id="video-title" maxlength="120" placeholder="例如：G4 地獄天使 vs T.C.W"><label for="video-url">YouTube 連結</label><input id="video-url" type="url" placeholder="https://www.youtube.com/watch?v=..."><div class="bar" style="margin-top:14px"><span id="video-editing" class="hint">正在新增影片</span><button id="save-video" type="button">儲存影片</button></div><div id="video-list"></div></section>
 </div>
-<a class="back" href="./index.html">← 回到 CBL 官網</a>
+<a class='back' href='/'>← 回到 CBL 官網</a>
 </section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const SUPABASE_URL="https://iwwwpgdrasrhmrhncsim.supabase.co",SUPABASE_KEY="sb_publishable_2Ko8glEiFB6NfunRyCr_4A_c1c1fvmO",ENDPOINT="/.netlify/functions/content-manager";

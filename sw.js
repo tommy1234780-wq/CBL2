@@ -1,4 +1,4 @@
-const CACHE_NAME = "cbl-season-3-v30-preseason-20261110";
+const CACHE_NAME = "cbl-season-3-v31-schedule-refresh-20261116";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,7 +9,7 @@ const APP_SHELL = [
   "./assets/season3-site.js",
   "./assets/season3-data.js?v=20261014-main1",
   "./assets/season3-home-data.js?v=20261110-preseason",
-  "./assets/season3-schedule-data.js?v=20261110-schedule",
+  "./assets/season3-schedule-data.js?v=20261112-schedule",
   "./assets/season3-results-data.js?v=20261014-results1",
   "./assets/content.js?v=20261110-opening",
   "./assets/pwa.js?v=20261014-perf1",
@@ -45,8 +45,12 @@ self.addEventListener("fetch", (event) => {
 
   const isDocument = event.request.mode === "navigate" || event.request.destination === "document" || path.endsWith(".html");
   const isFreshAsset = event.request.destination === "style" || event.request.destination === "script" || path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".json") || path.endsWith(".webmanifest");
+  const isUnversionedScheduleImage = !url.searchParams.has("v") && (
+    path.endsWith("/assets/season3-first-half-schedule-20261109.webp") ||
+    path.endsWith("/assets/season3-opening-schedule-20261121.webp")
+  );
 
-  if (isDocument || isFreshAsset) {
+  if (isDocument || isFreshAsset || isUnversionedScheduleImage) {
     event.respondWith(networkFirst(event.request, isDocument));
     return;
   }
