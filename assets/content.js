@@ -43,7 +43,7 @@
       // Older "每週戰況" uploads are retained in storage but should not
       // replace the official schedule artwork. New uploads from the reduced
       // content manager are explicitly labelled as the homepage schedule.
-      if (weeklyImage && assets.weekly_report?.alt_text === "首頁賽程圖片") {
+      if (weeklyImage && assets.weekly_report?.url) {
         setWeeklyState("loading");
         weeklyImage.src = assets.weekly_report.url;
         weeklyImage.alt = assets.weekly_report.alt_text || "CBL 第三屆每週戰況";
