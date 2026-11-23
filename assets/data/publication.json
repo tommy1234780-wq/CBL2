@@ -1,0 +1,23 @@
+{
+  "weeklyReport": {
+    "date": "2026-11-21",
+    "url": "assets/reports/weekly-2026-11-21.png?v=20261122-release",
+    "width": 1080,
+    "height": 1350,
+    "alt": "CBL 第三屆 11/21 週六三場合刊賽果戰報"
+  },
+  "personalDataStatus": {
+    "pendingDates": [
+      "2026-11-21"
+    ],
+    "description": "11/21 個人成績尚未公布；可先查詢既有歷屆紀錄。"
+  },
+  "scheduleChanges": [
+    {
+      "publishedAt": "2026/11/12",
+      "date": "2026-11-21",
+      "title": "11/21 前兩場對調",
+      "detail": "08:00 改為創邑對樂天，10:50 改為台中社會人對安穆壞壞熊；13:40 好CHILL對聚福運動不變。日期、球場與場次 ID 不變。"
+    }
+  ]
+}

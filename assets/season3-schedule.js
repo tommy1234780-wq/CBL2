@@ -190,6 +190,7 @@
               <time id="date-${escapeHtml(date)}" datetime="${escapeHtml(date)}">${escapeHtml(dateText)}<span>${escapeHtml(weekday)}</span></time>
               <p>${dateGames.length} 場賽事 · ${escapeHtml(dateGames[0].venue)}</p>
             </header>
+            ${(results.scheduleChanges || []).filter(change => change.date === date).map(change => `<details class="schedule-change-record"><summary>${escapeHtml(change.publishedAt)} 更新紀錄｜${escapeHtml(change.title)}</summary><p>${escapeHtml(change.detail)}</p></details>`).join("")}
             <div class="schedule-games-grid">${dateGames.map(renderGame).join("")}</div>
           </section>`;
       }).join("");
@@ -360,51 +361,8 @@
         : "賽季開始後更新";
     }
 
-    const rowMarkup = rows.map((row) => {
-      const team = getTeam(row.teamId);
-      if (!team) return "";
-      const rank = row.rank === null || row.rank === undefined ? "—" : row.rank;
-      const rankLabel = rank === "待裁定" ? "待定" : rank;
-      const rankTitle = rank === "待裁定" ? " title=\"同分待聯盟裁定\"" : "";
-      const percentage = row.winningPercentage === null || row.winningPercentage === undefined
-        ? "—"
-        : Number(row.winningPercentage).toFixed(3).replace(/^0/, "");
-      const difference = Number(row.difference || 0);
-      const differenceText = difference > 0 ? `+${difference}` : String(difference);
-      const recent = Array.isArray(row.recent) && row.recent.length
-        ? row.recent.map((outcome) => `<i class="recent-${outcome === "勝" ? "win" : outcome === "敗" ? "loss" : "draw"}">${escapeHtml(outcome)}</i>`).join("")
-        : "<span class='recent-empty'>—</span>";
-      return `
-        <article class="standings-row" role="row" aria-label="${escapeHtml(team.displayName)}戰績">
-          <span class="standings-rank" role="cell" data-label="名次"${rankTitle}>${escapeHtml(rankLabel)}</span>
-          <a class="standings-team" role="cell" href="team_introduction.html?division=${escapeHtml(team.division)}#team-${escapeHtml(team.id)}">
-            <img src="${escapeHtml(team.logo)}" alt="" loading="lazy" decoding="async">
-            <span><strong>${escapeHtml(team.shortName)}</strong><small>${escapeHtml(team.displayName)}</small></span>
-          </a>
-          <b role="cell" data-label="已賽">${escapeHtml(row.played)}</b>
-          <b role="cell" data-label="勝">${escapeHtml(row.wins)}</b>
-          <b role="cell" data-label="和">${escapeHtml(row.draws)}</b>
-          <b role="cell" data-label="敗">${escapeHtml(row.losses)}</b>
-          <b class="standings-points" role="cell" data-label="積分">${escapeHtml(row.points)}</b>
-          <span role="cell" data-label="得失分">${escapeHtml(row.scored)}:${escapeHtml(row.allowed)} <small>${escapeHtml(differenceText)}</small></span>
-          <span role="cell" data-label="勝率">${escapeHtml(percentage)}</span>
-          <span class="standings-recent" role="cell" data-label="近五場">${recent}</span>
-        </article>`;
-    }).join("");
-
-    standingsBoard.innerHTML = `
-      <div class="standings-division-title">
-        <img src="${escapeHtml(division.logo)}" alt="${escapeHtml(division.name)} LOGO">
-        <div><span>${escapeHtml(division.englishName)}</span><strong>${escapeHtml(division.name)}</strong><small>${escapeHtml(division.tagline)}</small></div>
-      </div>
-      <div class="standings-table" role="table" aria-label="${escapeHtml(division.name)}戰績排名">
-        <div class="standings-table-head" role="row">
-          <span role="columnheader">名次</span><span role="columnheader">球隊</span><span role="columnheader">已賽</span>
-          <span role="columnheader">勝</span><span role="columnheader">和</span><span role="columnheader">敗</span>
-          <span role="columnheader">積分</span><span role="columnheader">得失分</span><span role="columnheader">勝率</span><span role="columnheader">近五場</span>
-        </div>
-        <div class="standings-table-body" role="rowgroup">${rowMarkup}</div>
-      </div>`;
+    standingsBoard.closest(".standings-shell").dataset.division = activeStandingsDivision;
+    standingsBoard.innerHTML = window.CBL_STANDINGS_VIEW(activeStandingsDivision, rows);
   }
 
   function setView(view, updateUrl) {

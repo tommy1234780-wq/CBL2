@@ -1,0 +1,45 @@
+.home-page .hero-next-game { display: grid; gap: 3px; margin: 13px 0 0; padding: 10px 0 0; border-top: 1px solid #806b42; color: #f7f3e8; text-decoration: none; min-height: 53px; }
+.home-page .hero-next-game[hidden] { display: none; }
+.hero-next-game strong { color: #f2c15d; font-size: .76rem; }
+.hero-next-game span { color: #f7f3e8; font-size: .88rem; line-height: 1.5; font-weight: 700; }
+.home-page .weekly-public-panel { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1fr); align-items: center; gap: 32px; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
+.weekly-public-copy { min-width: 0; }
+.weekly-public-copy h3 { color: #fff; font-size: 1.45rem; margin: 0 0 20px; }
+.weekly-score-line { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 12px; align-items: center; min-height: 57px; border-block-start: 1px solid #3a465a; font-size: .92rem; text-decoration: none; color: #f7f3e8; }
+.weekly-score-line > span:last-child { text-align: right; }
+.weekly-score-line strong { color: #ffe2a0; display: flex; gap: 8px; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.weekly-score-line i { color: #aebed0; font-style: normal; }
+.weekly-results-action { display: inline-flex; align-items: center; min-height: 44px; margin-top: 18px; padding: 7px 15px; color: #ffe2a0; border: 1px solid #8a7143; border-radius: 5px; font-size: .9rem; text-decoration: none; }
+.weekly-public-panel .weekly-report-link { width: 100%; max-width: 540px; justify-self: end; }
+.weekly-public-panel .weekly-stage { min-height: 0; aspect-ratio: 4/5; }
+.weekly-public-panel .weekly-report-image { width: 100%; height: auto; object-fit: contain; border-radius: 0; }
+.weekly-public-panel .weekly-stage[data-state="loading"] .weekly-report-image { display: block; opacity: 0; }
+.weekly-public-panel .weekly-stage[data-state="ready"] .weekly-report-image { opacity: 1; }
+.weekly-public-panel .weekly-link-action { background: transparent; box-shadow: none; color: #ffe2a0; border: 1px solid #8a7143; font-size: .85rem; }
+.standings-shell.division-review { margin: 0; padding: 0; background: transparent !important; }
+.standings-shell.division-review .standings-filter { margin-top: 16px; }
+.standings-shell.division-review .standings-board { display: block; padding: 0; border: 0; background: transparent; }
+.standings-shell.division-review .table-team { text-decoration: none; }
+.standings-shell.division-review .standings-status-bar { font-size: .85rem; margin-bottom: 18px; }
+.standings-shell.division-review .division-table tbody th { border-radius: 0; }
+.publication-status { padding: 11px 0; margin: 0 0 16px; border-bottom: 1px solid #4a5367; color: #ead9ad; font-size: .9rem; line-height: 1.6; }
+.publication-status[hidden] { display: none; }
+.player-name-cue { display: inline-flex; align-items: center; gap: 11px; }
+.profile-toggle-cue { display: inline-block; width: 7px; height: 7px; border-right: 2px solid #f2c15d; border-bottom: 2px solid #f2c15d; transform: rotate(45deg); flex: none; }
+.player-data-row[aria-expanded="true"] .profile-toggle-cue { transform: rotate(225deg); }
+.schedule-change-record { margin: 0 0 14px; color: #c6cfdb; font-size: .85rem; line-height: 1.6; }
+.schedule-change-record summary { min-height: 36px; color: #e7cd9a; cursor: pointer; }
+.schedule-change-record p { margin: 5px 0 12px; }
+#ranking-publication-state { margin-block: 18px 30px; }
+#ranking-publication-state[hidden], #ranking-podium[hidden], .leaderboard-detail [hidden] { display: none !important; }
+@media (max-width: 760px) {
+  .home-page .weekly-public-panel { grid-template-columns: 1fr; gap: 22px; }
+  .weekly-public-panel .weekly-report-link { justify-self: center; }
+  .weekly-public-copy h3 { font-size: 1.25rem; margin-bottom: 13px; }
+  .home-page .hero-next-game { margin-top: 11px; }
+  .hero-next-game span { font-size: .82rem; }
+  .weekly-score-line { font-size: .88rem; }
+  .standings-shell.division-review .standings-status-bar { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+  .standings-shell.division-review .standings-filter button { flex: 1; }
+  .standings-shell.division-review .standings-heading p { margin-bottom: 16px; }
+}

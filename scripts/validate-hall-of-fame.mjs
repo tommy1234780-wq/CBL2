@@ -58,7 +58,7 @@ for (const forbidden of ["71.12", "34張", "34 張", "第一名票", "待聯盟�
 const html = fs.readFileSync(htmlPath, "utf8");
 expect(html.includes('data-season="1"'), "第一屆切換按鈕遺失。");
 expect(html.includes('data-season="2"'), "第二屆切換按鈕遺失。");
-expect(html.includes("hall-of-fame-data.js?v=20261014-s2hof1"), "名人堂資料版本未鎖定。");
+expect(html.includes("hall-of-fame-data.js?v=20261122-release"), "名人堂資料版本未鎖定。");
 
 if (errors.length) {
   console.error(JSON.stringify({ ok: false, errors }, null, 2));

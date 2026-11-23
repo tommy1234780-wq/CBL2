@@ -1,372 +1,50 @@
 (function () {
   "use strict";
 
+  const games = [
+    { id: "S3-001", date: "2027-02-13", time: "08:00", slot: 1, division: "black-hole", away: "good-chill", home: "hell-angels", venue: "大肚溪A球場" },
+    { id: "S3-002", date: "2027-02-13", time: "10:50", slot: 2, division: "stellar", away: "ngu", home: "nomads", venue: "大肚溪A球場" },
+    { id: "S3-003", date: "2027-02-13", time: "13:40", slot: 3, division: "black-hole", away: "jtron", home: "anmu-tech", venue: "大肚溪A球場" },
+    { id: "S3-004", date: "2026-11-21", time: "10:50", slot: 2, division: "stellar", away: "taichung-social", home: "bad-bears", venue: "大肚溪A球場" },
+    { id: "S3-005", date: "2026-11-21", time: "08:00", slot: 1, division: "stellar", away: "chungyi", home: "rakuten", venue: "大肚溪A球場" },
+    { id: "S3-006", date: "2026-11-21", time: "13:40", slot: 3, division: "black-hole", away: "good-chill", home: "jf-sport", venue: "大肚溪A球場" },
+    { id: "S3-007", date: "2026-11-28", time: "08:00", slot: 1, division: "black-hole", away: "hell-angels", home: "anmu-tech", venue: "大肚溪A球場" },
+    { id: "S3-008", date: "2026-12-12", time: "13:40", slot: 3, division: "stellar", away: "ngu", home: "rakuten", venue: "大肚溪A球場" },
+    { id: "S3-009", date: "2026-11-28", time: "13:40", slot: 3, division: "black-hole", away: "jf-sport", home: "tcw", venue: "大肚溪A球場" },
+    { id: "S3-010", date: "2026-12-05", time: "08:00", slot: 1, division: "black-hole", away: "hell-angels", home: "jf-sport", venue: "大肚溪A球場" },
+    { id: "S3-011", date: "2026-12-05", time: "13:40", slot: 3, division: "stellar", away: "ngu", home: "taichung-social", venue: "大肚溪A球場" },
+    { id: "S3-012", date: "2026-12-05", time: "10:50", slot: 2, division: "black-hole", away: "good-chill", home: "jtron", venue: "大肚溪A球場" },
+    { id: "S3-013", date: "2026-12-12", time: "08:00", slot: 1, division: "black-hole", away: "jtron", home: "hell-angels", venue: "大肚溪A球場" },
+    { id: "S3-014", date: "2026-11-28", time: "10:50", slot: 2, division: "stellar", away: "nomads", home: "rakuten", venue: "大肚溪A球場" },
+    { id: "S3-015", date: "2026-12-12", time: "10:50", slot: 2, division: "black-hole", away: "tcw", home: "good-chill", venue: "大肚溪A球場" },
+    { id: "S3-016", date: "2026-12-19", time: "08:00", slot: 1, division: "stellar", away: "nomads", home: "bad-bears", venue: "大肚溪A球場" },
+    { id: "S3-017", date: "2026-12-19", time: "10:50", slot: 2, division: "black-hole", away: "jf-sport", home: "anmu-tech", venue: "大肚溪A球場" },
+    { id: "S3-018", date: "2026-12-19", time: "13:40", slot: 3, division: "stellar", away: "taichung-social", home: "chungyi", venue: "大肚溪A球場" },
+    { id: "S3-019", date: "2026-12-26", time: "08:00", slot: 1, division: "stellar", away: "rakuten", home: "bad-bears", venue: "大肚溪A球場" },
+    { id: "S3-020", date: "2026-12-26", time: "10:50", slot: 2, division: "black-hole", away: "anmu-tech", home: "tcw", venue: "大肚溪A球場" },
+    { id: "S3-021", date: "2026-12-26", time: "13:40", slot: 3, division: "stellar", away: "chungyi", home: "ngu", venue: "大肚溪A球場" },
+    { id: "S3-022", date: "2027-01-02", time: "08:00", slot: 1, division: "stellar", away: "bad-bears", home: "ngu", venue: "大肚溪A球場" },
+    { id: "S3-023", date: "2027-01-02", time: "10:50", slot: 2, division: "stellar", away: "nomads", home: "taichung-social", venue: "大肚溪A球場" },
+    { id: "S3-024", date: "2027-01-02", time: "13:40", slot: 3, division: "black-hole", away: "anmu-tech", home: "good-chill", venue: "大肚溪A球場" },
+    { id: "S3-025", date: "2027-01-09", time: "08:00", slot: 1, division: "stellar", away: "bad-bears", home: "chungyi", venue: "大肚溪A球場" },
+    { id: "S3-026", date: "2027-01-09", time: "10:50", slot: 2, division: "stellar", away: "rakuten", home: "taichung-social", venue: "大肚溪A球場" },
+    { id: "S3-027", date: "2027-01-09", time: "13:40", slot: 3, division: "black-hole", away: "tcw", home: "jtron", venue: "大肚溪A球場" },
+    { id: "S3-028", date: "2027-01-16", time: "08:00", slot: 1, division: "black-hole", away: "hell-angels", home: "tcw", venue: "大肚溪A球場" },
+    { id: "S3-029", date: "2027-01-16", time: "13:40", slot: 3, division: "stellar", away: "chungyi", home: "nomads", venue: "大肚溪A球場" },
+    { id: "S3-030", date: "2027-01-16", time: "10:50", slot: 2, division: "black-hole", away: "jtron", home: "jf-sport", venue: "大肚溪A球場" },
+    { id: "S3-031", date: "2027-02-20", time: "08:00", slot: 1, division: "crossover", leftSeed: "黑洞組第 1 名", rightSeed: "恆星組第 1 名", venue: "大肚溪A球場" },
+    { id: "S3-032", date: "2027-02-20", time: "10:50", slot: 2, division: "crossover", leftSeed: "黑洞組第 2 名", rightSeed: "恆星組第 2 名", venue: "大肚溪A球場" },
+    { id: "S3-033", date: "2027-02-20", time: "13:40", slot: 3, division: "crossover", leftSeed: "黑洞組第 3 名", rightSeed: "恆星組第 3 名", venue: "大肚溪A球場" },
+    { id: "S3-034", date: "2027-02-27", time: "08:00", slot: 1, division: "crossover", leftSeed: "黑洞組第 4 名", rightSeed: "恆星組第 4 名", venue: "大肚溪A球場" },
+    { id: "S3-035", date: "2027-02-27", time: "10:50", slot: 2, division: "crossover", leftSeed: "黑洞組第 5 名", rightSeed: "恆星組第 5 名", venue: "大肚溪A球場" },
+    { id: "S3-036", date: "2027-02-27", time: "13:40", slot: 3, division: "crossover", leftSeed: "黑洞組第 6 名", rightSeed: "恆星組第 6 名", venue: "大肚溪A球場" }
+  ];
+
   window.CBL_SEASON3_SCHEDULE = {
-  "title": "第三屆上半季賽程",
-  "venue": "大肚溪A球場",
-  "updatedAt": "2026-11-12",
-  "notice": "如有賽程異動，以聯盟最新公告為準。",
-  "games": [
-    {
-      "id": "S3-005",
-      "date": "2026-11-21",
-      "time": "08:00",
-      "slot": 1,
-      "division": "stellar",
-      "away": "chungyi",
-      "home": "rakuten",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-004",
-      "date": "2026-11-21",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "away": "taichung-social",
-      "home": "bad-bears",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-006",
-      "date": "2026-11-21",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "away": "good-chill",
-      "home": "jf-sport",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-007",
-      "date": "2026-11-28",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "away": "hell-angels",
-      "home": "anmu-tech",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-014",
-      "date": "2026-11-28",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "away": "nomads",
-      "home": "rakuten",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-009",
-      "date": "2026-11-28",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "away": "jf-sport",
-      "home": "tcw",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-010",
-      "date": "2026-12-05",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "away": "hell-angels",
-      "home": "jf-sport",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-012",
-      "date": "2026-12-05",
-      "time": "10:50",
-      "slot": 2,
-      "division": "black-hole",
-      "away": "good-chill",
-      "home": "jtron",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-011",
-      "date": "2026-12-05",
-      "time": "13:40",
-      "slot": 3,
-      "division": "stellar",
-      "away": "ngu",
-      "home": "taichung-social",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-013",
-      "date": "2026-12-12",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "away": "jtron",
-      "home": "hell-angels",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-015",
-      "date": "2026-12-12",
-      "time": "10:50",
-      "slot": 2,
-      "division": "black-hole",
-      "away": "tcw",
-      "home": "good-chill",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-008",
-      "date": "2026-12-12",
-      "time": "13:40",
-      "slot": 3,
-      "division": "stellar",
-      "away": "ngu",
-      "home": "rakuten",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-016",
-      "date": "2026-12-19",
-      "time": "08:00",
-      "slot": 1,
-      "division": "stellar",
-      "away": "nomads",
-      "home": "bad-bears",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-017",
-      "date": "2026-12-19",
-      "time": "10:50",
-      "slot": 2,
-      "division": "black-hole",
-      "away": "jf-sport",
-      "home": "anmu-tech",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-018",
-      "date": "2026-12-19",
-      "time": "13:40",
-      "slot": 3,
-      "division": "stellar",
-      "away": "taichung-social",
-      "home": "chungyi",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-019",
-      "date": "2026-12-26",
-      "time": "08:00",
-      "slot": 1,
-      "division": "stellar",
-      "away": "rakuten",
-      "home": "bad-bears",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-020",
-      "date": "2026-12-26",
-      "time": "10:50",
-      "slot": 2,
-      "division": "black-hole",
-      "away": "anmu-tech",
-      "home": "tcw",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-021",
-      "date": "2026-12-26",
-      "time": "13:40",
-      "slot": 3,
-      "division": "stellar",
-      "away": "chungyi",
-      "home": "ngu",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-022",
-      "date": "2027-01-02",
-      "time": "08:00",
-      "slot": 1,
-      "division": "stellar",
-      "away": "bad-bears",
-      "home": "ngu",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-023",
-      "date": "2027-01-02",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "away": "nomads",
-      "home": "taichung-social",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-024",
-      "date": "2027-01-02",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "away": "anmu-tech",
-      "home": "good-chill",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-025",
-      "date": "2027-01-09",
-      "time": "08:00",
-      "slot": 1,
-      "division": "stellar",
-      "away": "bad-bears",
-      "home": "chungyi",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-026",
-      "date": "2027-01-09",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "away": "rakuten",
-      "home": "taichung-social",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-027",
-      "date": "2027-01-09",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "away": "tcw",
-      "home": "jtron",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-028",
-      "date": "2027-01-16",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "away": "hell-angels",
-      "home": "tcw",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-030",
-      "date": "2027-01-16",
-      "time": "10:50",
-      "slot": 2,
-      "division": "black-hole",
-      "away": "jtron",
-      "home": "jf-sport",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-029",
-      "date": "2027-01-16",
-      "time": "13:40",
-      "slot": 3,
-      "division": "stellar",
-      "away": "chungyi",
-      "home": "nomads",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-001",
-      "date": "2027-02-13",
-      "time": "08:00",
-      "slot": 1,
-      "division": "black-hole",
-      "away": "good-chill",
-      "home": "hell-angels",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-002",
-      "date": "2027-02-13",
-      "time": "10:50",
-      "slot": 2,
-      "division": "stellar",
-      "away": "ngu",
-      "home": "nomads",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-003",
-      "date": "2027-02-13",
-      "time": "13:40",
-      "slot": 3,
-      "division": "black-hole",
-      "away": "jtron",
-      "home": "anmu-tech",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-031",
-      "date": "2027-02-20",
-      "time": "08:00",
-      "slot": 1,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 1 名",
-      "rightSeed": "恆星組第 1 名",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-032",
-      "date": "2027-02-20",
-      "time": "10:50",
-      "slot": 2,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 2 名",
-      "rightSeed": "恆星組第 2 名",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-033",
-      "date": "2027-02-20",
-      "time": "13:40",
-      "slot": 3,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 3 名",
-      "rightSeed": "恆星組第 3 名",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-034",
-      "date": "2027-02-27",
-      "time": "08:00",
-      "slot": 1,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 4 名",
-      "rightSeed": "恆星組第 4 名",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-035",
-      "date": "2027-02-27",
-      "time": "10:50",
-      "slot": 2,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 5 名",
-      "rightSeed": "恆星組第 5 名",
-      "venue": "大肚溪A球場"
-    },
-    {
-      "id": "S3-036",
-      "date": "2027-02-27",
-      "time": "13:40",
-      "slot": 3,
-      "division": "crossover",
-      "leftSeed": "黑洞組第 6 名",
-      "rightSeed": "恆星組第 6 名",
-      "venue": "大肚溪A球場"
-    }
-  ]
-};
+    title: "第三屆上半季賽程",
+    venue: "大肚溪A球場",
+    updatedAt: "2026-11-12",
+    notice: "如有賽程異動，以聯盟最新公告為準。",
+    games
+  };
 })();

@@ -6,9 +6,10 @@
   <meta name="theme-color" content="#020914">
   <title>選手數據中心｜CBL 第三屆官方網站</title>
   <link rel="icon" href="assets/season3-main-logo.webp">
-  <link rel="stylesheet" href="assets/season3-site.css">
-  <link rel="stylesheet" href="assets/player-data-center.css?v=20261110-preseason">
-  <link rel="stylesheet" href="assets/player-data-contrast.css">
+  <link rel="stylesheet" href="assets/season3-site.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/player-data-center.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/player-data-contrast.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/season3-release.css?v=20261122-release">
 </head>
 <body class="player-data-page">
   <header class="header">
@@ -44,6 +45,7 @@
     </section>
 
     <section class="integrated-data-center" aria-label="選手數據查詢">
+      <p id="player-publication-status" class="publication-status" hidden></p>
       <div class="data-type-nav" role="tablist" aria-label="數據類型">
         <button class="active" type="button" data-player-type="hitter" aria-selected="true">打者數據</button>
         <button type="button" data-player-type="pitcher" aria-selected="false">投手數據</button>
@@ -110,8 +112,9 @@
       document.getElementById("nav-links").classList.toggle("active");
     }
   </script>
-  <script src="assets/season3-data.js?v=20261014-main1"></script>
-  <script src="assets/season3-site.js"></script>
-  <script src="assets/player-data-shell.js?v=20261110-preseason"></script>
+  <script src="assets/season3-data.js?v=20261122-release"></script>
+  <script src="assets/season3-site.js?v=20261122-release"></script>
+  <script src="assets/season3-results-data.js?v=20261122-release"></script>
+  <script src="assets/player-data-shell.js?v=20261122-release"></script>
 </body>
 </html>

@@ -13,8 +13,9 @@
   });
 
   window.addEventListener("message", (event) => {
-    if (!event.data || event.data.type !== "cbl-ranking-height") return;
-    const height = Math.max(760, Math.min(Number(event.data.height) + 4, 2200));
+    if (event.source !== frame.contentWindow || !event.data || event.data.type !== "cbl-ranking-height") return;
+    const height = Math.max(event.data.empty ? 320 : 760, Math.min(Number(event.data.height) + 4, 2200));
+    frame.style.minHeight = event.data.empty ? "320px" : "760px";
     if (Number.isFinite(height)) frame.style.height = `${height}px`;
   });
 

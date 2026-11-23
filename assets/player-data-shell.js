@@ -90,6 +90,9 @@
       });
     }
     const officialData = await officialDataPromise;
+    const publication = document.getElementById("player-publication-status");
+    const note = window.CBL_SEASON3_RESULTS?.personalDataStatus?.description;
+    if (publication) { publication.hidden = !note; publication.textContent = note || ""; }
     const source = officialData.datasets?.[type];
     if (!source || !Array.isArray(source.headers) || !Array.isArray(source.rows)) {
       throw new Error("官網正式資料格式不完整");
@@ -332,7 +335,7 @@
         const value = row[header] ?? "";
         const content = header === keys.team
           ? `<span class="team-cell"><img src="${teamLogo(value)}" alt=""><span>${escapeHtml(value)}</span></span>`
-          : escapeHtml(value);
+          : header === keys.name ? `<span class="player-name-cue">${escapeHtml(value)}<span class="profile-toggle-cue" aria-hidden="true"></span></span>` : escapeHtml(value);
         const stickyClass = index < 3 ? ` sticky-column sticky-column-${index + 1}` : "";
         return `<td class="${groupStart}${primary}${secondary}${stickyClass}">${content}</td>`;
       }).join("");

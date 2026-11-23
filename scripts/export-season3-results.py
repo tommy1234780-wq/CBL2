@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 from openpyxl import load_workbook
+from standings_rules import calculate as calculate_official
 
 
 GROUP_IDS = {"黑洞組": "black-hole", "恆星組": "stellar", "跨組交流": "crossover"}
@@ -154,89 +155,22 @@ def validate(games, teams, results):
 
 
 def calculate(teams, accepted):
-    stats = {
-        team: {
-            "team": team, "group": group, "played": 0, "wins": 0, "draws": 0, "losses": 0,
-            "points": 0, "scored": 0, "allowed": 0, "difference": 0,
-            "winningPercentage": None, "ratio": None, "recent": [], "rank": None,
-        }
-        for team, group in teams.items()
-    }
-    history = defaultdict(list)
-    for game, result in accepted:
-        away_score, home_score = result["away_score"], result["home_score"]
-        pairings = (
-            (game["away"], away_score, home_score, game["home"]),
-            (game["home"], home_score, away_score, game["away"]),
-        )
-        for team, scored, allowed, opponent in pairings:
-            row = stats[team]
-            row["played"] += 1
-            row["scored"] += scored
-            row["allowed"] += allowed
-            outcome = "勝" if scored > allowed else "敗" if scored < allowed else "和"
-            row["wins"] += outcome == "勝"
-            row["draws"] += outcome == "和"
-            row["losses"] += outcome == "敗"
-            row["points"] += 2 if outcome == "勝" else 1 if outcome == "和" else 0
-            history[team].append((game["day"], game["time"], game["slot"], game["id"], outcome, opponent))
-
-    for team, row in stats.items():
-        row["difference"] = row["scored"] - row["allowed"]
-        if row["played"]:
-            row["winningPercentage"] = row["wins"] / row["played"]
-            row["recent"] = [item[4] for item in sorted(history[team], reverse=True)[:5]]
-        if row["allowed"]:
-            row["ratio"] = (row["scored"] + row["allowed"]) / row["allowed"]
-
-    def head_to_head(team, peers):
-        return sum(2 if outcome == "勝" else 1 if outcome == "和" else 0
-                   for *_, outcome, opponent in history[team] if opponent in peers)
-
-    standings = {}
-    for group in GROUP_IDS:
-        active = [row for row in stats.values() if row["group"] == group and row["played"]]
-        inactive = [row for row in stats.values() if row["group"] == group and not row["played"]]
-        points_groups = defaultdict(list)
-        for row in active:
-            points_groups[row["points"]].append(row)
-        ordered = []
-        for points in sorted(points_groups, reverse=True):
-            peers = points_groups[points]
-            peer_names = {row["team"] for row in peers}
-            for row in peers:
-                row["h2h"] = head_to_head(row["team"], peer_names)
-            peers.sort(key=lambda row: (
-                -row["h2h"], -(row["ratio"] if row["ratio"] is not None else -1),
-                row["allowed"], -row["scored"], row["team"],
-            ))
-            if len(peers) > 1 and any(row["ratio"] is None for row in peers):
-                tied_by_head_to_head = defaultdict(list)
-                for row in peers:
-                    tied_by_head_to_head[row["h2h"]].append(row)
-                for subset in tied_by_head_to_head.values():
-                    if len(subset) > 1 and any(row["ratio"] is None for row in subset):
-                        for row in subset:
-                            row["unresolved"] = True
-            for index, row in enumerate(peers):
-                comparison = (row["h2h"], row["ratio"], row["allowed"], row["scored"])
-                previous = peers[index - 1] if index else None
-                previous_comparison = (
-                    previous["h2h"], previous["ratio"], previous["allowed"], previous["scored"]
-                ) if previous else None
-                if row.get("unresolved"):
-                    row["rank"] = "待裁定"
-                elif previous and comparison == previous_comparison:
-                    row["rank"] = previous["rank"]
-                else:
-                    row["rank"] = len(ordered) + index + 1
-            ordered.extend(peers)
-        ordered.extend(sorted(inactive, key=lambda row: TEAM_IDS[row["team"]]))
-        standings[GROUP_IDS[group]] = ordered
+    standings = {"crossover": []}
+    for group, rows in calculate_official(teams, accepted).items():
+        standings[GROUP_IDS[group]] = [{
+            **row,
+            "rank": row["rank"] if row["played"] else None,
+            "difference": row["diff"],
+            "winningPercentage": row["pct"],
+            "ratioHighest": row["ratio_highest"],
+            "recent": row["recent"].split() if row["played"] else [],
+        } for row in rows]
     return standings
 
 
 def build_payload(schedule_path: Path, results_path: Path):
+    publication_path = Path(__file__).resolve().parents[1] / "assets/data/publication.json"
+    publication = json.loads(publication_path.read_text(encoding="utf-8")) if publication_path.exists() else {}
     games, teams = read_schedule(schedule_path)
     results = read_results(results_path)
     accepted = validate(games, teams, results)
@@ -269,6 +203,8 @@ def build_payload(schedule_path: Path, results_path: Path):
             "allowed": row["allowed"],
             "difference": row["difference"],
             "winningPercentage": row["winningPercentage"],
+            "ratio": row["ratio"],
+            "ratioHighest": row["ratioHighest"],
             "recent": row["recent"],
         } for row in rows]
 
@@ -289,6 +225,9 @@ def build_payload(schedule_path: Path, results_path: Path):
             "crossoverCounts": True,
             "note": "同分時依聯盟規章比較；待裁定名次以聯盟正式公告為準。",
         },
+        "weeklyReport": publication.get("weeklyReport"),
+        "personalDataStatus": publication.get("personalDataStatus"),
+        "scheduleChanges": publication.get("scheduleChanges", []),
     }
 
 

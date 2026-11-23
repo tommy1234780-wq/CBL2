@@ -105,8 +105,14 @@
   }
 
   function showEmpty(title, detail) {
-    $("#ranking-podium").innerHTML = [1, 2, 3].map((rank) => podiumCard(null, rank)).join("");
-    $("#ranking-table-body").innerHTML = `<tr><td colspan="5"><div class="ranking-empty-state"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div></div></td></tr>`;
+    $("#ranking-podium").innerHTML = "";
+    $("#ranking-podium").hidden = true;
+    $("#ranking-table-body").closest("table").hidden = true;
+    $$(".ranking-section-heading,.ranking-table-heading,.ranking-table-wrap").forEach(el => { el.hidden = true; });
+    let note = document.getElementById("ranking-publication-state");
+    if (!note) { note = document.createElement("div"); note.id = "ranking-publication-state"; note.className = "ranking-empty-state"; $("#ranking-podium").after(note); }
+    note.hidden = false;
+    note.innerHTML = `<div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div>`;
     sendHeight();
   }
 
@@ -124,7 +130,7 @@
 
     const seasonRows = cachedRows.filter((row) => String(row[seasonKey] || "").trim() === season);
     if (!seasonRows.length) {
-      showEmpty("第三屆成績尚未發布", "資料上線後，黑洞組與恆星組排行榜會在此自動更新。");
+      showEmpty("第三屆個人成績尚未公布", window.CBL_SEASON3_RESULTS?.personalDataStatus?.description || "正式投打成績公布後，將依各獎項入選標準更新排行榜。");
       return;
     }
     if (!groupKey) {
@@ -153,12 +159,16 @@
     });
     rows = rankRows(rows).slice(0, 10);
 
-    $("#ranking-podium").innerHTML = [0, 1, 2].map((index) => podiumCard(rows[index], index + 1)).join("");
-
     if (!rows.length) {
       showEmpty(`${currentGroup === "A組" ? "黑洞組" : "恆星組"}尚無符合資格的成績`, "正式成績達到入選標準後，排行榜將自動產生。");
       return;
     }
+    $("#ranking-podium").hidden = false;
+    $("#ranking-table-body").closest("table").hidden = false;
+    $$(".ranking-section-heading,.ranking-table-heading,.ranking-table-wrap").forEach(el => { el.hidden = false; });
+    const note = document.getElementById("ranking-publication-state");
+    if (note) note.hidden = true;
+    $("#ranking-podium").innerHTML = [0, 1, 2].map((index) => podiumCard(rows[index], index + 1)).join("");
 
     $("#ranking-table-body").innerHTML = rows.map((player) => `<tr class="${player.__rank <= 3 ? `top-row rank-${player.__rank}` : ""}">
       <td>${player.__rank}</td>
@@ -192,7 +202,10 @@
 
   function sendHeight() {
     requestAnimationFrame(() => {
-      window.parent.postMessage({ type: "cbl-ranking-height", height: document.documentElement.scrollHeight }, "*");
+      const empty = !document.getElementById("ranking-publication-state")?.hidden && Boolean(document.getElementById("ranking-publication-state"));
+      const last = document.querySelector(".ranking-status");
+      const height = empty && last ? Math.ceil(last.getBoundingClientRect().bottom + scrollY + 24) : document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: "cbl-ranking-height", height, empty }, "*");
     });
   }
 

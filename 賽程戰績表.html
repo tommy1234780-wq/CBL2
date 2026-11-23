@@ -24,9 +24,12 @@
   <title>第三屆上半季賽程｜CBL 官方網站</title>
   <link rel="canonical" href="https://cblcbl.netlify.app/%E8%B3%BD%E7%A8%8B%E6%88%B0%E7%B8%BE%E8%A1%A8.html">
   <link rel="icon" href="assets/cbl-pwa-icon.png">
-  <link rel="stylesheet" href="assets/season3-site.css">
-  <link rel="stylesheet" href="assets/season3-schedule.css?v=20261014-sync1">
-  <link rel="stylesheet" href="assets/team-archive/archive.css">
+  <link rel="stylesheet" href="assets/season3-site.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/season3-schedule.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/team-archive/archive.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/standings-brand.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/black-hole-energy.css?v=20261122-release">
+  <link rel="stylesheet" href="assets/season3-release.css?v=20261122-release">
 </head>
 <body class="schedule-page">
   <header class="header">
@@ -134,7 +137,7 @@
       </section>
 
       <section class="schedule-panel" id="standings-panel" data-view-panel="standings" role="tabpanel" hidden>
-        <div class="standings-shell">
+        <div class="standings-shell division-review" data-division="black-hole">
           <div class="standings-heading">
             <div>
               <span class="schedule-section-kicker">SEASON 3 STANDINGS</span>
@@ -142,9 +145,9 @@
             </div>
             <p>戰績與排名依聯盟正式紀錄更新。分組循環賽完成後，排名將作為跨組交流對戰依據。</p>
           </div>
-          <div class="standings-filter" aria-label="戰績組別篩選">
-            <button type="button" data-standings-division="black-hole" aria-pressed="true">黑洞組</button>
-            <button type="button" data-standings-division="stellar" aria-pressed="false">恆星組</button>
+          <div class="standings-filter division-selector" aria-label="戰績組別篩選">
+            <button type="button" data-standings-division="black-hole" data-select="black-hole" aria-pressed="true"><img src="assets/black-hole-division-logo.webp" alt="" width="30" height="36">黑洞組</button>
+            <button type="button" data-standings-division="stellar" data-select="stellar" aria-pressed="false"><img src="assets/stellar-division-logo.webp" alt="" width="30" height="36">恆星組</button>
           </div>
           <div class="standings-status-bar" aria-label="戰績資料狀態">
             <div><span>目前狀態</span><strong data-standings-status>尚未開賽</strong></div>
@@ -152,10 +155,6 @@
             <div><span>資料更新</span><strong data-standings-updated>賽季開始後更新</strong></div>
           </div>
           <div class="standings-board" data-standings-board aria-live="polite"></div>
-          <div class="standings-rule-note">
-            <strong>排名規則</strong>
-            <span>勝 2 分、和 1 分、敗 0 分；跨組交流賽計入各隊所屬組別戰績。同分時依聯盟規章比較。</span>
-          </div>
           <noscript><div class="schedule-empty">請啟用 JavaScript 以瀏覽第三屆分組戰績。</div></noscript>
         </div>
       </section>
@@ -178,10 +177,11 @@
       document.getElementById("nav-links").classList.toggle("active");
     }
   </script>
-  <script src="assets/season3-data.js?v=20261014-main1"></script>
-  <script src="assets/season3-schedule-data.js?v=20261112-schedule"></script>
-  <script src="assets/season3-results-data.js?v=20261014-results1"></script>
-  <script src="assets/season3-schedule.js?v=20261111-archive"></script>
-  <script src="assets/season3-site.js"></script>
+  <script src="assets/season3-data.js?v=20261122-release"></script>
+  <script src="assets/season3-schedule-data.js?v=20261122-release"></script>
+  <script src="assets/season3-results-data.js?v=20261122-release"></script>
+  <script src="assets/standings-view.js?v=20261122-release"></script>
+  <script src="assets/season3-schedule.js?v=20261122-release"></script>
+  <script src="assets/season3-site.js?v=20261122-release"></script>
 </body>
 </html>

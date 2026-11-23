@@ -1,0 +1,69 @@
+.division-review[data-division="black-hole"] {
+  --division-bg: #090e1c;
+  --division-row: #0c1427;
+  --division-row-alt: #151f36;
+  --division-head: #292340;
+  --division-border: #454561;
+  --division-accent: #d9c8ff;
+  --division-head-text: #f0e7ff;
+  --division-muted: #c1c8de;
+  --division-hover: #252c48;
+  --division-sheen: #aa91ed;
+  --division-hero: #0b1020;
+}
+[data-division="black-hole"] .division-stage {
+  border-top-color: #a596da;
+  box-shadow: 0 0 0 1px #a596da14;
+}
+[data-division="black-hole"] .division-identity {
+  border-bottom-color: #bba3f8;
+  box-shadow: inset 0 -1px 0 #e0d2ff45;
+}
+[data-division="black-hole"] .division-cosmic-art {
+  opacity: .98;
+  filter: brightness(1.32) contrast(1.18) saturate(1.12);
+}
+[data-division="black-hole"] .division-identity::after {
+  background: linear-gradient(90deg,#0b1020 0%,#0b1020f5 30%,#0b1020c0 43%,#0b10202e 72%,#0b10205c 100%);
+}
+[data-division="black-hole"] .division-identity::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg,#b79bf500 2%,#d9caff 30%,#9f7bf2 68%,#d9caff00 100%);
+  pointer-events: none;
+}
+[data-division="black-hole"] .identity-lockup > img {
+  filter: drop-shadow(0 0 2px #eee6ff55) drop-shadow(0 0 11px #9a79ef55);
+}
+[data-division="black-hole"] .identity-copy > span {
+  color: #e6d9ff;
+  text-shadow: 0 0 12px #a184e94d;
+}
+[data-division="black-hole"] .identity-copy h2 {
+  text-shadow: 0 0 19px #a48de545;
+}
+[data-division="black-hole"] .identity-date {
+  background: #070d1de6;
+  box-shadow: inset 0 1px 0 #bfa8f56b,inset 0 -1px 0 #bfa8f533;
+}
+[data-division="black-hole"] .division-selector [data-select="black-hole"][aria-pressed="true"] {
+  color: #f3ebff;
+  background: #392b5b;
+  border-color: #d2bbff;
+  box-shadow: inset 0 -2px 0 #aa86f5;
+}
+[data-division="black-hole"] .trial-label {
+  color: #e2d3ff;
+  background: #24203b;
+}
+@media (max-width: 760px) {
+  [data-division="black-hole"] .division-cosmic-art { opacity: .88; }
+  [data-division="black-hole"] .division-identity::after {
+    background: linear-gradient(90deg,#0b1020 0%,#0b1020f0 35%,#0b1020b3 59%,#0b10203d 100%);
+  }
+  [data-division="black-hole"] .identity-lockup > img {
+    filter: drop-shadow(0 0 2px #eee6ff55) drop-shadow(0 0 8px #9a79ef66);
+  }
+}
