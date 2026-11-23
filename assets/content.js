@@ -14,10 +14,30 @@
     if (weeklyImage.complete) setWeeklyState(weeklyImage.naturalWidth ? "ready" : "empty");
   }
 
+  // Avoid an indefinite loading placeholder when the content API is unavailable.
+  const fallback = () => {
+    if (weeklyStage?.dataset.state !== "ready") setWeeklyState("empty");
+  };
+  setTimeout(fallback, 12000);
+
   async function loadContent() {
     try {
-      const response = await fetch(ENDPOINT, { headers: { apikey: KEY } });
-      if (!response.ok) return;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+      let response;
+      try {
+        response = await fetch(ENDPOINT, {
+          headers: { apikey: KEY },
+          signal: controller.signal,
+          cache: "no-store"
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
+      if (!response.ok) {
+        fallback();
+        return;
+      }
       const data = await response.json();
       const assets = Object.fromEntries((data.assets || []).map((asset) => [asset.asset_key, asset]));
       // Older "每週戰況" uploads are retained in storage but should not
@@ -43,6 +63,7 @@
       }
     } catch (error) {
       console.warn("CBL content load failed", error);
+      fallback();
     }
   }
   loadContent();
