@@ -1,4 +1,4 @@
-const CACHE_NAME = "cbl-season-3-v37-push-only-20261126";
+const CACHE_NAME = "cbl-season-3-v38-schedule-push-v4-20261126";
 const APP_SHELL = [
   "./",
   "./index.html",
