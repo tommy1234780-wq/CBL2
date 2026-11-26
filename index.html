@@ -33,7 +33,7 @@
   <link rel="preload" as="image" href="assets/homepage-season3-mobile-bg.webp" media="(max-width: 760px)" fetchpriority="high">
   <link rel="stylesheet" href="assets/season3-site.css">
   <link rel="stylesheet" href="assets/season3-home.css?v=20261110-preseason">
-  <link rel="stylesheet" href="assets/pwa.css?v=20260813-theme2">
+  <link rel="stylesheet" href="assets/pwa.css?v=20261126-push-v3">
 </head>
 <body class="home-page">
   <header class="header">
@@ -106,16 +106,18 @@
         <div class="push-summary">
           <div class="push-panel-copy">
             <strong>通知設定</strong>
-            <span data-push-status>只接收你在意的球隊消息。</span>
+            <span data-push-status role="status">只接收你在意的球隊消息。</span>
           </div>
           <button class="push-toggle" type="button" data-push-toggle aria-expanded="false" aria-controls="push-settings">✦ 設定通知</button>
         </div>
         <div class="push-settings" id="push-settings" data-push-settings hidden>
+          <p class="push-device-summary" data-push-device-summary role="status"></p>
           <div class="team-subscription-grid" data-team-options></div>
           <div class="push-actions">
             <button class="push-button" type="button" data-enable-push>開啟通知</button>
             <button class="push-button secondary" type="button" data-disable-push hidden>取消推播</button>
           </div>
+          <a href="push-check.html">檢查此裝置的通知收件</a>
         </div>
       </div>
     </section>
@@ -238,7 +240,7 @@
   <script src="assets/season3-results-data.js?v=20261014-results1"></script>
   <script src="assets/season3-home-data.js?v=20261110-preseason"></script>
   <script src="assets/season3-site.js"></script>
-  <script src="assets/pwa.js?v=20261014-perf1"></script>
+  <script src="assets/pwa.js?v=20261126-push-v3"></script>
   <script src="assets/content.js?v=20261123-weekly-fix"></script>
 </body>
 </html>

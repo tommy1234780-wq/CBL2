@@ -1,0 +1,16 @@
+.push-check { width: min(100% - 2.5rem, 42rem); margin: 2rem auto; padding-bottom: 2rem; position: relative; z-index: 1; }
+.push-check .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--cbl-gold-pale); font-weight: 700; }
+.push-check .brand img { object-fit: contain; flex: 0 0 84px; }
+.push-check h1 { margin: 2rem 0 1rem; font-size: 1.7rem; line-height: 1.45; }
+.push-check p, .push-check li, .push-check label { font-size: 1rem; line-height: 1.8; color: var(--cbl-muted); }
+.push-check ol { padding-left: 1.4rem; }
+.push-check li { margin: 0.75rem 0; }
+.push-check .consent { display: flex; gap: 0.7rem; margin: 1.5rem 0; color: var(--cbl-text); }
+.push-check input { width: 1.2rem; height: 1.2rem; flex: 0 0 1.2rem; margin-top: 0.3rem; accent-color: var(--cbl-gold); }
+.push-check button { width: 100%; min-height: 3rem; padding: 0.8rem; border: 1px solid var(--cbl-gold); border-radius: 6px; background: var(--cbl-gold); color: #03101f; font: inherit; font-weight: 700; cursor: pointer; }
+.push-check button:disabled { opacity: 0.5; cursor: not-allowed; }
+.push-check #result { border-top: 1px solid var(--cbl-line); border-bottom: 1px solid var(--cbl-line); margin: 1.5rem 0; padding: 1rem 0; }
+.push-check h2 { font-size: 1rem; }
+.push-check #code { display: block; font: 700 1.8rem/1.5 monospace; color: var(--cbl-gold-pale); overflow-wrap: anywhere; }
+.push-check a { color: var(--cbl-gold-pale); }
+.push-check :focus-visible { outline: 2px solid white; outline-offset: 4px; }

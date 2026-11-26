@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#03101f">
+  <title>賽程推播狀態｜CBL 第三屆</title>
+  <link rel="icon" href="assets/season3-main-logo.webp">
+  <link rel="stylesheet" href="assets/season3-site.css">
+  <link rel="stylesheet" href="assets/push-check.css">
+  <link rel="stylesheet" href="assets/push-monitor.css">
+</head>
+<body>
+  <main class="push-check monitor">
+    <div class="monitor-heading"><a class="brand" href="index.html"><img src="assets/season3-main-logo.webp" width="84" height="84" alt="CBL 第三屆官方標誌"><span>CBL 第三屆<br>官方推播管理</span></a><a href="admin.html">返回管理員登入與推播管理</a></div>
+    <div class="monitor-heading"><h1>賽程推播狀態</h1><button type="button" id="refresh">重新整理</button></div>
+    <p id="access" role="status" aria-live="polite">正在確認管理員身分。</p>
+    <section id="monitor-data" hidden aria-label="自動賽程推播狀態">
+      <div class="system-status"><strong id="system-state"></strong><p id="system-detail"></p></div>
+      <ul id="monitor-alerts" class="monitor-alerts" aria-live="polite" hidden></ul>
+      <dl class="metrics">
+        <div><dt>待發工作</dt><dd id="pending">0</dd></div>
+        <div><dt>處理中工作</dt><dd id="sending">0</dd></div>
+        <div><dt>已交付通知</dt><dd id="accepted">0</dd></div>
+        <div><dt>結果不明工作</dt><dd id="unknown">0</dd></div>
+        <div><dt>失敗工作</dt><dd id="failed">0</dd></div>
+        <div><dt>過期／裝置失效工作</dt><dd id="expired">0</dd></div>
+      </dl>
+      <p>一則通知可合併多項工作。「已交付」僅表示推播服務已接受，不代表手機已顯示或使用者已讀。</p>
+      <dl class="check-times"><div><dt>最近檢查</dt><dd id="last-checked"></dd></div><div><dt>最近完成處理</dt><dd id="last-success"></dd></div><div><dt>賽程資料版本</dt><dd id="revision"></dd></div></dl>
+      <h2>最近 20 筆通知處理紀錄</h2>
+      <div class="history-wrap" tabindex="0" aria-label="通知紀錄表，可水平捲動"><table><thead><tr><th scope="col">建立時間</th><th scope="col">通知</th><th scope="col">狀態</th><th scope="col">嘗試</th><th scope="col">服務回應</th><th scope="col">處理說明</th></tr></thead><tbody id="history"></tbody></table></div>
+    </section>
+  </main>
+  <script src="assets/pwa.js?v=20261126-push-v3"></script>
+  <script src="assets/push-monitor.js?v=20261126-push-v3"></script>
+</body>
+</html>

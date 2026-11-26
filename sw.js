@@ -1,18 +1,18 @@
-const CACHE_NAME = "cbl-season-3-v31-schedule-refresh-20261116";
+const CACHE_NAME = "cbl-season-3-v37-push-only-20261126";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./assets/season3-site.css",
   "./assets/season3-home.css?v=20261110-preseason",
-  "./assets/pwa.css",
+  "./assets/pwa.css?v=20261126-push-v3",
   "./assets/season3-site.js",
   "./assets/season3-data.js?v=20261014-main1",
   "./assets/season3-home-data.js?v=20261110-preseason",
   "./assets/season3-schedule-data.js?v=20261112-schedule",
   "./assets/season3-results-data.js?v=20261014-results1",
-  "./assets/content.js?v=20261110-opening",
-  "./assets/pwa.js?v=20261014-perf1",
+  "./assets/content.js?v=20261123-weekly-fix",
+  "./assets/pwa.js?v=20261126-push-v3",
   "./數據統計.html",
   "./assets/player-data-center.css?v=20261110-preseason",
   "./assets/player-data-contrast.css",
@@ -33,7 +33,7 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   const path = decodeURIComponent(url.pathname);
-  if (path.endsWith("/admin.html") || path.endsWith("/content-admin.html") || path.endsWith("/賽程戰績表.html")) return;
+  if (path.endsWith("/admin.html") || path.endsWith("/content-admin.html") || path.endsWith("/push-monitor.html") || path.endsWith("/賽程戰績表.html")) return;
   if (url.origin !== self.location.origin) return;
 
   // Homepage content is edited in the admin panel and must never be served
@@ -94,11 +94,18 @@ self.addEventListener("push", (event) => {
     body: data.body,
     icon: "./assets/season3-main-logo.webp",
     badge: "./assets/season3-main-logo.webp",
-    data: { url: data.url }
+    tag: typeof data.tag === "string" ? data.tag : undefined,
+    data: { url: data.url, restrictToSite: typeof data.tag === "string" && data.tag.startsWith("cbl-") }
   }));
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data?.url || "./index.html"));
+  let destination = new URL("./index.html", self.location.origin);
+  try {
+    const requested = new URL(event.notification.data?.url || "./index.html", self.location.origin);
+    const webLink = requested.protocol === "https:" || requested.protocol === "http:";
+    if (webLink && (!event.notification.data?.restrictToSite || requested.origin === self.location.origin)) destination = requested;
+  } catch (_) {}
+  event.waitUntil(clients.openWindow(destination.href));
 });

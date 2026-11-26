@@ -1,0 +1,15 @@
+{
+  "id": "/push-check.html",
+  "name": "CBL 推播裝置驗收",
+  "short_name": "CBL 推播驗收",
+  "description": "CBL 第三屆賽程推播隔離驗收入口",
+  "lang": "zh-TW",
+  "start_url": "./push-check.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#03101f",
+  "theme_color": "#03101f",
+  "icons": [
+    { "src": "assets/cbl-pwa-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
